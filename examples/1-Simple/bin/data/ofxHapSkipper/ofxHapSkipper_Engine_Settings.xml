@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ofxSurfingVideoSkip>
+	<START>0</START>
+	<FINISH>1</FINISH>
+	<SPEED>1</SPEED>
+	<LOOPED_BACK>0</LOOPED_BACK>
+	<REVERSE>0</REVERSE>
+	<ENABLE_TIMERS>0</ENABLE_TIMERS>
+	<BPM>120</BPM>
+	<DIV>1</DIV>
+	<A_MODE_SKIP>0</A_MODE_SKIP>
+	<T_SKIP>4</T_SKIP>
+	<B_MODE_REV>0</B_MODE_REV>
+	<T_REV>2</T_REV>
+</ofxSurfingVideoSkip>

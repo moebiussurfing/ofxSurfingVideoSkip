@@ -1,0 +1,7 @@
+ofxHapPlayer
+ofxImGui
+ofxScaleDragRect
+ofxSurfingHelpers
+ofxSurfingImGui
+ofxSurfingVideoSkip
+ofxWindowApp

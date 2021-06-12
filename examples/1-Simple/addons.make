@@ -1,0 +1,6 @@
+ofxGui
+ofxGuiExtended2
+ofxHapPlayer
+ofxSurfingVideoSkip
+ofxSurfingMoods
+ofxWindowApp
