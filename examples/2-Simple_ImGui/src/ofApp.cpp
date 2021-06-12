@@ -6,8 +6,6 @@ void ofApp::setup() {
 #ifndef INCLUDE_ofxWindowApp
 	ofSetFrameRate(60);
 #endif
-
-	myHapSkipper.setup();
 }
 
 //--------------------------------------------------------------
@@ -23,9 +21,9 @@ void ofApp::keyPressed(int key) {
 }
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h) {
-	myHapSkipper.windowResized(w, h);
+	player.windowResized(w, h);
 }
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo) {
-	myHapSkipper.dragEvent(dragInfo);
+	player.dragEvent(dragInfo);
 }

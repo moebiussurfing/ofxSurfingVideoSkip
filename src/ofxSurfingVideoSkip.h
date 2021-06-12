@@ -94,6 +94,8 @@ public:
 		ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);
 
 		addMouseListeners();
+
+		setup();
 	};
 
 	//--------------------------------------------------------------

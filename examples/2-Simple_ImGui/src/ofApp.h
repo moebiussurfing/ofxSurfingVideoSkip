@@ -21,7 +21,7 @@ public:
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 	
-	ofxSurfingVideoSkip myHapSkipper;
+	ofxSurfingVideoSkip player;
 
 #ifdef INCLUDE_ofxWindowApp
 	ofxWindowApp windowApp;
