@@ -51,7 +51,7 @@ public:
 
 	void setup_ImGui();
 	void draw_ImGui();
-	
+
 	bool bOpen0 = true;
 	bool bOpen1 = true;
 	bool bOpen2 = true;
@@ -62,6 +62,8 @@ public:
 	ofParameterGroup& getParams() {
 		return params_Engine_Store;
 	}
+
+	void setPathOpenDialog();
 
 private:
 	void setPath_GlobalFolder(std::string folder);//path for root container folder
@@ -85,11 +87,17 @@ public:
 
 	//--------------------------------------------------------------
 	ofxSurfingVideoSkip() {
+		//ofAddListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
+		ofAddListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
+		ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);
 	};
 
 	//--------------------------------------------------------------
 	~ofxSurfingVideoSkip()
 	{
+		//ofRemoveListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
+		ofRemoveListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
+		ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);		
 		exit();
 	};
 
@@ -120,7 +128,7 @@ public:
 		presetsManager.setVisible_PresetClicker(b);
 		presetsManager.setEnableKeys(b);
 #endif
-	}
+}
 
 	//--------------------------------------------------------------
 	void setMODE_App(int m)
@@ -212,8 +220,13 @@ private:
 public:
 
 	void setup();
-	void update();
-	void draw();
+
+	//void update();
+	//void draw();
+
+	void update(ofEventArgs & args);
+	void draw(ofEventArgs & args);
+
 	void exit();
 
 	void keyPressed(ofKeyEventArgs &eventArgs);

@@ -35,7 +35,7 @@ void ofxSurfingVideoSkip::setup()
 	//--
 
 	//skipper engine
-	videoFilePath.set("videoFilePath", " ");
+	videoFilePath.set("videoFilePath", "NO FILE");
 	videoName.set("FILE", "NO FILE");
 	videoTIME.set("", ""); // current time position
 
@@ -533,7 +533,7 @@ void ofxSurfingVideoSkip::setup_ChannelFx()
 #endif
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::update()
+void ofxSurfingVideoSkip::update(ofEventArgs & args)
 {
 	//--
 
@@ -839,7 +839,7 @@ void ofxSurfingVideoSkip::draw_Gui()
 	//if (SHOW_MoodMachine)
 	{
 		moodMachine.drawPreview();
-}
+	}
 #endif
 
 	//bar controller 
@@ -896,7 +896,7 @@ void ofxSurfingVideoSkip::setGuiVisible(bool b)
 	else {
 		channelFx.setVisibleGui(false);
 		//channelFx.setVisible_PresetClicker(false);
-}
+	}
 #endif
 
 	//-
@@ -1093,7 +1093,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 	if (ENABLE_Keys_Fx)
 	{
 		channelFx.keyPressed(key);
-}
+	}
 #endif
 
 	//----
@@ -1119,13 +1119,13 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 		else if (key == OF_KEY_F2)
 		{
 			SHOW_MoodMachine = !SHOW_MoodMachine;
-	}
+		}
 #endif
 #ifdef USE_ofxSurfingMoods
 		else if (key == OF_KEY_F4)
 		{
 			moodMachine.setPreviewToggleVisible();
-	}
+		}
 #endif
 		else if (key == OF_KEY_F5)
 		{
@@ -1420,8 +1420,8 @@ void ofxSurfingVideoSkip::Changed_params(ofAbstractParameter &e) //patch change
 #ifdef USE_ofxPresetsManager_Hap
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
+			}
 		}
-	}
 		else if (name == ENABLE_LOOP.getName())
 		{
 			if (ENABLE_LOOP)
@@ -1598,7 +1598,7 @@ void ofxSurfingVideoSkip::Changed_params(ofAbstractParameter &e) //patch change
 		else if (name == SHOW_MoodMachine.getName())
 		{
 			moodMachine.setGui_Visible(SHOW_MoodMachine);
-}
+		}
 #endif
 		//-
 
@@ -1686,8 +1686,8 @@ void ofxSurfingVideoSkip::Changed_params(ofAbstractParameter &e) //patch change
 			panel_Control->getVisible().set(SHOW_Advanced.get() && SHOW_Skipper.get());
 #endif
 		}
-		}
-		}
+	}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_SHOW_gui()
@@ -1831,7 +1831,7 @@ void ofxSurfingVideoSkip::Changed_Mood_PRESET_C(int &targetVal)
 #pragma mark - VIDEO
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::draw()
+void ofxSurfingVideoSkip::draw(ofEventArgs & args)
 {
 #ifdef USE_ofxChannelFx
 	if (ENABLE_Video_FX)
@@ -1853,7 +1853,7 @@ void ofxSurfingVideoSkip::draw()
 		ofEnableArbTex();
 		draw_Video();
 	}
-		}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_Video()
@@ -2338,9 +2338,14 @@ void ofxSurfingVideoSkip::draw_ImGui()
 				//--
 
 				// text
-				ImGui::Text(videoName.get().data());
+				if (ImGui::Button("OPEN FILE", ImVec2(_w100, _h / 2)))
+				{
+					setPathOpenDialog();
+				}
+				//ImGui::Text(videoName.get().data());
 				ImGui::Text(videoFilePath.get().data());
-				ImGui::Dummy(ImVec2(0, 1));
+				ImGui::Dummy(ImVec2(0, 5));
+
 				ImGui::Text(("Time   " + videoTIME.get()).data());
 				ImGui::Text(("Frame  " + videoFRAME.get()).data());
 				ImGui::Dummy(ImVec2(0, 5));
@@ -2351,15 +2356,13 @@ void ofxSurfingVideoSkip::draw_ImGui()
 
 				widgetsManager.Add(ENABLE_LOOP, SurfingWidgetTypes::IM_TOGGLE_SMALL, false, 1);
 
-				widgetsManager.Add(MARK_START, SurfingWidgetTypes::IM_BUTTON_SMALL, true, 2);
-				widgetsManager.Add(MARK_FINISH, SurfingWidgetTypes::IM_BUTTON_SMALL, false, 2);
-
 				// position
 				widgetsManager.Add(POSITION, SurfingWidgetTypes::IM_STEPPER);
 				widgetsManager.Add(POSITION, SurfingWidgetTypes::IM_SLIDER);
 
 				ofxImGuiSurfing::AddRangeParam("LOOP CLIP", POSITION_Start, POSITION_Finish, "%.3f      %.3f", 1.0f);
 
+				// start/finish
 				//static bool bFineTune = false;
 				//ToggleRoundedButton("Fine Tune", &bFineTune, ImVec2(30, 20));
 				//if (bFineTune) 
@@ -2368,6 +2371,10 @@ void ofxSurfingVideoSkip::draw_ImGui()
 					widgetsManager.Add(POSITION_Finish, SurfingWidgetTypes::IM_STEPPER);
 				}
 
+				// mark in/out
+				widgetsManager.Add(MARK_START, SurfingWidgetTypes::IM_BUTTON_SMALL, true, 2);
+				widgetsManager.Add(MARK_FINISH, SurfingWidgetTypes::IM_BUTTON_SMALL, false, 2);
+
 				//--
 
 				ImGui::Dummy(ImVec2(0, 5));
@@ -2375,6 +2382,29 @@ void ofxSurfingVideoSkip::draw_ImGui()
 				// speed
 				//widgetsManager.Add(speed, SurfingWidgetTypes::IM_SLIDER);
 				widgetsManager.Add(speedNorm, SurfingWidgetTypes::IM_SLIDER);
+
+				//{
+				//	// knob1
+				//	ofxImGuiSurfing::AddKnob(speedNorm, 0.001, 30, 0.1);
+
+				//	// knob2
+				//	ImGui::SameLine();
+				//	ImDrawList* draw_list = ImGui::GetWindowDrawList();
+				//	float width = 30;
+				//	const ImU32 color = ImGui::GetColorU32(ImGuiCol_ButtonActive);
+				//	float v_min = 0;
+				//	float v_max = 1;
+				//	float v_step = 0.001f;
+				//	static float p_value = 0.5f;
+				//	ofxImGuiSurfing::KnobFloat(draw_list, width, color, "Value", &p_value, v_min, v_max, v_step);
+
+				//	//static float _x = 100; 
+				//	//static float _y = 100; 
+				//	//ofxImGuiSurfing::Pad2D(draw_list, 100, 100, &_x, &_y);
+				//}
+
+				//-
+
 				widgetsManager.Add(speed_Reset, SurfingWidgetTypes::IM_BUTTON_SMALL, 0, 0, 5);
 				widgetsManager.Add(loopedBack, SurfingWidgetTypes::IM_TOGGLE_SMALL, true, 2);
 				widgetsManager.Add(reverseSpeed, SurfingWidgetTypes::IM_TOGGLE_SMALL, false, 2);
@@ -2390,7 +2420,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 				flagst |= ImGuiTreeNodeFlags_Framed;
 				ofxImGuiSurfing::AddGroup(params_Engine, flagst);
 
-				//-
+				//--
 
 				// extra panel
 				ImGui::Dummy(ImVec2(0, 10));
@@ -2415,4 +2445,32 @@ void ofxSurfingVideoSkip::draw_ImGui()
 	guiManager.end();
 
 	//gui.draw();
+}
+
+
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::setPathOpenDialog()
+{
+	ofLogNotice(__FUNCTION__) << " SET PRESETS PATH";
+
+	// Open the Open File Dialog
+	std::string str = "Select vdieo file. Must be enconded in HAP codec!\n";
+	ofFileDialogResult openFileResult = ofSystemLoadDialog(str, false);
+
+	// Check if the user opened a file
+	if (openFileResult.bSuccess)
+	{
+		//processOpenFileSelection(openFileResult);
+		videoName = openFileResult.getName();
+		videoFilePath = openFileResult.getPath();
+
+		ofLogNotice(__FUNCTION__) << "video name: " << videoName;
+		ofLogNotice(__FUNCTION__) << "video path: " << videoFilePath;
+		loadMovie(videoFilePath);
+	}
+	else
+	{
+		ofLogNotice(__FUNCTION__) << "User hit cancel";
+	}
 }

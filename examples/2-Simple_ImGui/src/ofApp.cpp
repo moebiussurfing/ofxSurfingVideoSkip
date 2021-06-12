@@ -2,7 +2,6 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
-	//ofBackground(0);
 
 #ifndef INCLUDE_ofxWindowApp
 	ofSetFrameRate(60);
@@ -13,13 +12,11 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	myHapSkipper.update();
 }
 
 //--------------------------------------------------------------
 void ofApp::draw() {
 	
-	myHapSkipper.draw();
 	myHapSkipper.draw_Gui();
 }
 
