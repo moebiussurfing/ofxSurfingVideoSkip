@@ -11,7 +11,8 @@
 //
 //	OPTIONAL DEFINES
 //
-//#define USE_ofxPresetsManager_Hap // presets
+#define USE_ofxPresetsManager_Hap // presets
+
 //#define USE_ofxSurfingMoods // mood machine
 //#define USE_ofxChannelFx // fx
 //#define USE_ofxGuiExtended

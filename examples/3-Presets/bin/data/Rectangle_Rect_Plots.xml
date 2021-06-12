@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path></path>
-	<x>650</x>
-	<y>237</y>
-	<width>1295</width>
-	<height>977</height>
+	<x>664</x>
+	<y>30</y>
+	<width>300</width>
+	<height>708</height>
 	<name>Rect_Plots</name>
 	<isEditing>1</isEditing>
 </interactiveRect>

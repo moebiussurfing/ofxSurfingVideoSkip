@@ -1,8 +1,6 @@
 ofxAnimatable
 ofxGui
-ofxGuiExtended2
 ofxHapPlayer
-ofxSurfingVideoSkip
 ofxHistoryPlot
 ofxImGui
 ofxMSAInteractiveObject
@@ -14,4 +12,5 @@ ofxSurfingImGui
 ofxSurfingMoods
 ofxSurfingRandomizer
 ofxSurfingTween
+ofxSurfingVideoSkip
 ofxWindowApp

@@ -149,10 +149,6 @@ void ofxSurfingVideoSkip::setup()
 
 	//-
 
-	//modules
-
-	//-
-
 	//for presets settings
 
 	ofParameter<std::string> label_Engine{ "ENGINE", "" };
