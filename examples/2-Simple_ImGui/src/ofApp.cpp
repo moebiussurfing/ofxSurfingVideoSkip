@@ -16,13 +16,10 @@ void ofApp::update() {
 
 //--------------------------------------------------------------
 void ofApp::draw() {
-	
-	myHapSkipper.draw_Gui();
 }
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key) {
-	//myHapSkipper.keyPressed(key);
 }
 //--------------------------------------------------------------
 void ofApp::windowResized(int w, int h) {
@@ -32,7 +29,6 @@ void ofApp::windowResized(int w, int h) {
 void ofApp::dragEvent(ofDragInfo dragInfo) {
 	myHapSkipper.dragEvent(dragInfo);
 }
-//mouse
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y) {
 	myHapSkipper.mouseMoved(x, y);

@@ -51,6 +51,8 @@ public:
 
 	void setup_ImGui();
 	void draw_ImGui();
+	void draw_ImGuiControls();
+	void draw_ImGuiTimers();
 
 	bool bOpen0 = true;
 	bool bOpen1 = true;
@@ -60,7 +62,7 @@ public:
 
 public:
 	ofParameterGroup& getParams() {
-		return params_Engine_Store;
+		return params_Preset;
 	}
 
 	void setPathOpenDialog();
@@ -70,7 +72,7 @@ private:
 	std::string path_GLOBAL_Folder;//main folder where nested folder goes inside
 #ifndef USE_ofxPresetsManager_Hap
 	std::string path_fileName_ChannelFX;
-	std::string path_fileName_Engine;
+	std::string path_Preset;
 #endif
 
 	bool ENABLE_Active = true;
@@ -118,7 +120,7 @@ public:
 	void setGuiVisible(bool b);
 	//--------------------------------------------------------------
 	void setGuiToggleVisible() {
-		SHOW_gui = !SHOW_gui;
+		bGui = !bGui;
 	}
 	//--------------------------------------------------------------
 	void setUserVisible(bool b)
@@ -333,11 +335,11 @@ private:
 	ofParameter<bool> ENABLE_AutoHide;
 	ofParameter<bool> ENABLE_TimersSkipRev;
 	ofParameter<bool> TRIG_time_Skiper;
-	ofParameter<bool> TRIG_reverse_Skiper;
+	ofParameter<bool> TRIG_bReverseSkipper;
 	ofParameter<bool> reverseSpeed;
 	ofParameter<bool> MODE_SkipTime;
 	ofParameter<bool> MODE_SkipReverse;
-	ofParameter<bool> TRIG_Reset_Mods;
+	ofParameter<bool> TRIG_bResetEngine;
 	ofParameter<bool> TRIG_Reset_Bpm;
 
 #define USE_BPM_TIMER_MODE
@@ -392,7 +394,7 @@ private:
 
 	//presetsManager
 
-	ofParameterGroup params_Engine_Store;
+	ofParameterGroup params_Preset;
 
 #ifdef USE_ofxPresetsManager_Hap
 	void setup_PresetsManager();
@@ -413,8 +415,10 @@ private:
 #endif
 
 	ofParameter<bool> SHOW_Skipper;
+	ofParameter<bool> SHOW_Timers;
 
-	ofParameter<bool> SHOW_gui = true;//independent to autohide state
+	ofParameter<bool> bGui = true;//independent to autohide state
+
 	ofEventListener listener_SHOW_gui;
 	void Changed_SHOW_gui();
 
@@ -423,7 +427,7 @@ private:
 	void Changed_MODE_App();
 
 	//settings
-	std::string path_fileName_AppSettings;
+	std::string path_AppSettings;
 	void saveGroup(ofParameterGroup &g, std::string path);
 	void loadGroup(ofParameterGroup &g, std::string path);
 
