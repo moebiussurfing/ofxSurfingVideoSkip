@@ -92,6 +92,8 @@ public:
 		//ofAddListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
 		ofAddListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
 		ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);
+
+		addMouseListeners();
 	};
 
 	//--------------------------------------------------------------
@@ -100,6 +102,9 @@ public:
 		//ofRemoveListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
 		ofRemoveListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
 		ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);		
+
+		removeMouseListeners();
+
 		exit();
 	};
 
@@ -233,16 +238,22 @@ public:
 
 	void keyPressed(ofKeyEventArgs &eventArgs);
 	//void keyPressed(int key);
-	void mouseMoved(int x, int y);
-	void mouseDragged(int x, int y, int button);
-	void mousePressed(int x, int y, int button);
-	void mouseReleased(int x, int y, int button);
+	
+	//mouse
+	void mouseDragged(ofMouseEventArgs &eventArgs);
+	void mousePressed(ofMouseEventArgs &eventArgs);
+	void mouseReleased(ofMouseEventArgs &eventArgs);
+	void mouseMoved(ofMouseEventArgs &eventArgs);
+	void addMouseListeners();
+	void removeMouseListeners();
+
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 
 private:
 	void startup();
 	void updateVideoPLayer();
+	void updateTimers();
 
 public:
 	void draw_Gui();
@@ -352,8 +363,8 @@ private:
 	ofParameter<int> bpmDivider;
 	ofParameter<float> timer1;
 	ofParameter<float> timer2;
-	ofParameter<int> tBeatSkipper;//skiper
-	ofParameter<int> tBeatReverse;//reverse
+	ofParameter<int> trigBeatSkipper;//skiper
+	ofParameter<int> trigBeatReverse;//reverse
 #endif
 	ofParameter<bool> SHOW_Presets;
 	ofParameter<bool> SHOW_MoodMachine;
@@ -364,7 +375,7 @@ private:
 	uint64_t last_TRIG_reverse;
 
 	ofParameterGroup params_Engine;
-	void Changed_params(ofAbstractParameter &e);
+	void Changed_Params(ofAbstractParameter &e);
 	bool DISABLE_CALLBACKS;
 
 	ofParameterGroup params_Control;
