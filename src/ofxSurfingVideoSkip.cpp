@@ -2541,8 +2541,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			}
 			//ImGui::Text(videoName.get().data());
 			ImGui::Text(videoFilePath.get().data());
-			ImGui::Dummy(ImVec2(0, 5));
-
+			ImGui::Dummy(ImVec2(0, 2));
 			ImGui::Text(("Time   " + videoTIME.get()).data());
 			ImGui::Text(("Frame  " + videoFRAME.get()).data());
 			ImGui::Dummy(ImVec2(0, 5));
