@@ -2539,6 +2539,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			{
 				setPathOpenDialog();
 			}
+			ImGui::Dummy(ImVec2(0, 1));
 			//ImGui::Text(videoName.get().data());
 			ImGui::Text(videoFilePath.get().data());
 			ImGui::Dummy(ImVec2(0, 2));
