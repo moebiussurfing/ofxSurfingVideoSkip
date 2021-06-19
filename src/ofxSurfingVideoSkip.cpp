@@ -864,13 +864,6 @@ void ofxSurfingVideoSkip::updateTimers()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_Gui()
 {
-	//TODO:
-	// crash
-	//// instance - Plugin code that was made for sharing context
-	//ImGui::PushID("##ofxSurfingVideoSkipHASH"); // <-- if you want to ensure a sandbox between both (fails with sharedMode off)
-	//draw_ImGui();
-	//ImGui::PopID(); // <-- If you want to ensure a sandbox between both
-
 	draw_ImGui();
 
 #ifdef USE_ofxSurfingMoods
