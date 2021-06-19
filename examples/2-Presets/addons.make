@@ -1,0 +1,17 @@
+ofxAnimatable
+ofxGui
+ofxHapPlayer
+ofxHistoryPlot
+ofxImGui
+ofxMSAInteractiveObject
+ofxPresetsManager
+ofxScaleDragRect
+ofxSurfingAnimators
+ofxSurfingHelpers
+ofxSurfingImGui
+ofxSurfingMoods
+ofxSurfingPresets
+ofxSurfingRandomizer
+ofxSurfingTween
+ofxSurfingVideoSkip
+ofxWindowApp

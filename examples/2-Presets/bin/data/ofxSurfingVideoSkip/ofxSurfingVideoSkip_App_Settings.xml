@@ -7,10 +7,15 @@
 	<MODE_App>0</MODE_App>
 	<SHOW_PRESETS>1</SHOW_PRESETS>
 	<ENABLE_KEYS_PLAYER>1</ENABLE_KEYS_PLAYER>
+	<SHOW_TIMERS>0</SHOW_TIMERS>
 	<SHOW_CONTROL_PANEL>1</SHOW_CONTROL_PANEL>
 	<SHOW_HEADER>1</SHOW_HEADER>
 	<AUTO_HIDE>1</AUTO_HIDE>
-	<SHOW_HAP-SKIPPER>1</SHOW_HAP-SKIPPER>
-	<Gui_Panel_Position>822, 349</Gui_Panel_Position>
-	<Gui_Engine_Position>1182, 81</Gui_Engine_Position>
+	<SHOW_MOOD-MACHINE>1</SHOW_MOOD-MACHINE>
+	<SHOW_SURFING_SKIP>1</SHOW_SURFING_SKIP>
+	<Gui_Panel_Position>500, 500</Gui_Panel_Position>
+	<Gui_Engine_Position>700, 500</Gui_Engine_Position>
+	<Auto_Resize>1</Auto_Resize>
+	<Debug>0</Debug>
+	<Extra>0</Extra>
 </params_App>

@@ -2,9 +2,14 @@
 
 #include "ofMain.h"
 
+//----
+
+#define INCLUDE_ofxWindowApp // -> not required
+
+//----
+
 #include "ofxSurfingVideoSkip.h"
 
-#define INCLUDE_ofxWindowApp
 #ifdef INCLUDE_ofxWindowApp
 #include "ofxWindowApp.h"
 #endif
@@ -16,14 +21,14 @@ public:
 	void setup();
 	void update();
 	void draw();
-
 	void keyPressed(int key);
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
-	
+
 	ofxSurfingVideoSkip player;
 
 #ifdef INCLUDE_ofxWindowApp
 	ofxWindowApp windowApp;
 #endif
+
 };

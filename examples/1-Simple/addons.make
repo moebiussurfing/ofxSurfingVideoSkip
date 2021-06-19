@@ -1,6 +1,7 @@
-ofxGui
-ofxGuiExtended2
 ofxHapPlayer
+ofxImGui
+ofxScaleDragRect
+ofxSurfingHelpers
+ofxSurfingImGui
 ofxSurfingVideoSkip
-ofxSurfingMoods
 ofxWindowApp

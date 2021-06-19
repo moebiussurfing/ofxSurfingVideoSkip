@@ -7,17 +7,18 @@
 #include "ofMain.h"
 
 
-//------------------
+//----------------------------------------------
 //
 //	OPTIONAL DEFINES
-//
-#define USE_ofxPresetsManager_Hap // presets
 
-//#define USE_ofxSurfingMoods // mood machine
+//#define USE_ofxPresetsManager_Hap // presets
+
+#define USE_ofxSurfingMoods // mood machine
 //#define USE_ofxChannelFx // fx
 //#define USE_ofxGuiExtended
 //
-//---------
+//----------------------------------------------
+
 
 #include "ofxSurfingImGui.h"
 
@@ -39,7 +40,7 @@
 #include "ofxPresetsManager.h"
 #endif
 
-//#define USE_ofxGui//not implemented
+//#define USE_ofxGui // not implemented
 #ifdef USE_ofxGui
 #include "ofxGui.h"
 #endif
@@ -92,7 +93,8 @@ public:
 	ofxSurfingVideoSkip() {
 		//ofAddListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
 		ofAddListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
-		ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);
+		ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
+		//ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);
 
 		addMouseListeners();
 
@@ -104,7 +106,8 @@ public:
 	{
 		//ofRemoveListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
 		ofRemoveListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
-		ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);		
+		ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
+		//ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);		
 
 		removeMouseListeners();
 
@@ -134,7 +137,7 @@ public:
 	void setUserVisible(bool b)
 	{
 #ifdef USE_ofxPresetsManager_Hap
-		//presets
+		// presets
 		presetsManager.setVisible_PresetClicker(b);
 		presetsManager.setEnableKeys(b);
 #endif
@@ -146,7 +149,7 @@ public:
 		MODE_App = m;
 	}
 
-	//auto hide controlled outside the class. internal by default
+	// auto hide controlled outside the class. internal by default
 	//--------------------------------------------------------------
 	void setAudoHideExternal(bool b)
 	{
@@ -163,7 +166,7 @@ public:
 	//--------------------------------------------------------------
 	//bool isPlaying_MoodMachine()
 	//{
-	//	return moodMachine.isPlaying();
+	//	return moodsSurfer.isPlaying();
 	//}
 	//--------------------------------------------------------------
 	void play()
@@ -197,22 +200,22 @@ public:
 	void setPlay_MoodMachine(bool b)
 	{
 		if (b)
-			moodMachine.play();
+			moodsSurfer.play();
 		else
-			moodMachine.stop();
+			moodsSurfer.stop();
 	}
 
 	//--------------------------------------------------------------
 	bool isPlaying_MoodMachine()
 	{
-		return moodMachine.isPlaying();
+		return moodsSurfer.isPlaying();
 	}
 
-	//--------------------------------------------------------------
-	bool get_MoodMachine_EditorMode()
-	{
-		return SHOW_MoodMachine.get();
-	}
+	////--------------------------------------------------------------
+	//bool get_MoodMachine_EditorMode()
+	//{
+	//	return SHOW_MoodMachine.get();
+	//}
 #endif
 
 	//--
@@ -225,7 +228,7 @@ private:
 	ofParameter<bool> SHOW_Video_FX;
 #endif
 
-	//-
+	//--
 
 public:
 
@@ -242,11 +245,12 @@ public:
 	void keyPressed(ofKeyEventArgs &eventArgs);
 	//void keyPressed(int key);
 	
-	//mouse
+	// mouse
 	void mouseDragged(ofMouseEventArgs &eventArgs);
 	void mousePressed(ofMouseEventArgs &eventArgs);
 	void mouseReleased(ofMouseEventArgs &eventArgs);
 	void mouseMoved(ofMouseEventArgs &eventArgs);
+
 	void addMouseListeners();
 	void removeMouseListeners();
 
@@ -264,14 +268,14 @@ public:
 	void draw_VideoControls();
 
 private:
-	//hap video player
+	// hap video player
 	void loadMovie(std::string movie);
 	ofRectangle getBarRectangle() const;
 	ofxHapPlayer player;
 	uint64_t lastMovement;
 	bool wasPaused;
 
-	//autohide
+	// autohide
 	bool ENABLE_GuiVisibleByAutoHide = false;
 	ofParameter<bool> ENABLE_drawVideoControlBar;
 	bool draw_Autohide_PRE;
@@ -281,7 +285,7 @@ private:
 	bool ENABLE_AutoHide_external = false;
 
 private:
-	//video control bar size and margins
+	// video control bar size and margins
 	int BarInset = 10;
 	int BarHeight = 30;
 public:
@@ -298,7 +302,7 @@ public:
 
 	//-
 
-	//transport
+	// transport
 public:
 	//--------------------------------------------------------------
 	void goStart()
@@ -307,7 +311,7 @@ public:
 	}
 
 private:
-	//preset params
+	// preset params
 	ofParameterGroup params_App;
 
 	//--
@@ -321,7 +325,7 @@ private:
 
 	//-
 
-	//labels
+	// labels
 	std::string myTTF;// gui font for all gui theme
 	int sizeTTF;
 	std::string filename_Font;
@@ -366,14 +370,14 @@ private:
 	ofParameter<int> bpmDivider;
 	ofParameter<float> timer1;
 	ofParameter<float> timer2;
-	ofParameter<int> trigBeatSkipper;//skiper
-	ofParameter<int> trigBeatReverse;//reverse
+	ofParameter<int> divBeatSkipper;//skiper
+	ofParameter<int> divBeatReverse;//reverse
 #endif
 	ofParameter<bool> SHOW_Presets;
-	ofParameter<bool> SHOW_MoodMachine;
+	//ofParameter<bool> SHOW_MoodMachine;
 	ofParameter<bool> SHOW_Advanced;
 
-	//engine
+	// engine
 	uint64_t last_TRIG_time;
 	uint64_t last_TRIG_reverse;
 
@@ -406,7 +410,7 @@ private:
 
 	//--
 
-	//presetsManager
+	// presetsManager
 
 	ofParameterGroup params_Preset;
 
@@ -420,15 +424,16 @@ private:
 	//--
 
 #ifdef USE_ofxSurfingMoods
-	ofxSurfingMoods moodMachine;
+	ofxSurfingMoods moodsSurfer;
+
 	void Changed_Mood_RANGE(int & targetVal);
-	void Changed_Mood_TARGET(int &targetVal);//listener for inside class moodMachine
+	void Changed_Mood_TARGET(int &targetVal);//listener for inside class moodsSurfer
 	void Changed_Mood_PRESET_A(int &targetVal);
 	void Changed_Mood_PRESET_B(int &targetVal);
 	void Changed_Mood_PRESET_C(int &targetVal);
 #endif
 
-	ofParameter<bool> SHOW_Skipper;
+	ofParameter<bool> SHOW_SurfingSkip;
 	ofParameter<bool> SHOW_Timers;
 
 	ofParameter<bool> bGui = true;//independent to autohide state
@@ -450,8 +455,8 @@ private:
 	//--
 
 private:
-	//check if a folder path exist and creates one if not
-	//many times when you try to save a file, this is not possible and do not happens bc the container folder do not exist
+	// check if a folder path exist and creates one if not
+	// many times when you try to save a file, this is not possible and do not happens bc the container folder do not exist
 	//--------------------------------------------------------------
 	void CheckFolder(std::string _path)
 	{
@@ -525,6 +530,8 @@ public:
 		//crash!
 		panel_Engine->loadTheme(path_Theme);
 	}
+
 #endif
+
 };
 

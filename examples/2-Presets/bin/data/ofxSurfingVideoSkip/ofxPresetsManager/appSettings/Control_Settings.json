@@ -1,0 +1,31 @@
+{
+    "ofxPresetsManager": {
+        "Buttons_Size": "80",
+        "GUI": {
+            "BOX_CLICKER": "1",
+            "EDIT_PLAYER": "0",
+            "GUI_INTERNAL_POSITION": "512, 384",
+            "SHOW_ADVANCED": "0",
+            "SHOW_CLICKER": "1",
+            "SHOW_HELP": "0",
+            "SHOW_ImGui": "1",
+            "SHOW_PARAMETERS": "0",
+            "SHOW_PLAYERS": "1",
+            "SHOW_PRESET_PARAMETERS": "0",
+            "SHOW_SELECTORS": "0",
+            "SHOW_STANDALONES": "0",
+            "THEME_DARK": "1"
+        },
+        "OPTIONS": {
+            "AUTO_LOAD": "1",
+            "AUTO_SAVE": "0",
+            "EDIT_MODE": "0",
+            "TIMER_AUTO_SAVE": "0"
+        },
+        "SHOW_ALL": "0",
+        "SHOW_PANELS": "1",
+        "SURFING_RANDOMIZER": "1",
+        "SURFING_TWEENER": "0",
+        "THEME_DARK": "1"
+    }
+}
