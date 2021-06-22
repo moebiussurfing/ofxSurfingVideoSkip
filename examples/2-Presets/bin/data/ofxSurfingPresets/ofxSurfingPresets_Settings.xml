@@ -5,12 +5,12 @@
         "Auto_Save_Timed": "0",
         "Clicker": "1",
         "Clicker_Menu": "0",
-        "Control": "1",
+        "Control": "0",
         "Cycled": "1",
         "Extra": "0",
         "FLOAT_CLICKER": {
             "Auto_Resize": "1",
-            "Control": "1",
+            "Control": "0",
             "Extra": "0",
             "Max_Buttons": "3",
             "Responsive": "1"

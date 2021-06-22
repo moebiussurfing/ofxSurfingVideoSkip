@@ -3,14 +3,14 @@
         "A_MODE_SKIP": "1",
         "BPM": "120",
         "B_MODE_REV": "1",
-        "DIV": "1",
+        "DIV": "4",
         "ENABLE_TIMERS": "1",
-        "FINISH": "0.643",
+        "FINISH": "0.550633",
         "LOOPED_BACK": "0",
-        "REVERSE": "1",
+        "REVERSE": "0",
         "SPEED": "-0.182",
-        "START": "0.184072",
-        "T_REV": "7",
-        "T_SKIP": "2"
+        "START": "0.441983",
+        "T_REV": "2",
+        "T_SKIP": "5"
     }
 }
