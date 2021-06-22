@@ -1,12 +1,23 @@
 {
-    "INTERNAL": {
+    "AppSettings": {
         "Auto_Resize": "1",
-        "Auto_Save": "0",
-        "Cycled": "0",
-        "Debug": "1",
+        "Auto_Save": "1",
+        "Auto_Save_Timed": "0",
+        "Clicker": "1",
+        "Clicker_Menu": "0",
+        "Control": "1",
+        "Cycled": "1",
         "Extra": "0",
-        "GUI": "1",
-        "Minimize": "0",
-        "Show_Parameters": "1"
+        "FLOAT_CLICKER": {
+            "Auto_Resize": "1",
+            "Control": "1",
+            "Extra": "0",
+            "Max_Buttons": "3",
+            "Responsive": "1"
+        },
+        "Keys": "1",
+        "Minimize": "1",
+        "PARAMETERS": "0",
+        "SURFING_PRESETS": "1"
     }
 }

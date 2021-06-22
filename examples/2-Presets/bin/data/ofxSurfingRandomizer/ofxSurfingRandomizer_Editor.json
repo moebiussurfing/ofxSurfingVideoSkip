@@ -30,7 +30,7 @@
             },
             "RESET_SPEED": null,
             "REVERSE": {
-                "REVERSE": "1"
+                "REVERSE": "0"
             },
             "SPEED": {
                 "Max": "27.01",

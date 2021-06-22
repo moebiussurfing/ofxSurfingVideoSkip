@@ -11,11 +11,14 @@
 //
 //	OPTIONAL DEFINES
 
-//#define USE_ofxPresetsManager_Hap // presets
-
 #define USE_ofxSurfingMoods // mood machine
+
+#define USE_ofxSurfingPresets__VIDEO_SKIP // simple presets
+//#define USE_ofxPresetsManager__VIDEO_SKIP // power presets
+
 //#define USE_ofxChannelFx // fx
-//#define USE_ofxGuiExtended
+
+//#define USE_ofxGuiExtended // -> deprectaed
 //
 //----------------------------------------------
 
@@ -36,7 +39,11 @@
 
 #include "ofxHapPlayer.h"
 
-#ifdef USE_ofxPresetsManager_Hap
+#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+#include "ofxSurfingPresets.h"
+#endif
+
+#ifdef USE_ofxPresetsManager__VIDEO_SKIP
 #include "ofxPresetsManager.h"
 #endif
 
@@ -48,7 +55,17 @@
 class ofxSurfingVideoSkip
 {
 
+	//-
+
+#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 public:
+	ofxSurfingPresets presets;
+#endif
+
+	//-
+
+public:
+	// gui
 	ofxSurfing_ImGui_Manager guiManager;
 
 	void setup_ImGui();
@@ -72,14 +89,14 @@ public:
 private:
 	void setPath_GlobalFolder(std::string folder);//path for root container folder
 	std::string path_GLOBAL_Folder;//main folder where nested folder goes inside
-#ifndef USE_ofxPresetsManager_Hap
+#ifndef USE_ofxPresetsManager__VIDEO_SKIP
 	std::string path_fileName_ChannelFX;
 	std::string path_Preset;
 #endif
 
 	bool ENABLE_Active = true;
 
-	ofParameter<bool> ENABLE_Keys_Player{ "ENABLE KEYS PLAYER", true };
+	ofParameter<bool> ENABLE_Keys_Player{ "Keys", true };
 	ofParameter<bool> ENABLE_Keys_Presets{ "ENABLE KEYS PRESETS", false };
 	ofParameter<bool> ENABLE_Keys_Fx{ "ENABLE KEYS FX", false };
 
@@ -118,7 +135,7 @@ public:
 
 public:
 
-#ifdef USE_ofxPresetsManager_Hap
+#ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	//--------------------------------------------------------------
 	void loadPreset(int p)
 	{
@@ -136,12 +153,12 @@ public:
 	//--------------------------------------------------------------
 	void setUserVisible(bool b)
 	{
-#ifdef USE_ofxPresetsManager_Hap
+#ifdef USE_ofxPresetsManager__VIDEO_SKIP
 		// presets
 		presetsManager.setVisible_PresetClicker(b);
 		presetsManager.setEnableKeys(b);
 #endif
-}
+	}
 
 	//--------------------------------------------------------------
 	void setMODE_App(int m)
@@ -242,9 +259,14 @@ public:
 
 	void exit();
 
+private:
+
+	// keys
 	void keyPressed(ofKeyEventArgs &eventArgs);
-	//void keyPressed(int key);
-	
+	void keyReleased(ofKeyEventArgs &eventArgs) {};
+	void addKeysListeners();
+	void removeKeysListeners() ;
+
 	// mouse
 	void mouseDragged(ofMouseEventArgs &eventArgs);
 	void mousePressed(ofMouseEventArgs &eventArgs);
@@ -254,6 +276,7 @@ public:
 	void addMouseListeners();
 	void removeMouseListeners();
 
+public:
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 
@@ -312,7 +335,7 @@ public:
 
 private:
 	// preset params
-	ofParameterGroup params_App;
+	ofParameterGroup params_AppSettings;
 
 	//--
 
@@ -368,8 +391,8 @@ private:
 	//60,000 ms (1 minute) / Tempo (BPM) = Delay Time in ms
 	ofParameter<float> bpmTimer;
 	ofParameter<int> bpmDivider;
-	ofParameter<float> timer1;
-	ofParameter<float> timer2;
+	ofParameter<float> timer_SkipTime;
+	ofParameter<float> timer_SkipRev;
 	ofParameter<int> divBeatSkipper;//skiper
 	ofParameter<int> divBeatReverse;//reverse
 #endif
@@ -414,7 +437,7 @@ private:
 
 	ofParameterGroup params_Preset;
 
-#ifdef USE_ofxPresetsManager_Hap
+#ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	void setup_PresetsManager();
 	ofxPresetsManager presetsManager;
 	void Changed_DONE_load(bool &DONE_load);
@@ -434,7 +457,7 @@ private:
 #endif
 
 	ofParameter<bool> SHOW_SurfingSkip;
-	ofParameter<bool> SHOW_Timers;
+	ofParameter<bool> SHOW_SkipTimers;
 
 	ofParameter<bool> bGui = true;//independent to autohide state
 
@@ -529,9 +552,9 @@ public:
 		panel_Control->loadTheme(path_Theme);
 		//crash!
 		panel_Engine->loadTheme(path_Theme);
-	}
+		}
 
 #endif
 
-};
+	};
 

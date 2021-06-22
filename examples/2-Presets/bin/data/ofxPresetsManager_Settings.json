@@ -8,7 +8,7 @@
         "GROUP_SELECT": "0",
         "PRESET_SELECTORS": {
             "ofxSurfingVideoSkip": {
-                "ofxSurfingVideoSkip": "5",
+                "ofxSurfingVideoSkip": "0",
                 "t_BPM": "120"
             }
         }

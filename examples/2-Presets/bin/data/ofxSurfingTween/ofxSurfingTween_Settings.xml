@@ -26,6 +26,7 @@
         "SHOW_ANIMATOR": "0",
         "SURFING_TWEENER": "0",
         "Speed": "0.5",
-        "TWEEN_ENABLE": "1"
+        "TWEEN_ENABLE": "1",
+        "Time": "1000"
     }
 }

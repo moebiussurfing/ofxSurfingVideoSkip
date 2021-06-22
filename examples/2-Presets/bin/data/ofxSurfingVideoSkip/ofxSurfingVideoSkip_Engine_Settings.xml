@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <ofxSurfingVideoSkip>
-	<START>0</START>
-	<FINISH>1</FINISH>
+	<START>0.0406118</START>
+	<FINISH>0.12289</FINISH>
 	<SPEED>0</SPEED>
 	<LOOPED_BACK>0</LOOPED_BACK>
 	<REVERSE>1</REVERSE>
@@ -9,7 +9,7 @@
 	<BPM>120</BPM>
 	<DIV>1</DIV>
 	<A_MODE_SKIP>1</A_MODE_SKIP>
-	<T_SKIP>4</T_SKIP>
+	<T_SKIP>2</T_SKIP>
 	<B_MODE_REV>1</B_MODE_REV>
 	<T_REV>2</T_REV>
 </ofxSurfingVideoSkip>
