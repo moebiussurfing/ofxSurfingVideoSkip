@@ -7,6 +7,22 @@
 #include "ofMain.h"
 
 
+/*
+
+	TODO:
+
+	+ fix workflow edit/mouse/loop/lock..
+
+	+ handle different videos/projects:
+	video file & presets files path
+	duplicate project, undo
+
+	+ add locker for duration locked to bpm ? 
+	could be better to link bpm to skippers only, not to loop duration. easy to user
+
+*/
+
+
 //----------------------------------------------
 //
 //	OPTIONAL DEFINES
@@ -16,6 +32,9 @@
 #define USE_ofxSurfingPresets__VIDEO_SKIP // simple presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP // power presets
 
+
+#define USE_MIDI_PARAMS__VIDEO_SKIP 
+
 //#define USE_ofxChannelFx // fx
 
 //#define USE_ofxGuiExtended // -> deprectaed
@@ -24,6 +43,10 @@
 
 
 #include "ofxSurfingImGui.h"
+
+#ifdef USE_MIDI_PARAMS__VIDEO_SKIP 
+#include "ofxMidiParams.h"
+#endif
 
 #ifdef USE_ofxChannelFx
 #include "ofxChannelFx.h"
@@ -64,6 +87,13 @@ public:
 
 	//-
 
+#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
+private:
+	ofxMidiParams mMidiParams;
+#endif
+
+	//-
+
 public:
 	// gui
 	ofxSurfing_ImGui_Manager guiManager;
@@ -71,7 +101,7 @@ public:
 	void setup_ImGui();
 	void draw_ImGui();
 	void draw_ImGuiControls();
-	void draw_ImGuiTimers();
+	void draw_ImGuiSkipTimers();
 
 	bool bOpen0 = true;
 	bool bOpen1 = true;
@@ -361,15 +391,18 @@ private:
 	ofParameter<std::string> videoTIME;
 	ofParameter<std::string> videoFRAME;
 
+	ofParameter<bool> bKickL;
+	ofParameter<bool> bKickR;
+
 	ofParameter<bool> PLAYING;
 	ofParameter<bool> MODE_EDIT;
 	ofParameter<bool> ENABLE_LOOP;
 	ofParameter<bool> loopedBack;
 	ofParameter<float> POSITION_Start;
-	ofParameter<float> POSITION_Finish;
+	ofParameter<float> POSITION_End;
 	ofParameter<float> POSITION;
-	ofParameter<bool> MARK_START;
-	ofParameter<bool> MARK_FINISH;
+	ofParameter<bool> bSET_START;
+	ofParameter<bool> bSET_END;
 	ofParameter<float> speed;
 	ofParameter<float> speedNorm;
 	ofParameter<bool> speed_Reset;
@@ -435,7 +468,8 @@ private:
 
 	// presetsManager
 
-	ofParameterGroup params_Preset;
+	ofParameterGroup params_Preset; // -> the params to create presets
+	ofParameterGroup params_ControlRemote; // -> the params to control externally by user. ie: to assign to OSC/midi control
 
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	void setup_PresetsManager();

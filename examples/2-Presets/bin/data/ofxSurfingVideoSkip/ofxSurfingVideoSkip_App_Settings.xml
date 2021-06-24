@@ -10,7 +10,7 @@
 	<SKIP_TIMERS>0</SKIP_TIMERS>
 	<SHOW_CONTROL_PANEL>1</SHOW_CONTROL_PANEL>
 	<SHOW_HEADER>1</SHOW_HEADER>
-	<AUTO_HIDE>1</AUTO_HIDE>
+	<AutoHide_Bar>0</AutoHide_Bar>
 	<SHOW_SURFING_SKIP>1</SHOW_SURFING_SKIP>
 	<Gui_Panel_Position>500, 500</Gui_Panel_Position>
 	<Gui_Engine_Position>700, 500</Gui_Engine_Position>

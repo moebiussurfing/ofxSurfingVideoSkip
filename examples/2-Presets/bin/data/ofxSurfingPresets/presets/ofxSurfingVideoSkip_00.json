@@ -1,16 +1,14 @@
 {
     "ofxSurfingVideoSkip": {
         "A_MODE_SKIP": "1",
-        "BPM": "120",
-        "B_MODE_REV": "1",
-        "DIV": "4",
+        "B_MODE_REV": "0",
         "ENABLE_TIMERS": "1",
-        "FINISH": "0.110232",
-        "LOOPED_BACK": "0",
+        "END": "0.0690928",
+        "LOOPED_BACK": "1",
         "REVERSE": "0",
-        "SPEED": "0.078",
-        "START": "0.0495781",
-        "T_REV": "1",
-        "T_SKIP": "4"
+        "SPEED": "0",
+        "START": "0.0474684",
+        "T_REV": "3",
+        "T_SKIP": "3"
     }
 }

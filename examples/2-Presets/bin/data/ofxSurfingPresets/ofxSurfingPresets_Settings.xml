@@ -7,7 +7,7 @@
         "Clicker_Menu": "0",
         "Control": "0",
         "Cycled": "1",
-        "Extra": "0",
+        "Extra": "1",
         "FLOAT_CLICKER": {
             "Auto_Resize": "1",
             "Control": "0",
@@ -16,7 +16,7 @@
             "Responsive": "1"
         },
         "Keys": "1",
-        "Minimize": "1",
+        "Minimize": "0",
         "PARAMETERS": "0",
         "SURFING_PRESETS": "1"
     }

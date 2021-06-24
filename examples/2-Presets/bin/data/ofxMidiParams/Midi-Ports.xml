@@ -1,0 +1,8 @@
+{
+    "PORTS": {
+        "In": "MPD218 1",
+        "Midi_In": "1",
+        "Midi_Out": "2",
+        "Out": "MPD218 2"
+    }
+}

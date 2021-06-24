@@ -1,8 +1,10 @@
-ofxAnimatable
 ofxGui
+ofxAnimatable
 ofxHapPlayer
 ofxHistoryPlot
 ofxImGui
+ofxMidi
+ofxMidiParams
 ofxMSAInteractiveObject
 ofxPresetsManager
 ofxScaleDragRect
