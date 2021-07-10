@@ -29,16 +29,17 @@
 
 #define USE_ofxSurfingMoods // mood machine
 
+//#define USE_OF_BEAT_CLOCK__VIDEO_SKIP // beat clock
+
 #define USE_ofxSurfingPresets__VIDEO_SKIP // simple presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP // power presets
 
-
-#define USE_MIDI_PARAMS__VIDEO_SKIP 
+//#define USE_MIDI_PARAMS__VIDEO_SKIP // midi input to control gui and switch presets
 
 //#define USE_ofxChannelFx // fx
 
 //#define USE_ofxGuiExtended // -> deprectaed
-//
+
 //----------------------------------------------
 
 
@@ -46,6 +47,10 @@
 
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP 
 #include "ofxMidiParams.h"
+#endif
+
+#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
+#include "ofxBeatClock.h"
 #endif
 
 #ifdef USE_ofxChannelFx
@@ -94,15 +99,25 @@ private:
 
 	//-
 
+#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
+	ofxBeatClock beatClock;	
+	ofEventListener listenerBeat;
+	void Changed_BeatTick();
+#endif
+
+	//-
+
 public:
 	// gui
 	ofxSurfing_ImGui_Manager guiManager;
 
 	void setup_ImGui();
 	void draw_ImGui();
+	void draw_ImGuiPanels();
 	void draw_ImGuiControls();
 	void draw_ImGuiSkipTimers();
 
+private:
 	bool bOpen0 = true;
 	bool bOpen1 = true;
 	bool bOpen2 = true;
@@ -302,6 +317,8 @@ private:
 	void mousePressed(ofMouseEventArgs &eventArgs);
 	void mouseReleased(ofMouseEventArgs &eventArgs);
 	void mouseMoved(ofMouseEventArgs &eventArgs);
+	
+	void refreshMouse(int button, float position);
 
 	void addMouseListeners();
 	void removeMouseListeners();
@@ -396,7 +413,7 @@ private:
 
 	ofParameter<bool> PLAYING;
 	ofParameter<bool> MODE_EDIT;
-	ofParameter<bool> ENABLE_LOOP;
+	ofParameter<bool> MODE_LOOP;
 	ofParameter<bool> loopedBack;
 	ofParameter<float> POSITION_Start;
 	ofParameter<float> POSITION_End;
@@ -434,8 +451,8 @@ private:
 	ofParameter<bool> SHOW_Advanced;
 
 	// engine
-	uint64_t last_TRIG_time;
-	uint64_t last_TRIG_reverse;
+	uint64_t last_TRIG_time = 0;
+	uint64_t last_TRIG_reverse = 0;
 
 	ofParameterGroup params_Engine;
 	void Changed_Params(ofAbstractParameter &e);
@@ -490,13 +507,13 @@ private:
 	void Changed_Mood_PRESET_C(int &targetVal);
 #endif
 
-	ofParameter<bool> SHOW_SurfingSkip;
-	ofParameter<bool> SHOW_SkipTimers;
+	ofParameter<bool> bGui_SurfingVideo;
+	ofParameter<bool> bGui_SkipTimers;
 
-	ofParameter<bool> bGui = true;//independent to autohide state
+	ofParameter<bool> bGui{ "SURFING VIDEO", true };//independent to autohide state
 
 	ofEventListener listener_SHOW_gui;
-	void Changed_SHOW_gui();
+	void Changed_bGui();
 
 	ofParameter<int> MODE_App;
 	ofEventListener listener_MODE_App;
@@ -589,6 +606,16 @@ public:
 		}
 
 #endif
+
+	float _w100;
+	float _w50;
+	float _h = WIDGETS_HEIGHT;
+	void refreshLayout() {
+		// update sizes to current window shape
+		widgetsManager.refreshPanelShape();
+		_w100 = ofxImGuiSurfing::getWidgetsWidth(1);
+		_w50 = ofxImGuiSurfing::getWidgetsWidth(2);
+	}
 
 	};
 

@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<midiparams>
+	<param paramName="PLAY" group="SKIP_PLAYER" midiid="572" displayName="Note 60" />
+	<param paramName="EDIT" group="SKIP_PLAYER" midiid="573" displayName="Note 61" />
+	<param paramName="FRAME_L" group="SKIP_PLAYER" midiid="568" displayName="Note 56" />
+	<param paramName="FRAME_R" group="SKIP_PLAYER" midiid="571" displayName="Note 59" />
+	<param paramName="SET_START" group="SKIP_PLAYER" midiid="564" displayName="Note 52" />
+	<param paramName="SET_END" group="SKIP_PLAYER" midiid="567" displayName="Note 55" />
+	<param paramName="POSITION" group="SKIP_PLAYER" midiid="24" displayName="Control24" />
+	<param paramName="START" group="SKIP_PLAYER" midiid="28" displayName="Control28" />
+	<param paramName="END" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="RESET_SPEED" group="SKIP_PLAYER" midiid="567" displayName="Note 55" />
+	<param paramName="SPEED" group="SKIP_PLAYER" midiid="25" displayName="Control25" />
+	<param paramName="LOOPED_BACK" group="SKIP_PLAYER" midiid="573" displayName="Note 61" />
+	<param paramName="REVERSE" group="SKIP_PLAYER" midiid="574" displayName="Note 62" />
+	<param paramName="ENABLE_TIMERS" group="TIMERS" midiid="-1" displayName="" />
+	<param paramName="A_MODE_SKIP" group="TIMERS" midiid="562" displayName="Note 50" />
+	<param paramName="T_SKIP" group="TIMERS" midiid="26" displayName="Control26" />
+	<param paramName="B_MODE_REV" group="TIMERS" midiid="563" displayName="Note 51" />
+	<param paramName="T_REV" group="TIMERS" midiid="27" displayName="Control27" />
+	<param paramName="Preset_0" group="Presets" midiid="604" displayName="Note 92" />
+	<param paramName="Preset_1" group="Presets" midiid="605" displayName="Note 93" />
+	<param paramName="Preset_2" group="Presets" midiid="606" displayName="Note 94" />
+	<param paramName="Preset_3" group="Presets" midiid="607" displayName="Note 95" />
+	<param paramName="Preset_4" group="Presets" midiid="600" displayName="Note 88" />
+	<param paramName="Preset_5" group="Presets" midiid="601" displayName="Note 89" />
+</midiparams>

@@ -1,0 +1,77 @@
+{
+    "Editor": {
+        "Parameters_RANDOMiZER": {
+            "A_MODE_SKIP": {
+                "A_MODE_SKIP": "1"
+            },
+            "BPM": {
+                "BPM": "120",
+                "Max": "364",
+                "Min": "76"
+            },
+            "B_MODE_REV": {
+                "B_MODE_REV": "1"
+            },
+            "DIV": {
+                "DIV": "1",
+                "Max": "7",
+                "Min": "1"
+            },
+            "ENABLE_TIMERS": {
+                "ENABLE_TIMERS": "1"
+            },
+            "FINISH": {
+                "FINISH": "0.678717",
+                "Max": "0.9",
+                "Min": "0.506"
+            },
+            "LOOPED_BACK": {
+                "LOOPED_BACK": "0"
+            },
+            "RESET_SPEED": null,
+            "REVERSE": {
+                "REVERSE": "0"
+            },
+            "SPEED": {
+                "Max": "27.01",
+                "Min": "-1",
+                "SPEED": "23.0667"
+            },
+            "SPEED_": {
+                "Max": "45.02",
+                "Min": "0.2"
+            },
+            "START": {
+                "Max": "0.5",
+                "Min": "0.079",
+                "START": "0.24667"
+            },
+            "T_REV": {
+                "Max": "7",
+                "Min": "1",
+                "T_REV": "2"
+            },
+            "T_SKIP": {
+                "Max": "7",
+                "Min": "1",
+                "T_SKIP": "4"
+            }
+        },
+        "Params": {
+            "A_MODE_SKIP": "1",
+            "BPM": "0",
+            "B_MODE_REV": "1",
+            "DIV": "0",
+            "ENABLE_TIMERS": "0",
+            "FINISH": "0",
+            "LOOPED_BACK": "0",
+            "RESET_SPEED": "0",
+            "REVERSE": "1",
+            "SPEED": "1",
+            "SPEED_": "0",
+            "START": "0",
+            "T_REV": "0",
+            "T_SKIP": "0"
+        }
+    }
+}

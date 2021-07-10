@@ -1,13 +1,13 @@
 <?xml version="1.0"?>
 <AppSettings>
-	<PLAY>1</PLAY>
+	<PLAY>0</PLAY>
 	<LOOP>1</LOOP>
 	<FILE>"NightmoVES4.mov"</FILE>
 	<videoFilePath>C:\_DATA\NightmoVES4.mov</videoFilePath>
 	<MODE_App>0</MODE_App>
 	<SHOW_PRESETS>1</SHOW_PRESETS>
 	<Keys>1</Keys>
-	<SKIP_TIMERS>0</SKIP_TIMERS>
+	<SKIP_TIMERS>1</SKIP_TIMERS>
 	<SHOW_CONTROL_PANEL>1</SHOW_CONTROL_PANEL>
 	<SHOW_HEADER>1</SHOW_HEADER>
 	<AutoHide_Bar>0</AutoHide_Bar>
