@@ -27,14 +27,14 @@
 //
 //	OPTIONAL DEFINES
 
-#define USE_ofxSurfingMoods // mood machine
+#define USE_ofxSurfingMoods // -> mood machine
 
-//#define USE_OF_BEAT_CLOCK__VIDEO_SKIP // beat clock
+#define USE_OF_BEAT_CLOCK__VIDEO_SKIP // -> beat clock
 
-#define USE_ofxSurfingPresets__VIDEO_SKIP // simple presets
-//#define USE_ofxPresetsManager__VIDEO_SKIP // power presets
+#define USE_ofxSurfingPresets__VIDEO_SKIP // -> simple presets
+//#define USE_ofxPresetsManager__VIDEO_SKIP // -> power presets
 
-//#define USE_MIDI_PARAMS__VIDEO_SKIP // midi input to control gui and switch presets
+//#define USE_MIDI_PARAMS__VIDEO_SKIP // -> midi input to control gui and switch presets
 
 //#define USE_ofxChannelFx // fx
 
@@ -76,9 +76,9 @@
 #endif
 
 //#define USE_ofxGui // not implemented
-#ifdef USE_ofxGui
-#include "ofxGui.h"
-#endif
+//#ifdef USE_ofxGui
+//#include "ofxGui.h"
+//#endif
 
 class ofxSurfingVideoSkip
 {
@@ -102,7 +102,9 @@ private:
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
 	ofxBeatClock beatClock;	
 	ofEventListener listenerBeat;
+	ofEventListener listenerBpm;
 	void Changed_BeatTick();
+	void Changed_BeatBpm();
 #endif
 
 	//-
@@ -112,6 +114,7 @@ public:
 	ofxSurfing_ImGui_Manager guiManager;
 
 	void setup_ImGui();
+
 	void draw_ImGui();
 	void draw_ImGuiPanels();
 	void draw_ImGuiControls();

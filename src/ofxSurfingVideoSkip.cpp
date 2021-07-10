@@ -203,7 +203,10 @@ void ofxSurfingVideoSkip::setup()
 
 	//-
 
-	// jump
+	// skippers
+
+	// time
+
 	_param_SkipEngine.add(MODE_SkipTime);
 #ifndef USE_BPM_TIMER_MODE
 	_param_SkipEngine.add(timePeriod_skipper);
@@ -216,6 +219,7 @@ void ofxSurfingVideoSkip::setup()
 	//-
 
 	// reverse
+
 	_param_SkipEngine.add(MODE_SkipReverse);
 #ifndef USE_BPM_TIMER_MODE
 	_param_SkipEngine.add(timePeriod_reverser);
@@ -373,6 +377,8 @@ void ofxSurfingVideoSkip::setup()
 	moodsSurfer.PRESET_A_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_A);
 	moodsSurfer.PRESET_B_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_B);
 	moodsSurfer.PRESET_C_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_C);
+
+	moodsSurfer.setTickMode(true);
 #endif
 
 	//----
@@ -492,6 +498,7 @@ void ofxSurfingVideoSkip::setup()
 
 	// callback to receive BeatTicks
 	listenerBeat = beatClock.BeatTick_TRIG.newListener([&](bool&) {this->Changed_BeatTick(); });
+	listenerBpm = beatClock.BPM_Global.newListener([&](float&) {this->Changed_BeatBpm(); });
 #endif
 
 	//----
@@ -944,7 +951,7 @@ void ofxSurfingVideoSkip::draw_Gui()
 #ifdef USE_ofxSurfingMoods
 	//if (SHOW_MoodMachine)
 	{
-		if (moodsSurfer.bGui) moodsSurfer.drawPreview();
+		if (moodsSurfer.bGui) moodsSurfer.draw_PreviewWidget();
 		moodsSurfer.draw_ImGui();
 	}
 #endif
@@ -2607,9 +2614,13 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 
 			// big enablers
 			widgetsManager.Add(ENABLE_TimersSkipRev, SurfingTypes::IM_TOGGLE_BIG);
-			if (ENABLE_TimersSkipRev) {
-				widgetsManager.Add(MODE_SkipTime, SurfingTypes::IM_TOGGLE_BIG, true, 2);
-				widgetsManager.Add(MODE_SkipReverse, SurfingTypes::IM_TOGGLE_BIG, false, 2);
+			if (ENABLE_TimersSkipRev) 
+			{
+				ofxImGuiSurfing::AddBigToggle(MODE_SkipTime);
+				ofxImGuiSurfing::AddBigToggle(MODE_SkipReverse);
+
+				//widgetsManager.Add(MODE_SkipTime, SurfingTypes::IM_TOGGLE_BIG, true, 0);
+				//widgetsManager.Add(MODE_SkipReverse, SurfingTypes::IM_TOGGLE_BIG, false, 0);
 			}
 
 			ImGui::Dummy(ImVec2(0, 2));
@@ -2658,7 +2669,6 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 					// draw progress bar
 					////widgetsManager.Add(timer_SkipRev, SurfingTypes::IM_DEFAULT);
 					ofxImGuiSurfing::AddProgressBar(timer_SkipRev);
-
 				}
 
 				ImGui::TreePop();
@@ -2718,17 +2728,15 @@ void ofxSurfingVideoSkip::draw_ImGuiPanels()
 		widgetsManager.Add(bGui_SurfingVideo, SurfingTypes::IM_TOGGLE_SMALL);
 		widgetsManager.Add(bGui_SkipTimers, SurfingTypes::IM_TOGGLE_SMALL);
 
-		// presets
-#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
-		widgetsManager.Add(presets.bGui, SurfingTypes::IM_TOGGLE_SMALL);
-#endif
 		//-
 
+		// midi
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
 		widgetsManager.Add(mMidiParams.bGui, SurfingTypes::IM_TOGGLE_SMALL);
 #endif
 		//-
 
+		// beat clock
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
 		widgetsManager.Add(beatClock.bGui, SurfingTypes::IM_TOGGLE_SMALL);
 #endif
@@ -2737,6 +2745,12 @@ void ofxSurfingVideoSkip::draw_ImGuiPanels()
 		// moods
 #ifdef USE_ofxSurfingMoods 
 		widgetsManager.Add(moodsSurfer.bGui, SurfingTypes::IM_TOGGLE_SMALL);
+#endif
+		//-
+
+		// presets
+#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+		widgetsManager.Add(presets.bGui, SurfingTypes::IM_TOGGLE_SMALL);
 #endif
 	}
 	guiManager.endWindow();
@@ -2984,6 +2998,23 @@ void ofxSurfingVideoSkip::setPathOpenDialog()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_BeatTick() // callback to receive BeatTicks
 {
-	if (beatClock.BeatTick_TRIG) ofLogNotice("ofxSurfingVideoSkip") << "BeatTick ! #" << beatClock.Beat_current;
+	if (beatClock.BeatTick_TRIG)
+	{
+		ofLogNotice(__FUNCTION__) << "BeatTick ! #" << beatClock.Beat_current;
+
+#ifdef USE_ofxSurfingMoods
+		moodsSurfer.doBeatTick();
+#endif
+	}
+}
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::Changed_BeatBpm()
+{
+	ofLogNotice(__FUNCTION__) << "Bpm " << beatClock.BPM_Global;
+
+#ifdef USE_ofxSurfingMoods
+	moodsSurfer.setBpm(beatClock.BPM_Global);
+#endif
 }
 #endif

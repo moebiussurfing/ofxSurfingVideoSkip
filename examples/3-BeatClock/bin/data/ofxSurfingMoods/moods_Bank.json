@@ -1,17 +1,17 @@
 [
     {
         "preset_A": 0,
-        "preset_B": 4,
+        "preset_B": 0,
         "preset_C": 0
     },
     {
         "preset_A": 1,
-        "preset_B": 5,
+        "preset_B": 1,
         "preset_C": 0
     },
     {
-        "preset_A": 1,
-        "preset_B": 2,
+        "preset_A": 2,
+        "preset_B": 0,
         "preset_C": 2
     },
     {
