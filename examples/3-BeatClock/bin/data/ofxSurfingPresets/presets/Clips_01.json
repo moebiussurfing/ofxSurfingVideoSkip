@@ -1,6 +1,6 @@
 {
     "Clips": {
-        "A_MODE_SKIP": "0",
+        "A_MODE_SKIP": "1",
         "B_MODE_REV": "0",
         "ENABLE_TIMERS": "1",
         "END": "0.125",
@@ -8,7 +8,7 @@
         "REVERSE": "1",
         "SPEED": "0",
         "START": "0.0901899",
-        "T_REV": "2",
-        "T_SKIP": "4"
+        "T_REV": "8",
+        "T_SKIP": "8"
     }
 }

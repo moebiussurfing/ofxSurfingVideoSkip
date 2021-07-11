@@ -1,14 +1,14 @@
 {
     "Clips": {
-        "A_MODE_SKIP": "0",
+        "A_MODE_SKIP": "1",
         "B_MODE_REV": "0",
-        "ENABLE_TIMERS": "0",
+        "ENABLE_TIMERS": "1",
         "END": "0.762131",
         "LOOPED_BACK": "0",
         "REVERSE": "0",
-        "SPEED": "0.239",
-        "START": "0.667722",
+        "SPEED": "0.111",
+        "START": "0.683",
         "T_REV": "2",
-        "T_SKIP": "4"
+        "T_SKIP": "2"
     }
 }

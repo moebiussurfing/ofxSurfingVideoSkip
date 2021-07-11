@@ -11,8 +11,8 @@
 
 	TODO:
 
-	+ fix workflow edit/mouse/loop/lock..
-
+	+ add slow skip timers
+	+ add jumpt bpm timed stutter
 	+ handle different videos/projects:
 	video file & presets files path
 	duplicate project, undo
@@ -82,11 +82,11 @@
 
 class ofxSurfingVideoSkip
 {
-
 	//-
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 public:
+
 	ofxSurfingPresets presets;
 #endif
 
@@ -110,6 +110,7 @@ private:
 	//-
 
 public:
+
 	// gui
 	ofxSurfing_ImGui_Manager guiManager;
 
@@ -121,6 +122,7 @@ public:
 	void draw_ImGuiSkipTimers();
 
 private:
+
 	bool bOpen0 = true;
 	bool bOpen1 = true;
 	bool bOpen2 = true;
@@ -128,6 +130,7 @@ private:
 	//-
 
 public:
+
 	ofParameterGroup& getParams() {
 		return params_Preset;
 	}
@@ -135,6 +138,7 @@ public:
 	void setPathOpenDialog();
 
 private:
+
 	void setPath_GlobalFolder(std::string folder);//path for root container folder
 	std::string path_GLOBAL_Folder;//main folder where nested folder goes inside
 #ifndef USE_ofxPresetsManager__VIDEO_SKIP
@@ -327,20 +331,24 @@ private:
 	void removeMouseListeners();
 
 public:
+
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 
 private:
+
 	void startup();
 	void updateVideoPLayer();
 	void updateTimers();
 
 public:
+
 	void draw_Gui();
 	void draw_Video();
 	void draw_VideoControls();
 
 private:
+
 	// hap video player
 	void loadMovie(std::string movie);
 	ofRectangle getBarRectangle() const;
@@ -358,10 +366,13 @@ private:
 	bool ENABLE_AutoHide_external = false;
 
 private:
+
 	// video control bar size and margins
 	int BarInset = 10;
 	int BarHeight = 30;
+
 public:
+
 	//--------------------------------------------------------------
 	void setBarInset(int _w)
 	{
@@ -376,7 +387,9 @@ public:
 	//-
 
 	// transport
+
 public:
+
 	//--------------------------------------------------------------
 	void goStart()
 	{
@@ -384,6 +397,7 @@ public:
 	}
 
 private:
+
 	// preset params
 	ofParameterGroup params_AppSettings;
 
@@ -406,6 +420,7 @@ private:
 	//--
 
 private:
+
 	//skipper engine
 	float positionSeconds;
 	ofParameter<std::string> videoTIME;
@@ -532,6 +547,7 @@ private:
 	//--
 
 private:
+
 	// check if a folder path exist and creates one if not
 	// many times when you try to save a file, this is not possible and do not happens bc the container folder do not exist
 	//--------------------------------------------------------------
@@ -564,6 +580,7 @@ private:
 #ifdef USE_ofxGuiExtended
 
 private:
+
 	//gui
 	ofxGui gui;
 	ofxGuiPanel *panel_Engine;
@@ -571,6 +588,7 @@ private:
 	ofxGuiPanel *panel_Control;
 
 private:
+
 	//customize guiExtended
 	void gui_CustomizeDefine();
 	void gui_CustomizeApply();
@@ -583,6 +601,7 @@ private:
 	ofJson jConf_Labl_Hide;//labels
 
 public:
+
 	//--------------------------------------------------------------
 	glm::vec2 getGuiPosition()
 	{
@@ -597,8 +616,11 @@ public:
 	}
 
 private:
+
 	std::string path_Theme;
+
 public:
+
 	//--------------------------------------------------------------
 	void loadTheme(std::string _path) {
 		path_Theme = _path;

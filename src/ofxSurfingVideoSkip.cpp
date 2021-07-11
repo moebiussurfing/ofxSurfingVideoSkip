@@ -315,6 +315,8 @@ void ofxSurfingVideoSkip::setup()
 	//params_Control.add(SHOW_ControlPanel);//TODO: same than SHOW_GUI ?
 
 	params_Control.add(bGui_SurfingVideo);
+	params_Control.add(bGui_SkipTimers);
+	params_Control.add(bGui);
 	//params_Control.add(MODE_EDIT);
 
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
@@ -411,6 +413,7 @@ void ofxSurfingVideoSkip::setup()
 	params_AppSettings.add(SHOW_Presets);
 	params_AppSettings.add(ENABLE_Keys_Player);
 	params_AppSettings.add(bGui_SkipTimers);
+	//params_AppSettings.add(bGui);
 
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	params_AppSettings.add(ENABLE_Keys_Presets);
@@ -644,10 +647,10 @@ void ofxSurfingVideoSkip::update(ofEventArgs & args)
 	updateVideoPLayer();
 
 	//--
-
-#ifdef USE_ofxSurfingMoods
-	moodsSurfer.update();
-#endif
+//
+//#ifdef USE_ofxSurfingMoods
+//	moodsSurfer.update();
+//#endif
 
 	//--
 }
@@ -948,10 +951,10 @@ void ofxSurfingVideoSkip::draw_Gui()
 {
 	draw_ImGui();
 
-#ifdef USE_ofxSurfingMoods
-	moodsSurfer.draw();
-#endif
-
+//#ifdef USE_ofxSurfingMoods
+//	moodsSurfer.draw();
+//#endif
+//
 	// bar controller 
 	draw_VideoControls();
 }
@@ -2722,7 +2725,7 @@ void ofxSurfingVideoSkip::draw_ImGuiPanels()
 
 		// video
 		widgetsManager.Add(bGui_SurfingVideo, SurfingTypes::OFX_IM_TOGGLE_SMALL);
-		widgetsManager.Add(bGui_SkipTimers, SurfingTypes::OFX_IM_TOGGLE_SMALL);
+		//widgetsManager.Add(bGui_SkipTimers, SurfingTypes::OFX_IM_TOGGLE_SMALL);
 
 		//-
 
@@ -2918,7 +2921,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 
 			// skippers
-			widgetsManager.Add(bGui_SkipTimers, SurfingTypes::OFX_IM_TOGGLE_BIG);
+			//widgetsManager.Add(bGui_SkipTimers, SurfingTypes::OFX_IM_TOGGLE_BIG);
+			ofxImGuiSurfing::AddToggleRoundedButton(bGui_SkipTimers);
 
 			ImGui::Dummy(ImVec2(0, 10));
 
