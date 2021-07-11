@@ -5,7 +5,7 @@
         "Auto_Save_Timed": "0",
         "Cycled": "1",
         "Editor": "0",
-        "Extra": "0",
+        "Extra": "1",
         "FLOAT_CLICKER": {
             "Auto_Resize": "0",
             "Extra": "0",
@@ -19,8 +19,8 @@
         },
         "Inner_Clicker": "1",
         "Keys": "1",
-        "Minimize": "1",
+        "Minimize": "0",
         "Parameters": "0",
-        "SURFING_PRESETS": "0"
+        "SURFING_PRESETS": "1"
     }
 }

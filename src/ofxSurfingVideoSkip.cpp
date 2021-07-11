@@ -378,7 +378,7 @@ void ofxSurfingVideoSkip::setup()
 	moodsSurfer.PRESET_B_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_B);
 	moodsSurfer.PRESET_C_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_C);
 
-	moodsSurfer.setTickMode(true);
+	//moodsSurfer.setTickMode(true);
 #endif
 
 	//----
@@ -949,11 +949,7 @@ void ofxSurfingVideoSkip::draw_Gui()
 	draw_ImGui();
 
 #ifdef USE_ofxSurfingMoods
-	//if (SHOW_MoodMachine)
-	{
-		if (moodsSurfer.bGui) moodsSurfer.draw_PreviewWidget();
-		moodsSurfer.draw_ImGui();
-	}
+	moodsSurfer.draw();
 #endif
 
 	// bar controller 
@@ -1621,15 +1617,15 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) //patch change
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
-			}
 		}
+	}
 		else if (name == MODE_LOOP.getName())
 		{
 			if (MODE_LOOP)
 			{
 				player.setPosition(POSITION_Start);
 			}
-		}
+}
 		else if (name == bSET_START.getName() && bSET_START)
 		{
 			bSET_START = false;
@@ -1918,7 +1914,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) //patch change
 			panel_Control->getVisible().set(SHOW_Advanced.get() && bGui_SurfingVideo.get());
 #endif
 		}
-	}
+		}
 }
 
 //--------------------------------------------------------------
@@ -2506,32 +2502,32 @@ void ofxSurfingVideoSkip::setup_ImGui()
 
 	//-
 
-	//widgetsManager.AddWidgetConf(bSET_START, SurfingTypes::IM_BUTTON_SMALL, true, 2);
-	//widgetsManager.AddWidgetConf(bSET_END, SurfingTypes::IM_BUTTON_SMALL, false, 2);
-	//widgetsManager.AddWidgetConf(MODE_LOOP, SurfingTypes::IM_BUTTON_BIG, false, 1);
-	//widgetsManager.AddWidgetConf(loopedBack, SurfingTypes::IM_BUTTON_SMALL, true, 2);
-	//widgetsManager.AddWidgetConf(loopedBack, SurfingTypes::IM_BUTTON_SMALL, false, 2);
+	//widgetsManager.AddWidgetConf(bSET_START, SurfingTypes::OFX_IM_BUTTON_SMALL, true, 2);
+	//widgetsManager.AddWidgetConf(bSET_END, SurfingTypes::OFX_IM_BUTTON_SMALL, false, 2);
+	//widgetsManager.AddWidgetConf(MODE_LOOP, SurfingTypes::OFX_IM_BUTTON_BIG, false, 1);
+	//widgetsManager.AddWidgetConf(loopedBack, SurfingTypes::OFX_IM_BUTTON_SMALL, true, 2);
+	//widgetsManager.AddWidgetConf(loopedBack, SurfingTypes::OFX_IM_BUTTON_SMALL, false, 2);
 
 	//if (bCustom2)
 	//{
-	//	widgetsManager.AddWidgetConf(bEnable, SurfingTypes::IM_TOGGLE_BIG, false, 1, 20);
-	//	widgetsManager.AddWidgetConf(bPrevious, SurfingTypes::IM_BUTTON_SMALL, true, 2);
-	//	widgetsManager.AddWidgetConf(separation, SurfingTypes::IM_STEPPER);
-	//	widgetsManager.AddWidgetConf(speed, SurfingTypes::IM_DRAG, false, 1, 10);
-	//	widgetsManager.AddWidgetConf(shapeType, SurfingTypes::IM_SLIDER);
-	//	widgetsManager.AddWidgetConf(size, SurfingTypes::IM_STEPPER);
-	//	widgetsManager.AddWidgetConf(amount, SurfingTypes::IM_DRAG, false, 1, 10);
-	//	widgetsManager.AddWidgetConf(bMode1, SurfingTypes::IM_TOGGLE_BIG, true, 2);
-	//	widgetsManager.AddWidgetConf(bMode2, SurfingTypes::IM_TOGGLE_BIG, false, 2);
-	//	widgetsManager.AddWidgetConf(bMode3, SurfingTypes::IM_TOGGLE_BIG, true, 2);
-	//	widgetsManager.AddWidgetConf(bMode4, SurfingTypes::IM_TOGGLE_BIG, false, 2);
-	//	//widgetsManager.AddWidgetConf(lineWidth3, SurfingTypes::IM_DRAG); // not works?
+	//	widgetsManager.AddWidgetConf(bEnable, SurfingTypes::OFX_IM_TOGGLE_BIG, false, 1, 20);
+	//	widgetsManager.AddWidgetConf(bPrevious, SurfingTypes::OFX_IM_BUTTON_SMALL, true, 2);
+	//	widgetsManager.AddWidgetConf(separation, SurfingTypes::OFX_IM_STEPPER);
+	//	widgetsManager.AddWidgetConf(speed, SurfingTypes::OFX_IM_DRAG, false, 1, 10);
+	//	widgetsManager.AddWidgetConf(shapeType, SurfingTypes::OFX_IM_SLIDER);
+	//	widgetsManager.AddWidgetConf(size, SurfingTypes::OFX_IM_STEPPER);
+	//	widgetsManager.AddWidgetConf(amount, SurfingTypes::OFX_IM_DRAG, false, 1, 10);
+	//	widgetsManager.AddWidgetConf(bMode1, SurfingTypes::OFX_IM_TOGGLE_BIG, true, 2);
+	//	widgetsManager.AddWidgetConf(bMode2, SurfingTypes::OFX_IM_TOGGLE_BIG, false, 2);
+	//	widgetsManager.AddWidgetConf(bMode3, SurfingTypes::OFX_IM_TOGGLE_BIG, true, 2);
+	//	widgetsManager.AddWidgetConf(bMode4, SurfingTypes::OFX_IM_TOGGLE_BIG, false, 2);
+	//	//widgetsManager.AddWidgetConf(lineWidth3, SurfingTypes::OFX_IM_DRAG); // not works?
 	//	// hide some params from any on-param-group appearance
-	//	widgetsManager.AddWidgetConf(speed3, SurfingTypes::IM_HIDDEN, false, -1, 50);
-	//	widgetsManager.AddWidgetConf(size2, SurfingTypes::IM_HIDDEN, false, -1, 50);
-	//	widgetsManager.AddWidgetConf(bPrevious, SurfingTypes::IM_HIDDEN);
-	//	widgetsManager.AddWidgetConf(bNext, SurfingTypes::IM_HIDDEN);
-	//	widgetsManager.AddWidgetConf(lineWidth, SurfingTypes::IM_HIDDEN);
+	//	widgetsManager.AddWidgetConf(speed3, SurfingTypes::OFX_IM_HIDDEN, false, -1, 50);
+	//	widgetsManager.AddWidgetConf(size2, SurfingTypes::OFX_IM_HIDDEN, false, -1, 50);
+	//	widgetsManager.AddWidgetConf(bPrevious, SurfingTypes::OFX_IM_HIDDEN);
+	//	widgetsManager.AddWidgetConf(bNext, SurfingTypes::OFX_IM_HIDDEN);
+	//	widgetsManager.AddWidgetConf(lineWidth, SurfingTypes::OFX_IM_HIDDEN);
 	//}
 
 	//-
@@ -2587,9 +2583,9 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 				{
 					refreshLayout();
 
-					//widgetsManager.Add(bpmTimer, SurfingTypes::IM_STEPPER);
-					//widgetsManager.Add(bpmTimer, SurfingTypes::IM_DEFAULT);
-					////widgetsManager.Add(bpmDivider, SurfingTypes::IM_DEFAULT);
+					//widgetsManager.Add(bpmTimer, SurfingTypes::OFX_IM_STEPPER);
+					//widgetsManager.Add(bpmTimer, SurfingTypes::OFX_IM_DEFAULT);
+					////widgetsManager.Add(bpmDivider, SurfingTypes::OFX_IM_DEFAULT);
 
 					ofxImGuiSurfing::AddParameter(bpmTimer);
 					ofxImGuiSurfing::AddParameter(bpmDivider);
@@ -2602,7 +2598,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 						bpmTimer *= 2.0f;
 					}
 
-					widgetsManager.Add(TRIG_Reset_Bpm, SurfingTypes::IM_BUTTON_SMALL);
+					widgetsManager.Add(TRIG_Reset_Bpm, SurfingTypes::OFX_IM_BUTTON_SMALL);
 
 					ImGui::TreePop();
 				}
@@ -2613,14 +2609,14 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 			ImGui::Dummy(ImVec2(0, 10));
 
 			// big enablers
-			widgetsManager.Add(ENABLE_TimersSkipRev, SurfingTypes::IM_TOGGLE_BIG);
-			if (ENABLE_TimersSkipRev) 
+			widgetsManager.Add(ENABLE_TimersSkipRev, SurfingTypes::OFX_IM_TOGGLE_BIG);
+			if (ENABLE_TimersSkipRev)
 			{
 				ofxImGuiSurfing::AddBigToggle(MODE_SkipTime);
 				ofxImGuiSurfing::AddBigToggle(MODE_SkipReverse);
 
-				//widgetsManager.Add(MODE_SkipTime, SurfingTypes::IM_TOGGLE_BIG, true, 0);
-				//widgetsManager.Add(MODE_SkipReverse, SurfingTypes::IM_TOGGLE_BIG, false, 0);
+				//widgetsManager.Add(MODE_SkipTime, SurfingTypes::OFX_IM_TOGGLE_BIG, true, 0);
+				//widgetsManager.Add(MODE_SkipReverse, SurfingTypes::OFX_IM_TOGGLE_BIG, false, 0);
 			}
 
 			ImGui::Dummy(ImVec2(0, 2));
@@ -2635,14 +2631,14 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 			{
 				refreshLayout();
 
-				widgetsManager.Add(TRIG_time_Skiper, SurfingTypes::IM_BUTTON_BIG, false, 1, 5);
+				widgetsManager.Add(TRIG_time_Skiper, SurfingTypes::OFX_IM_BUTTON_BIG, false, 1, 5);
 				if (MODE_SkipTime && ENABLE_TimersSkipRev)
 				{
-					//widgetsManager.Add(divBeatSkipper, SurfingTypes::IM_DEFAULT);
+					//widgetsManager.Add(divBeatSkipper, SurfingTypes::OFX_IM_DEFAULT);
 					ofxImGuiSurfing::AddParameter(divBeatSkipper);
 
 					// draw progress bar
-					////widgetsManager.Add(timer_SkipTime, SurfingTypes::IM_DEFAULT);
+					////widgetsManager.Add(timer_SkipTime, SurfingTypes::OFX_IM_DEFAULT);
 					ofxImGuiSurfing::AddProgressBar(timer_SkipTime);
 				}
 
@@ -2659,15 +2655,15 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 			{
 				refreshLayout();
 
-				widgetsManager.Add(TRIG_bReverseSkipper, SurfingTypes::IM_BUTTON_BIG, false, 1, 5);
+				widgetsManager.Add(TRIG_bReverseSkipper, SurfingTypes::OFX_IM_BUTTON_BIG, false, 1, 5);
 
 				if (MODE_SkipReverse && ENABLE_TimersSkipRev)
 				{
-					//widgetsManager.Add(divBeatReverse, SurfingTypes::IM_DEFAULT);
+					//widgetsManager.Add(divBeatReverse, SurfingTypes::OFX_IM_DEFAULT);
 					ofxImGuiSurfing::AddParameter(divBeatReverse);
 
 					// draw progress bar
-					////widgetsManager.Add(timer_SkipRev, SurfingTypes::IM_DEFAULT);
+					////widgetsManager.Add(timer_SkipRev, SurfingTypes::OFX_IM_DEFAULT);
 					ofxImGuiSurfing::AddProgressBar(timer_SkipRev);
 				}
 
@@ -2675,7 +2671,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 			}
 
 			ImGui::Dummy(ImVec2(0, 5));
-			widgetsManager.Add(TRIG_bResetEngine, SurfingTypes::IM_BUTTON_SMALL);
+			widgetsManager.Add(TRIG_bResetEngine, SurfingTypes::OFX_IM_BUTTON_SMALL);
 
 			//--
 
@@ -2725,32 +2721,32 @@ void ofxSurfingVideoSkip::draw_ImGuiPanels()
 		ImGui::Text("PANELS");
 
 		// video
-		widgetsManager.Add(bGui_SurfingVideo, SurfingTypes::IM_TOGGLE_SMALL);
-		widgetsManager.Add(bGui_SkipTimers, SurfingTypes::IM_TOGGLE_SMALL);
+		widgetsManager.Add(bGui_SurfingVideo, SurfingTypes::OFX_IM_TOGGLE_SMALL);
+		widgetsManager.Add(bGui_SkipTimers, SurfingTypes::OFX_IM_TOGGLE_SMALL);
 
 		//-
 
 		// midi
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-		widgetsManager.Add(mMidiParams.bGui, SurfingTypes::IM_TOGGLE_SMALL);
+		widgetsManager.Add(mMidiParams.bGui, SurfingTypes::OFX_IM_TOGGLE_SMALL);
 #endif
 		//-
 
 		// beat clock
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
-		widgetsManager.Add(beatClock.bGui, SurfingTypes::IM_TOGGLE_SMALL);
+		widgetsManager.Add(beatClock.bGui, SurfingTypes::OFX_IM_TOGGLE_SMALL);
 #endif
 		//-
 
 		// moods
 #ifdef USE_ofxSurfingMoods 
-		widgetsManager.Add(moodsSurfer.bGui, SurfingTypes::IM_TOGGLE_SMALL);
+		widgetsManager.Add(moodsSurfer.bGui, SurfingTypes::OFX_IM_TOGGLE_SMALL);
 #endif
 		//-
 
 		// presets
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
-		widgetsManager.Add(presets.bGui, SurfingTypes::IM_TOGGLE_SMALL);
+		widgetsManager.Add(presets.bGui, SurfingTypes::OFX_IM_TOGGLE_SMALL);
 #endif
 	}
 	guiManager.endWindow();
@@ -2814,8 +2810,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			ImGui::Dummy(ImVec2(0, 2));
 
 			// play
-			widgetsManager.Add(PLAYING, SurfingTypes::IM_TOGGLE_BIG);
-			widgetsManager.Add(MODE_EDIT, SurfingTypes::IM_TOGGLE_BIG);
+			widgetsManager.Add(PLAYING, SurfingTypes::OFX_IM_TOGGLE_BIG);
+			widgetsManager.Add(MODE_EDIT, SurfingTypes::OFX_IM_TOGGLE_BIG);
 
 			ImGui::Dummy(ImVec2(0, 10));
 
@@ -2826,14 +2822,14 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 #endif
 
 			// mark clip start/end
-			widgetsManager.Add(bSET_START, SurfingTypes::IM_BUTTON_BIG, true, 2);
-			widgetsManager.Add(bSET_END, SurfingTypes::IM_BUTTON_BIG, false, 2);
+			widgetsManager.Add(bSET_START, SurfingTypes::OFX_IM_BUTTON_BIG, true, 2);
+			widgetsManager.Add(bSET_END, SurfingTypes::OFX_IM_BUTTON_BIG, false, 2);
 			ImGui::Dummy(ImVec2(0, 2));
 
 			ImGui::Text(("Time " + videoTIME.get()).data());
 
 			// position
-			widgetsManager.Add(POSITION, SurfingTypes::IM_SLIDER);
+			widgetsManager.Add(POSITION, SurfingTypes::OFX_IM_SLIDER);
 			// range
 			ofxImGuiSurfing::AddRangeParam("CLIP", POSITION_Start, POSITION_End, "%.3f      %.3f", 1.0f);
 
@@ -2866,9 +2862,9 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					ImGui::PopButtonRepeat();
 				}
 
-				widgetsManager.Add(POSITION, SurfingTypes::IM_STEPPER);
-				widgetsManager.Add(POSITION_Start, SurfingTypes::IM_STEPPER);
-				widgetsManager.Add(POSITION_End, SurfingTypes::IM_STEPPER);
+				widgetsManager.Add(POSITION, SurfingTypes::OFX_IM_STEPPER);
+				widgetsManager.Add(POSITION_Start, SurfingTypes::OFX_IM_STEPPER);
+				widgetsManager.Add(POSITION_End, SurfingTypes::OFX_IM_STEPPER);
 
 				ImGui::Unindent();
 			}
@@ -2880,8 +2876,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			ImGui::Dummy(ImVec2(0, 2));
 
 			// speed
-			//widgetsManager.Add(speed, SurfingTypes::IM_SLIDER);
-			widgetsManager.Add(speedNorm, SurfingTypes::IM_SLIDER);
+			//widgetsManager.Add(speed, SurfingTypes::OFX_IM_SLIDER);
+			widgetsManager.Add(speedNorm, SurfingTypes::OFX_IM_SLIDER);
 
 			//{
 			//	// knob1
@@ -2903,14 +2899,14 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 			//-
 
-			widgetsManager.Add(speed_Reset, SurfingTypes::IM_BUTTON_SMALL);
+			widgetsManager.Add(speed_Reset, SurfingTypes::OFX_IM_BUTTON_SMALL);
 
 			ImGui::Dummy(ImVec2(0, 10));
 
 			// loop
-			widgetsManager.Add(MODE_LOOP, SurfingTypes::IM_TOGGLE_BIG, false, 1);
-			widgetsManager.Add(loopedBack, SurfingTypes::IM_TOGGLE_SMALL, true, 2);
-			widgetsManager.Add(reverseSpeed, SurfingTypes::IM_TOGGLE_SMALL, false, 2);
+			widgetsManager.Add(MODE_LOOP, SurfingTypes::OFX_IM_TOGGLE_BIG, false, 1);
+			widgetsManager.Add(loopedBack, SurfingTypes::OFX_IM_TOGGLE_SMALL, true, 2);
+			widgetsManager.Add(reverseSpeed, SurfingTypes::OFX_IM_TOGGLE_SMALL, false, 2);
 
 			ImGui::Dummy(ImVec2(0, 10));
 
@@ -2922,7 +2918,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 
 			// skippers
-			widgetsManager.Add(bGui_SkipTimers, SurfingTypes::IM_TOGGLE_BIG);
+			widgetsManager.Add(bGui_SkipTimers, SurfingTypes::OFX_IM_TOGGLE_BIG);
 
 			ImGui::Dummy(ImVec2(0, 10));
 
@@ -2937,7 +2933,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				ofxImGuiSurfing::AddToggleRoundedButton(ENABLE_AutoHide);
 				ofxImGuiSurfing::AddToggleRoundedButton(guiManager.bAdvanced);
 
-				//widgetsManager.Add(guiManager.bExtra, SurfingTypes::IM_TOGGLE_SMALL);
+				//widgetsManager.Add(guiManager.bExtra, SurfingTypes::OFX_IM_TOGGLE_SMALL);
 				//ofxImGuiSurfing::AddToggleRoundedButton(guiManager.bExtra);
 				//guiManager.bAdvanced = guiManager.bExtra;
 
