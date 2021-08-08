@@ -3,7 +3,7 @@
 	<STAY_COUNT>4</STAY_COUNT>
 	<BPM>174.41</BPM>
 	<BARS_LEN>1</BARS_LEN>
-	<MOODS_SURFING>0</MOODS_SURFING>
+	<MOODS_SURFING>1</MOODS_SURFING>
 	<Moods_Advanced>0</Moods_Advanced>
 	<Manual_Slider>1</Manual_Slider>
 	<Slider_Header>0</Slider_Header>

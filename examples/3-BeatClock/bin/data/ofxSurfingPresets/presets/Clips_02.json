@@ -5,7 +5,7 @@
         "ENABLE_TIMERS": "0",
         "END": "0.2173",
         "LOOPED_BACK": "1",
-        "REVERSE": "1",
+        "REVERSE": "0",
         "SPEED": "0.264",
         "START": "0.165612",
         "T_REV": "2",

@@ -11,17 +11,21 @@
 
 	TODO:
 
-	+ fix layout preset doisabled by default. bc multi instance must be simple
+	+ fix layout preset disabled by default. bc multi instance must be simpler.
 	+ fix docking
-	+ 
+	+ layout panels not drawing 
+
+	+ dual window. external output.
+	+ mini preview.
 
 	+ add slow skip timers
 	+ add jumpt bpm timed stutter
-	+ handle different videos/projects:
-	video file & presets files path
-	duplicate project, undo
 
-	+ add locker for duration locked to bpm ? 
+	+ handle different videos/projects:
+		video file & presets files path
+		duplicate project, undo
+
+	+ add locker for duration locked (opened/without ending) to bpm ? 
 	could be better to link bpm to skippers only, not to loop duration. easy to user
 
 */

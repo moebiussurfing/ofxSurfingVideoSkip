@@ -3,8 +3,8 @@
 	<path>ofxBeatClock/settings/</path>
 	<x>225</x>
 	<y>325</y>
-	<width>35</width>
-	<height>70</height>
+	<width>208</width>
+	<height>362</height>
 	<name>_BeatClock_Gui</name>
 	<isEditing>0</isEditing>
 </interactiveRect>
