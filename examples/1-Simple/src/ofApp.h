@@ -9,6 +9,16 @@
 #include "ofxWindowApp.h"
 #endif
 
+/*
+
+About this example '1-Simple':
+Go to ofxSurfingVideoSkip.h and
+comment all the 'OPTIONAL DEFINES'
+to disable all the optional add-ons!
+
+*/
+
+
 class ofApp : public ofBaseApp {
 
 public:

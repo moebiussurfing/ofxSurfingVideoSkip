@@ -1,3 +1,4 @@
+ofxAbletonLink
 ofxAnimatable
 ofxBeatClock
 ofxGui

@@ -27,17 +27,13 @@
 //
 //	OPTIONAL DEFINES
 
-#define USE_ofxSurfingMoods // -> mood machine
-
-#define USE_OF_BEAT_CLOCK__VIDEO_SKIP // -> beat clock
-
-#define USE_ofxSurfingPresets__VIDEO_SKIP // -> simple presets
+//#define USE_ofxSurfingMoods // -> mood machine
+//#define USE_OF_BEAT_CLOCK__VIDEO_SKIP // -> beat clock
+// presets. two alternatives:
+//#define USE_ofxSurfingPresets__VIDEO_SKIP // -> simple presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP // -> power presets
-
 //#define USE_MIDI_PARAMS__VIDEO_SKIP // -> midi input to control gui and switch presets
-
 //#define USE_ofxChannelFx // fx
-
 //#define USE_ofxGuiExtended // -> deprectaed
 
 //----------------------------------------------
@@ -112,7 +108,13 @@ private:
 public:
 
 	// gui
+
 	ofxSurfing_ImGui_Manager guiManager;
+
+	void drawMenu();
+	bool bDockingReset = false;
+	void dockingReset();
+	//void dockingPopulate();
 
 	void setup_ImGui();
 
@@ -156,10 +158,13 @@ private:
 	ofxChannelFx channelFx;
 #endif
 
+	//--
+
 public:
 
 	//--------------------------------------------------------------
-	ofxSurfingVideoSkip() {
+	ofxSurfingVideoSkip() 
+	{
 		//ofAddListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
 		ofAddListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
 		ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
@@ -637,7 +642,7 @@ public:
 	float _h = WIDGETS_HEIGHT;
 	void refreshLayout() {
 		// update sizes to current window shape
-		widgetsManager.refreshPanelShape();
+		guiManager.refresh();
 		_w100 = ofxImGuiSurfing::getWidgetsWidth(1);
 		_w50 = ofxImGuiSurfing::getWidgetsWidth(2);
 	}
