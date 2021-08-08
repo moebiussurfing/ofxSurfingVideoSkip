@@ -500,7 +500,7 @@ void ofxSurfingVideoSkip::setup()
 	beatClock.setup();
 
 	// callback to receive BeatTicks
-	listenerBeat = beatClock.BeatTick_TRIG.newListener([&](bool&) {this->Changed_BeatTick(); });
+	listenerBeat = beatClock.BeatTick.newListener([&](bool&) {this->Changed_BeatTick(); });
 	listenerBpm = beatClock.BPM_Global.newListener([&](float&) {this->Changed_BeatBpm(); });
 #endif
 
@@ -2759,38 +2759,44 @@ void ofxSurfingVideoSkip::draw_ImGuiPanels()
 
 		ImGui::Text("PANELS");
 
+		//-
+
 		// video
-		guiManager.Add(bGui_SurfingVideo, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL);
+		guiManager.Add(bGui_SurfingVideo, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
 
-		guiManager.Add(guiManager.bGui_MainWindow, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL);
-		//guiManager.Add(guiManager.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL);
-
-		//guiManager.Add(bGui_SkipTimers, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL);
+		//guiManager.Add(bGui_SkipTimers, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
 
 		//-
 
 		// midi
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-		guiManager.Add(mMidiParams.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL);
+		guiManager.Add(mMidiParams.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
 #endif
 		//-
 
 		// beat clock
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
-		guiManager.Add(beatClock.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL);
+		guiManager.Add(beatClock.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
 #endif
 		//-
 
 		// moods
 #ifdef USE_ofxSurfingMoods 
-		guiManager.Add(moodsSurfer.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL);
+		guiManager.Add(moodsSurfer.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
 #endif
 		//-
 
 		// presets
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
-		guiManager.Add(presets.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL);
+		guiManager.Add(presets.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
 #endif
+		//-
+
+		ImGui::Spacing();
+
+		// layout
+		guiManager.Add(guiManager.bGui_MainWindow, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
+		//guiManager.Add(guiManager.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
 	}
 	guiManager.endWindow();
 }
@@ -3059,9 +3065,10 @@ void ofxSurfingVideoSkip::setPathOpenDialog()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_BeatTick() // callback to receive BeatTicks
 {
-	if (beatClock.BeatTick_TRIG)
+	if (beatClock.BeatTick)
 	{
-		ofLogNotice(__FUNCTION__) << "BeatTick ! #" << beatClock.Beat_current;
+		ofLogNotice(__FUNCTION__) << "BeatTick ! #" << beatClock.getBeat();
+		//ofLogNotice(__FUNCTION__) << "BeatTick ! #" << beatClock.Beat_current;
 
 #ifdef USE_ofxSurfingMoods
 		moodsSurfer.doBeatTick();
@@ -3079,8 +3086,6 @@ void ofxSurfingVideoSkip::Changed_BeatBpm()
 #endif
 }
 #endif
-
-
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::dockingReset() // not works on runtime..?

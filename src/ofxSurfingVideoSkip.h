@@ -11,6 +11,10 @@
 
 	TODO:
 
+	+ fix layout preset doisabled by default. bc multi instance must be simple
+	+ fix docking
+	+ 
+
 	+ add slow skip timers
 	+ add jumpt bpm timed stutter
 	+ handle different videos/projects:
@@ -27,12 +31,16 @@
 //
 //	OPTIONAL DEFINES
 
-//#define USE_ofxSurfingMoods // -> mood machine
-//#define USE_OF_BEAT_CLOCK__VIDEO_SKIP // -> beat clock
+#define USE_ofxSurfingMoods // -> mood machine
+
+#define USE_OF_BEAT_CLOCK__VIDEO_SKIP // -> beat clock
+
 // presets. two alternatives:
-//#define USE_ofxSurfingPresets__VIDEO_SKIP // -> simple presets
-//#define USE_ofxPresetsManager__VIDEO_SKIP // -> power presets
+#define USE_ofxSurfingPresets__VIDEO_SKIP // -> A. simple presets
+//#define USE_ofxPresetsManager__VIDEO_SKIP // -> B. power presets
+
 //#define USE_MIDI_PARAMS__VIDEO_SKIP // -> midi input to control gui and switch presets
+
 //#define USE_ofxChannelFx // fx
 //#define USE_ofxGuiExtended // -> deprectaed
 
