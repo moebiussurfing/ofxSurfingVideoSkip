@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path>ofxSurfingMoods/ofxSurfingMoods_</path>
-	<x>97</x>
-	<y>-26</y>
+	<x>10</x>
+	<y>10</y>
 	<width>1896</width>
-	<height>57</height>
+	<height>20</height>
 	<name>_PreviewRect</name>
-	<isEditing>1</isEditing>
+	<isEditing>0</isEditing>
 </interactiveRect>

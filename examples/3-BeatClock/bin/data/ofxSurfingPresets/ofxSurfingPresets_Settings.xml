@@ -1,18 +1,18 @@
 {
     "AppSettings": {
-        "Auto_Resize": "0",
+        "Auto_Resize": "1",
         "Auto_Save": "1",
         "Auto_Save_Timed": "0",
         "Cycled": "1",
-        "Editor": "0",
-        "Extra": "1",
+        "Editor": "1",
+        "Extra": "0",
         "FLOAT_CLICKER": {
-            "Auto_Resize": "0",
+            "Auto_Resize": "1",
             "Extra": "0",
-            "Max_Buttons": "3",
+            "Max_Buttons": "1",
             "Responsive": "1"
         },
-        "Float_Clicker": "1",
+        "Float_Clicker": "0",
         "INNER_CLICKER": {
             "Amt_Buttons": "3",
             "Responsive": "1"

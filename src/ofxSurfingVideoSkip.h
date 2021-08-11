@@ -6,10 +6,13 @@
 
 #include "ofMain.h"
 
-
 /*
 
 	TODO:
+
+	+ handle different videos/projects:
+		video file & presets files path
+		duplicate project, undo
 
 	+ fix layout preset disabled by default. bc multi instance must be simpler.
 	+ fix docking
@@ -19,11 +22,7 @@
 	+ mini preview.
 
 	+ add slow skip timers
-	+ add jumpt bpm timed stutter
-
-	+ handle different videos/projects:
-		video file & presets files path
-		duplicate project, undo
+	+ add new fx skip-engine jump bpm timed shutter
 
 	+ add locker for duration locked (opened/without ending) to bpm ? 
 	could be better to link bpm to skippers only, not to loop duration. easy to user
@@ -83,11 +82,6 @@
 #include "ofxPresetsManager.h"
 #endif
 
-//#define USE_ofxGui // not implemented
-//#ifdef USE_ofxGui
-//#include "ofxGui.h"
-//#endif
-
 class ofxSurfingVideoSkip
 {
 	//-
@@ -123,7 +117,7 @@ public:
 
 	ofxSurfing_ImGui_Manager guiManager;
 
-	void drawMenu();
+	void draw_ImGuiMenu();
 	bool bDockingReset = false;
 	void dockingReset();
 	//void dockingPopulate();

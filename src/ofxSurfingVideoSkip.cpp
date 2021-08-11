@@ -357,6 +357,8 @@ void ofxSurfingVideoSkip::setup()
 	panel_Control = gui.addPanel(params_Control);
 #endif
 
+	params_Control.add(videoName);
+
 	//--
 
 	// channel fx
@@ -544,6 +546,12 @@ void ofxSurfingVideoSkip::startup()
 
 		loadGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
 
+		//-
+
+#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+		std::string _path = ofToString("ofxSurfingPresets/" + videoName.get());
+		presets.setPathPresets(_path);
+#endif
 		//-
 
 #ifdef USE_ofxGuiExtended
@@ -1009,7 +1017,7 @@ void ofxSurfingVideoSkip::setGuiVisible(bool b)
 	else {
 		channelFx.setVisibleGui(false);
 		//channelFx.setVisible_PresetClicker(false);
-	}
+}
 #endif
 
 	//-
@@ -1283,12 +1291,15 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 		ofLogNotice(__FUNCTION__) << "mod_SHIFT: " << (mod_SHIFT ? "ON" : "OFF");
 	}
 
+	guiManager.keyPressed(key);
+
+
 	// ofxChannelFx
 #ifdef USE_ofxChannelFx
 	if (ENABLE_Keys_Fx)
 	{
 		channelFx.keyPressed(key);
-	}
+}
 #endif
 
 	//----
@@ -1621,8 +1632,8 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
-			}
 		}
+	}
 		else if (name == MODE_LOOP.getName())
 		{
 			if (MODE_LOOP)
@@ -1843,7 +1854,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 			//ofxChannelFx
 			channelFx.setVisibleGui(b);
 			//channelFx.setVisible_PresetClicker(b);
-		}
+}
 #endif
 		//-
 
@@ -1854,6 +1865,16 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 			presetsManager.setVisible_PresetClicker(SHOW_Presets);
 		}
 #endif
+		//-
+
+#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+		else if (name == videoName.getName())
+		{
+			std::string _path = ofToString("ofxSurfingPresets/" + videoName.get());
+			presets.setPathPresets(_path);
+		}
+#endif
+
 		//-
 
 		// keys
@@ -2102,7 +2123,7 @@ void ofxSurfingVideoSkip::draw(ofEventArgs & args)
 		mMidiParams.draw();
 #endif
 		draw_Gui();
-	}
+}
 }
 
 //--------------------------------------------------------------
@@ -2425,7 +2446,7 @@ void ofxSurfingVideoSkip::gui_CustomizeApply()
 			->getGroup(_param_Clock.getName())
 			->getFloatSlider(bpmTimer.getName()))
 			->setConfig(jConf_BigBut2);
-	}
+}
 }
 #endif
 
@@ -2462,15 +2483,15 @@ void ofxSurfingVideoSkip::exit()
 	ofRemoveListener(params_Engine.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Params);
 	ofRemoveListener(params_Control.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Params);
 
-	//disable for the momment
+	// disable for the momment
 	//ofRemoveListener(params_Control_VideoFX.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_params_VideoFX);
 
-	////auto hide callback
+	//// auto hide callback
 	//ENABLE_drawVideoControlBar.removeListener(this, &ofxSurfingVideoSkip::Changed_draw_Autohide);
 
 	//-
 
-	//presetsManager
+	// presetsManager
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	presetsManager.DONE_save.removeListener(this, &ofxSurfingVideoSkip::Changed_DONE_save);
 	presetsManager.DONE_load.removeListener(this, &ofxSurfingVideoSkip::Changed_DONE_load);
@@ -2480,7 +2501,7 @@ void ofxSurfingVideoSkip::exit()
 	//-
 
 #ifdef USE_ofxSurfingMoods
-	//listener for inside class moodsSurfer
+	// listener for inside class moodsSurfer
 	moodsSurfer.RANGE_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_RANGE);
 	moodsSurfer.TARGET_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_TARGET);
 	moodsSurfer.PRESET_A_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_A);
@@ -2505,27 +2526,31 @@ void ofxSurfingVideoSkip::setup_ImGui()
 
 
 	// -> required to allow custom docking layout. 
-// instead of the default centralized.
+	// instead of the default centralized.
 	guiManager.setAutoSaveSettings(true);
 	guiManager.setImGuiDocking(true);
-	guiManager.setImGuiDockingModeCentered(false);
+	guiManager.setImGuiDockingModeCentered(true);
 	guiManager.setImGuiAutodraw(true);
+
+	//-
+
+	// customize default labels
+	guiManager.setLabelLayoutPanels("SURFING_VIDEO");
+	//guiManager.setLabelLayoutMainWindow("Layout Manager");
+	//guiManager.bGui_LayoutsManagerWindow.setName("Layout Manager");
+
 	guiManager.setup();
 
-	guiManager.bGui_MainWindow.setName("Layout Manager");
+	//-
 
 	// -> layouts presets
 	// this bool toggles will control the show of the added window
 	// and will be added too to layout presets engine
-;
+	;
 	guiManager.addWindow(bGui_SurfingVideo);
 
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
 	guiManager.addWindow(mMidiParams.bGui);
-#endif
-
-#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
-	guiManager.addWindow(beatClock.bGui);
 #endif
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
@@ -2534,6 +2559,10 @@ void ofxSurfingVideoSkip::setup_ImGui()
 
 #ifdef USE_ofxSurfingMoods 
 	guiManager.addWindow(moodsSurfer.bGui);
+#endif
+
+#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
+	guiManager.addWindow(beatClock.bGui);
 #endif
 
 	// -> initiates when adding finished
@@ -2585,7 +2614,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 
 	// widgets sizes
 
-	static ofParameter<bool> _bAutoResize{ "Auto Resize",false };
+	static ofParameter<bool> _bAutoResize{ "Auto Resize", true };
 
 	//-
 
@@ -2649,7 +2678,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 
 			// big enablers
 			guiManager.Add(ENABLE_TimersSkipRev, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
-			if (ENABLE_TimersSkipRev)
+			//if (ENABLE_TimersSkipRev)
 			{
 				ofxImGuiSurfing::AddBigToggle(MODE_SkipTime);
 				ofxImGuiSurfing::AddBigToggle(MODE_SkipReverse);
@@ -2731,6 +2760,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGuiPanels()
 {
+	/*
 	// panels sizes
 	float xx = 10;
 	float yy = 10;
@@ -2781,7 +2811,7 @@ void ofxSurfingVideoSkip::draw_ImGuiPanels()
 		//-
 
 		// moods
-#ifdef USE_ofxSurfingMoods 
+#ifdef USE_ofxSurfingMoods
 		guiManager.Add(moodsSurfer.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
 #endif
 		//-
@@ -2795,10 +2825,11 @@ void ofxSurfingVideoSkip::draw_ImGuiPanels()
 		ImGui::Spacing();
 
 		// layout
-		guiManager.Add(guiManager.bGui_MainWindow, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
+		guiManager.Add(guiManager.bGui_LayoutsManagerWindow, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL);
 		//guiManager.Add(guiManager.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
 	}
 	guiManager.endWindow();
+	*/
 }
 
 //--------------------------------------------------------------
@@ -3005,32 +3036,37 @@ void ofxSurfingVideoSkip::draw_ImGui()
 {
 	if (!bGui) return;
 
-	//guiManager.beginDocking();
-	//{
-	//	//dockingPopulate(); // -> initialize and "bypass" layout presets system if required
-
-	//	//--
-
-	//	//if (bDockingReset)
-	//	//{
-	//	//	bDockingReset = false;
-
-	//	//	dockingReset();
-	//	//}
-
-	//	//--
-
-	//	//if (guiManager.bGui_Menu) drawMenu();
-	//}
-	//guiManager.endDocking();
-
 	//-
 
 	guiManager.begin();
 	{
-		draw_ImGuiPanels();
+		//draw_ImGuiPanels(); // -> moved to layout manager
+
 		if (bGui_SurfingVideo) draw_ImGuiControls();
-		if (bGui_SkipTimers) draw_ImGuiSkipTimers();
+
+		if (bGui_SkipTimers && bGui_SurfingVideo) draw_ImGuiSkipTimers();
+		//if (bGui_SkipTimers) draw_ImGuiSkipTimers();
+
+		//--
+
+		guiManager.beginDocking();
+		{
+			//dockingPopulate(); // -> initialize and "bypass" layout presets system if required
+
+			//--
+
+			//if (bDockingReset)
+			//{
+			//	bDockingReset = false;
+
+			//	dockingReset();
+			//}
+
+			//--
+
+			//if (guiManager.bGui_Menu) draw_ImGuiMenu();
+		}
+		guiManager.endDocking();
 	}
 	guiManager.end();
 }
@@ -3038,7 +3074,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::setPathOpenDialog()
 {
-	ofLogNotice(__FUNCTION__) << " SET PRESETS PATH";
+	ofLogNotice(__FUNCTION__) << "Set presets path";
 
 	// Open the Open File Dialog
 	std::string str = "Select vdieo file. Must be enconded in HAP codec!\n";
@@ -3065,10 +3101,9 @@ void ofxSurfingVideoSkip::setPathOpenDialog()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_BeatTick() // callback to receive BeatTicks
 {
-	if (beatClock.BeatTick)
+	//if (beatClock.BeatTick)
 	{
-		ofLogNotice(__FUNCTION__) << "BeatTick ! #" << beatClock.getBeat();
-		//ofLogNotice(__FUNCTION__) << "BeatTick ! #" << beatClock.Beat_current;
+		ofLogNotice(__FUNCTION__) << "Beat #" << beatClock.getBeat();
 
 #ifdef USE_ofxSurfingMoods
 		moodsSurfer.doBeatTick();
@@ -3079,10 +3114,12 @@ void ofxSurfingVideoSkip::Changed_BeatTick() // callback to receive BeatTicks
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_BeatBpm()
 {
-	ofLogNotice(__FUNCTION__) << "Bpm " << beatClock.BPM_Global;
+	ofLogNotice(__FUNCTION__) << "Bpm " << beatClock.getBpm();
+
+	bpmTimer.set(beatClock.getBpm());
 
 #ifdef USE_ofxSurfingMoods
-	moodsSurfer.setBpm(beatClock.BPM_Global);
+	moodsSurfer.setBpm(beatClock.getBpm());
 #endif
 }
 #endif
@@ -3124,14 +3161,14 @@ void ofxSurfingVideoSkip::dockingReset() // not works on runtime..?
 
 	//ImGui::DockBuilderDockWindow("Window 0", dock_id_right);
 	//ImGui::DockBuilderDockWindow("Main Window", dock_id_left);
-	//ImGui::DockBuilderDockWindow("Layouts", dock_id_left);
+	//ImGui::DockBuilderDockWindow("Layouts Presets", dock_id_left);
 	//ImGui::DockBuilderDockWindow("Panels", dock_id_top);
 
 	ImGui::DockBuilderFinish(dockspace_id);
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::drawMenu()
+void ofxSurfingVideoSkip::draw_ImGuiMenu()
 {
 	static bool opt_fullscreen = true;
 	static bool opt_padding = false;
