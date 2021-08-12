@@ -3,12 +3,12 @@
         "A_MODE_SKIP": "0",
         "B_MODE_REV": "0",
         "ENABLE_TIMERS": "0",
-        "END": "0.140174",
+        "END": "0.323496",
         "LOOPED_BACK": "1",
         "REVERSE": "1",
-        "SPEED": "0.0600299",
-        "START": "0.140019",
-        "T_REV": "2",
-        "T_SKIP": "6"
+        "SPEED": "0.253883",
+        "START": "0.169073",
+        "T_REV": "7",
+        "T_SKIP": "3"
     }
 }

@@ -38,11 +38,11 @@
 
 #define USE_OF_BEAT_CLOCK__VIDEO_SKIP // -> Beat clock
 
-// Presets. two alternatives:
+// Presets. Two alternatives:
 #define USE_ofxSurfingPresets__VIDEO_SKIP // -> A. simple presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP // -> B. power presets
 
-//#define USE_MIDI_PARAMS__VIDEO_SKIP // -> MIDI input to control gui and switch presets
+#define USE_MIDI_PARAMS__VIDEO_SKIP // -> MIDI input to control gui and switch presets
 
 //#define USE_ofxChannelFx // fx
 //#define USE_ofxGuiExtended // -> deprectaed
