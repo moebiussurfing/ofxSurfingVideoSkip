@@ -2570,12 +2570,12 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	// and will be added too to layout presets engine
 	guiManager.addWindow(bGui_SurfingVideo);
 
-#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-	guiManager.addWindow(mMidiParams.bGui);
-#endif
-
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 	guiManager.addWindow(presets.bGui);
+#endif
+
+#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
+	guiManager.addWindow(mMidiParams.bGui);
 #endif
 
 #ifdef USE_ofxSurfingMoods 
@@ -2833,18 +2833,22 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				ImGui::TreePop();
 			}
 
-			ImGui::Dummy(ImVec2(0, 2));
+			//ImGui::Dummy(ImVec2(0, 2));
+			ImGui::Spacing();
 
 			// play
 			guiManager.Add(PLAYING, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
 			guiManager.Add(MODE_EDIT, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
+			
+			ofxImGuiSurfing::AddToggleRoundedButton(bGui_SkipTimers);
 
-			ImGui::Dummy(ImVec2(0, 10));
+			//ImGui::Dummy(ImVec2(0, 10));
+			ImGui::Spacing();
 
 			// preset clicker
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 			presets.draw_ImGui_MiniClicker();
-			ImGui::Dummy(ImVec2(0, 2));
+			//ImGui::Dummy(ImVec2(0, 2));
 #endif
 
 			// mark clip start/end
@@ -2859,7 +2863,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			// range
 			ofxImGuiSurfing::AddRangeParam("CLIP", POSITION_Start, POSITION_End, "%.3f      %.3f", 1.0f);
 
-			ImGui::Dummy(ImVec2(0, 5));
+			//ImGui::Dummy(ImVec2(0, 5));
+			ImGui::Spacing();
 
 			// start/finish
 			static bool bFineTune = false;
@@ -2899,7 +2904,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 			//--
 
-			ImGui::Dummy(ImVec2(0, 2));
+			//ImGui::Dummy(ImVec2(0, 2));
+			//ImGui::Spacing();
 
 			// speed
 			//guiManager.Add(speed, SurfingImGuiTypes::OFX_IM_SLIDER);
@@ -2927,14 +2933,16 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 			guiManager.Add(speed_Reset, SurfingImGuiTypes::OFX_IM_BUTTON_SMALL);
 
-			ImGui::Dummy(ImVec2(0, 10));
+			//ImGui::Dummy(ImVec2(0, 10));
+			//ImGui::Spacing();
 
 			// loop
 			guiManager.Add(MODE_LOOP, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG, false, 1);
 			guiManager.Add(loopedBack, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL, true, 2);
 			guiManager.Add(reverseSpeed, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL, false, 2);
 
-			ImGui::Dummy(ImVec2(0, 10));
+			//ImGui::Dummy(ImVec2(0, 10));
+			//ImGui::Spacing();
 
 			//-
 
@@ -2945,9 +2953,10 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 			// skippers
 			//guiManager.Add(bGui_SkipTimers, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
-			ofxImGuiSurfing::AddToggleRoundedButton(bGui_SkipTimers);
+			//ofxImGuiSurfing::AddToggleRoundedButton(bGui_SkipTimers);
 
-			ImGui::Dummy(ImVec2(0, 10));
+			//ImGui::Dummy(ImVec2(0, 10));
+			//ImGui::Spacing();
 
 			//--
 
@@ -2963,6 +2972,18 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				//guiManager.Add(guiManager.bExtra, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL);
 				//ofxImGuiSurfing::AddToggleRoundedButton(guiManager.bExtra);
 				//guiManager.bAdvanced = guiManager.bExtra;
+
+				//-
+
+				//TODO:
+#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
+				static bool bPopulateMidiToggles = false;
+				if (ofxImGuiSurfing::ToggleRoundedButton("Populate Midi", &bPopulateMidiToggles))
+				{
+					mMidiParams.add(presets.getParametersSelectorToggles());
+				}
+#endif
+				//-
 
 				// extra panel
 				//if (guiManager.bExtra) 

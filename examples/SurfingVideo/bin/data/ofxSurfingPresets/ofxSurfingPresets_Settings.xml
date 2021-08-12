@@ -4,7 +4,6 @@
         "Auto_Save": "1",
         "Auto_Save_Timed": "0",
         "Cycled": "1",
-        "Editor": "1",
         "Extra": "0",
         "FLOAT_CLICKER": {
             "Auto_Resize": "1",
@@ -12,15 +11,16 @@
             "Max_Buttons": "3",
             "Responsive": "1"
         },
-        "Float_Clicker": "0",
+        "Float_Clicker": "1",
         "INNER_CLICKER": {
             "Amt_Buttons": "3",
             "Responsive": "1"
         },
         "Inner_Clicker": "0",
         "Keys": "0",
-        "Minimize": "0",
-        "Parameters": "0",
-        "SURFING_PRESETS": "1"
+        "Minimize": "1",
+        "Parameters": "1",
+        "Presets_Editor": "1",
+        "SURFING_PRESETS": "0"
     }
 }

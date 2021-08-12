@@ -1,6 +1,7 @@
 {
     "Layout_Presets": {
         "BEAT_CLOCK": "1",
+        "MIDI_PARAMS": "0",
         "MOODS_SURFING": "1",
         "Menu": "0",
         "SKIP_PLAYER": "0",

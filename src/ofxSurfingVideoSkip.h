@@ -10,23 +10,20 @@
 
 	TODO:
 
-	+ handle different videos/projects:
-		video file & presets files path
-		duplicate project, undo
-
 	+ mini preview.
 	+ dual window. external output.
 
-	+ fix layout preset disabled by default. bc multi instance must be simpler.
+	+ popoulate midi notes for available presets
+		or make an engine to centralize all midi stuff for different modules.
+
 	+ fix docking
-	+ layout panels not drawing 
 
 	+ add slow skip timers
 	+ add new fx skip-engine jump bpm timed shutter
 
 	+ add locker for duration locked (opened/without ending) to bpm ? 
-	could be better to link bpm to skippers only, not to loop duration. easy to user
-
+		+ could be better to link bpm to skippers only, not to loop duration. easy to user
+		+ add control to move the loop clip with same duration
 */
 
 

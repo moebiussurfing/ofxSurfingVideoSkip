@@ -1,7 +1,7 @@
 {
     "AppSettings": {
         "LayoutSettings": {
-            "App_Layout": "1",
+            "App_Layout": "-1",
             "Auto_Save_Layout": "1",
             "Forced": "0",
             "FreeStore": "1",
@@ -20,7 +20,7 @@
         "Rect_Panels": {
             "rect_Manager": "184, 162, 0, 160, 412",
             "rect_Panels": "0, 0, 0, 1916, 100",
-            "rect_Presets": "6, 163, 0, 160, 283"
+            "rect_Presets": "12, 131, 0, 160, 283"
         }
     }
 }
