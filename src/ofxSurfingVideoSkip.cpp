@@ -493,8 +493,18 @@ void ofxSurfingVideoSkip::setup()
 	mMidiParams.connect();
 	mMidiParams.add(params_ControlRemote);
 	mMidiParams.add(params_Preset);
+	//TODO:
 	//mMidiParams.add(presets.getParametersSelectorToggles());
 #endif
+
+	//-
+
+	myRect.bEditMode.setName("Edit Viewport");
+	//myRect.enableEdit();
+	//myRect.setRect(200, 200, 200, 400);
+	myRect.setTransparent();
+	myRect.setAutoSave(true);
+	//myRect.loadSettings();
 
 	//--
 
@@ -2132,6 +2142,12 @@ void ofxSurfingVideoSkip::draw(ofEventArgs & args)
 #endif
 		draw_Gui();
 	}
+
+	//--
+
+	//ofSetColor(ofColor(ofColor::red, 128));
+	//ofDrawRectangle(myRect);
+	myRect.draw();
 }
 
 //--------------------------------------------------------------
@@ -2145,10 +2161,28 @@ void ofxSurfingVideoSkip::draw_Video()
 		ofSetColor(255, 255, 255, 255);
 
 		ofRectangle r(0, 0, player.getWidth(), player.getHeight());
-		r.scaleTo(ofGetWindowRect(), OF_SCALEMODE_FILL);//expand
-		//r.scaleTo(ofGetWindowRect(), OF_SCALEMODE_STRETCH_TO_FILL);
-		//r.scaleTo(ofGetWindowRect(), OF_SCALEMODE_CENTER);
-		//r.scaleTo(ofGetWindowRect());//fill window width
+
+		//-
+
+		bool static bFullScreen = false;
+		if (bFullScreen) {
+			r.scaleTo(ofGetWindowRect(), OF_SCALEMODE_FILL);//expand
+			////r.scaleTo(ofGetWindowRect(), OF_SCALEMODE_STRETCH_TO_FILL);//deform
+			////r.scaleTo(ofGetWindowRect(), OF_SCALEMODE_CENTER);
+			////r.scaleTo(ofGetWindowRect());//fill window width
+		}
+		else {
+			// draggable viewport
+			r.scaleTo(myRect, OF_SCALEMODE_FILL);
+			
+			//if (!myRect.isEditing()) 
+			//myRect.set(r);
+
+			myRect.setX(r.getX());
+			myRect.setY(r.getY());
+			myRect.setWidth(r.getWidth());
+			myRect.setHeight(r.getHeight());
+		}
 
 		//--
 
@@ -2586,6 +2620,11 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	guiManager.addWindow(beatClock.bGui);
 #endif
 
+	//-
+
+	// -> extra params to include into layout presets
+	guiManager.addParameterToLayoutPresets(myRect.getParameter());
+
 	// -> initiates when adding finished
 	guiManager.setupLayout();
 
@@ -2839,8 +2878,9 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			// play
 			guiManager.Add(PLAYING, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
 			guiManager.Add(MODE_EDIT, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
-			
+
 			ofxImGuiSurfing::AddToggleRoundedButton(bGui_SkipTimers);
+			ofxImGuiSurfing::AddToggleRoundedButton(myRect.bEditMode);
 
 			//ImGui::Dummy(ImVec2(0, 10));
 			ImGui::Spacing();

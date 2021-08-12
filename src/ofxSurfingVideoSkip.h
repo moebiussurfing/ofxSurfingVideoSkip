@@ -10,20 +10,26 @@
 
 	TODO:
 
-	+ mini preview.
-	+ dual window. external output.
+	+ fix presets path empty on startup
+		+ fix route paths for Windos/macOS
+
+	+ full screen/dual window. external output.
 
 	+ popoulate midi notes for available presets
 		or make an engine to centralize all midi stuff for different modules.
 
-	+ fix docking
+	+ fix docking for all panels. Should split main 3 panels too..
 
 	+ add slow skip timers
+
 	+ add new fx skip-engine jump bpm timed shutter
 
 	+ add locker for duration locked (opened/without ending) to bpm ? 
 		+ could be better to link bpm to skippers only, not to loop duration. easy to user
 		+ add control to move the loop clip with same duration
+
+	+ zoom on loop zone. maybe with stills
+
 */
 
 
@@ -79,8 +85,16 @@
 #include "ofxPresetsManager.h"
 #endif
 
+#include "ofxInteractiveRect.h"
+
+
+//--------------------------------------------------------------
 class ofxSurfingVideoSkip
 {
+
+public:
+	ofxInteractiveRect myRect = { "myRect" };
+
 	//-
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
