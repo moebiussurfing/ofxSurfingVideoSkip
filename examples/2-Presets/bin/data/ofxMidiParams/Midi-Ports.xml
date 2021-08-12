@@ -1,8 +1,0 @@
-{
-    "PORTS": {
-        "In": "loopMIDI Port 2",
-        "Midi_In": "2",
-        "Midi_Out": "2",
-        "Out": ""
-    }
-}

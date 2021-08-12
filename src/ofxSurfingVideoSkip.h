@@ -14,12 +14,12 @@
 		video file & presets files path
 		duplicate project, undo
 
+	+ mini preview.
+	+ dual window. external output.
+
 	+ fix layout preset disabled by default. bc multi instance must be simpler.
 	+ fix docking
 	+ layout panels not drawing 
-
-	+ dual window. external output.
-	+ mini preview.
 
 	+ add slow skip timers
 	+ add new fx skip-engine jump bpm timed shutter
@@ -34,15 +34,15 @@
 //
 //	OPTIONAL DEFINES
 
-#define USE_ofxSurfingMoods // -> mood machine
+#define USE_ofxSurfingMoods // -> Mood machine
 
-#define USE_OF_BEAT_CLOCK__VIDEO_SKIP // -> beat clock
+#define USE_OF_BEAT_CLOCK__VIDEO_SKIP // -> Beat clock
 
-// presets. two alternatives:
+// Presets. two alternatives:
 #define USE_ofxSurfingPresets__VIDEO_SKIP // -> A. simple presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP // -> B. power presets
 
-//#define USE_MIDI_PARAMS__VIDEO_SKIP // -> midi input to control gui and switch presets
+//#define USE_MIDI_PARAMS__VIDEO_SKIP // -> MIDI input to control gui and switch presets
 
 //#define USE_ofxChannelFx // fx
 //#define USE_ofxGuiExtended // -> deprectaed
@@ -125,7 +125,6 @@ public:
 	void setup_ImGui();
 
 	void draw_ImGui();
-	void draw_ImGuiPanels();
 	void draw_ImGuiControls();
 	void draw_ImGuiSkipTimers();
 
@@ -143,7 +142,7 @@ public:
 		return params_Preset;
 	}
 
-	void setPathOpenDialog();
+	void doOpenDialogToSetPath();
 
 private:
 

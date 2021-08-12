@@ -548,10 +548,15 @@ void ofxSurfingVideoSkip::startup()
 
 		//-
 
-#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
-		std::string _path = ofToString("ofxSurfingPresets/" + videoName.get());
-		presets.setPathPresets(_path);
-#endif
+//		// workaround: bc presets is initiated before
+//#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+//		{
+//			std::string _path = ofToString("ofxSurfingPresets/" + videoName.get());
+//			auto ss = ofSplitString(_path, ".");
+//			if (ss.size() > 0) _path = ss[0];
+//			presets.setPathPresets(_path);
+//		}
+//#endif
 		//-
 
 #ifdef USE_ofxGuiExtended
@@ -604,7 +609,7 @@ void ofxSurfingVideoSkip::startup()
 	//loadMovie("/Volumes/xTOSHIBA/VIDEO/NightmoVES4.mov");
 
 	player.setLoopState(OF_LOOP_NORMAL);
-	player.setVolume(0.0);
+	player.setVolume(0.0f);
 
 	// workflow
 	// skip black intro
@@ -1017,7 +1022,7 @@ void ofxSurfingVideoSkip::setGuiVisible(bool b)
 	else {
 		channelFx.setVisibleGui(false);
 		//channelFx.setVisible_PresetClicker(false);
-}
+	}
 #endif
 
 	//-
@@ -1299,7 +1304,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 	if (ENABLE_Keys_Fx)
 	{
 		channelFx.keyPressed(key);
-}
+	}
 #endif
 
 	//----
@@ -1632,8 +1637,8 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
+			}
 		}
-	}
 		else if (name == MODE_LOOP.getName())
 		{
 			if (MODE_LOOP)
@@ -1854,7 +1859,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 			//ofxChannelFx
 			channelFx.setVisibleGui(b);
 			//channelFx.setVisible_PresetClicker(b);
-}
+		}
 #endif
 		//-
 
@@ -1871,6 +1876,9 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 		else if (name == videoName.getName())
 		{
 			std::string _path = ofToString("ofxSurfingPresets/" + videoName.get());
+			auto ss = ofSplitString(_path, ".");
+			if (ss.size() > 0) _path = ss[0];
+			ofStringReplace(_path, "\"", "");
 			presets.setPathPresets(_path);
 		}
 #endif
@@ -2123,7 +2131,7 @@ void ofxSurfingVideoSkip::draw(ofEventArgs & args)
 		mMidiParams.draw();
 #endif
 		draw_Gui();
-}
+	}
 }
 
 //--------------------------------------------------------------
@@ -2265,6 +2273,20 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 		b = player.load(_path);
 		if (!b) ofLogError(__FUNCTION__) << "BAD ERROR!";
 	}
+
+	//workflow
+	if (!PLAYING) PLAYING = true;
+
+	//to fix startup bug..
+#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+	{
+		std::string _path = ofToString("ofxSurfingPresets/" + videoName.get());
+		auto ss = ofSplitString(_path, ".");
+		if (ss.size() > 0) _path = ss[0];
+		ofStringReplace(_path, "\"", "");
+		presets.setPathPresets(_path);
+	}
+#endif
 }
 
 //--------------------------------------------------------------
@@ -2446,7 +2468,7 @@ void ofxSurfingVideoSkip::gui_CustomizeApply()
 			->getGroup(_param_Clock.getName())
 			->getFloatSlider(bpmTimer.getName()))
 			->setConfig(jConf_BigBut2);
-}
+	}
 }
 #endif
 
@@ -2535,9 +2557,9 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	//-
 
 	// customize default labels
-	guiManager.setLabelLayoutPanels("SURFING_VIDEO");
+	guiManager.setLabelLayoutPanels("SURFING_VIDEO"); // global title
 	//guiManager.setLabelLayoutMainWindow("Layout Manager");
-	//guiManager.bGui_LayoutsManagerWindow.setName("Layout Manager");
+	//guiManager.bGui_LayoutsManager.setName("Layout Manager");
 
 	guiManager.setup();
 
@@ -2546,7 +2568,6 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	// -> layouts presets
 	// this bool toggles will control the show of the added window
 	// and will be added too to layout presets engine
-	;
 	guiManager.addWindow(bGui_SurfingVideo);
 
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
@@ -2758,81 +2779,6 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::draw_ImGuiPanels()
-{
-	/*
-	// panels sizes
-	float xx = 10;
-	float yy = 10;
-	float ww = PANEL_WIDGETS_WIDTH;
-	float hh = PANEL_WIDGETS_HEIGHT;
-
-	//-
-
-	std::string n;
-
-	ImGuiWindowFlags flagsw = ImGuiWindowFlags_None;
-	if (guiManager.bAutoResize) flagsw |= ImGuiWindowFlags_AlwaysAutoResize;
-
-	//-
-
-	n = "SURFING VIDEO";
-	ImGuiWindowFlags window_flags = ImGuiWindowFlags_None;
-	if (guiManager.bAutoResize) window_flags |= ImGuiWindowFlags_AlwaysAutoResize;
-
-	//guiManager.beginWindow(n.c_str(), (bool*)&bGui_SurfingVideo.get(), flagsw);
-	guiManager.beginWindow(n.c_str(), (bool*)&bGui.get(), flagsw);
-	{
-		refreshLayout();
-
-		//-
-
-		ImGui::Text("PANELS");
-
-		//-
-
-		// video
-		guiManager.Add(bGui_SurfingVideo, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
-
-		//guiManager.Add(bGui_SkipTimers, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
-
-		//-
-
-		// midi
-#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-		guiManager.Add(mMidiParams.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
-#endif
-		//-
-
-		// beat clock
-#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
-		guiManager.Add(beatClock.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
-#endif
-		//-
-
-		// moods
-#ifdef USE_ofxSurfingMoods
-		guiManager.Add(moodsSurfer.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
-#endif
-		//-
-
-		// presets
-#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
-		guiManager.Add(presets.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
-#endif
-		//-
-
-		ImGui::Spacing();
-
-		// layout
-		guiManager.Add(guiManager.bGui_LayoutsManagerWindow, SurfingImGuiTypes::OFX_IM_TOGGLE_SMALL);
-		//guiManager.Add(guiManager.bGui, SurfingImGuiTypes::OFX_IM_TOGGLE_BIG);
-	}
-	guiManager.endWindow();
-	*/
-}
-
-//--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGuiControls()
 {
 	// panels sizes
@@ -2879,7 +2825,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 				if (ImGui::Button("OPEN FILE", ImVec2(_w100, _h / 2)))
 				{
-					setPathOpenDialog();
+					doOpenDialogToSetPath();
 				}
 				ImGui::Dummy(ImVec2(0, 1));
 				//ImGui::Text(videoName.get().data());
@@ -3040,8 +2986,6 @@ void ofxSurfingVideoSkip::draw_ImGui()
 
 	guiManager.begin();
 	{
-		//draw_ImGuiPanels(); // -> moved to layout manager
-
 		if (bGui_SurfingVideo) draw_ImGuiControls();
 
 		if (bGui_SkipTimers && bGui_SurfingVideo) draw_ImGuiSkipTimers();
@@ -3072,7 +3016,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::setPathOpenDialog()
+void ofxSurfingVideoSkip::doOpenDialogToSetPath()
 {
 	ofLogNotice(__FUNCTION__) << "Set presets path";
 

@@ -1,0 +1,17 @@
+ofxAbletonLink
+ofxBeatClock
+ofxGui
+ofxHapPlayer
+ofxHistoryPlot
+ofxImGui
+ofxMidi
+ofxMidiParams
+ofxMSAInteractiveObject
+ofxScaleDragRect
+ofxSurfingAnimators
+ofxSurfingHelpers
+ofxSurfingImGui
+ofxSurfingMoods
+ofxSurfingPresets
+ofxSurfingVideoSkip
+ofxWindowApp
