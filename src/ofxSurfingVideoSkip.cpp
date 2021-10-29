@@ -293,19 +293,6 @@ void ofxSurfingVideoSkip::setup()
 
 	// gui
 
-	//-
-
-#ifdef USE_ofxGuiExtended
-	//ofxGuiExtended
-	gui_CustomizeDefine();
-
-	//-
-
-	//panel engine
-	panel_Engine = gui.addPanel(params_Engine);
-	//panel_Engine = gui.addGroup(params_Engine);
-#endif
-
 	//----
 
 	// main gui panel params
@@ -352,10 +339,6 @@ void ofxSurfingVideoSkip::setup()
 	params_Control.add(_param_Keys);
 	params_Control.add(ENABLE_AutoHide);
 	params_Control.add(SHOW_ControlPanel_Header);
-
-#ifdef USE_ofxGuiExtended
-	panel_Control = gui.addPanel(params_Control);
-#endif
 
 	params_Control.add(videoName);
 
@@ -476,10 +459,6 @@ void ofxSurfingVideoSkip::setup()
 
 	// gui
 
-#ifdef USE_ofxGuiExtended
-	gui_CustomizeApply();
-#endif
-
 	// ofApp.cpp
 	setup_ImGui();
 
@@ -548,8 +527,11 @@ void ofxSurfingVideoSkip::startup()
 #endif
 
 		// add after created object
+		
+#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
 		mMidiParams.add(presets.getParametersSelectorToggles());
+#endif
 #endif
 
 		//-
@@ -568,20 +550,6 @@ void ofxSurfingVideoSkip::startup()
 //		}
 //#endif
 		//-
-
-#ifdef USE_ofxGuiExtended
-		panel_Control->setPosition(positionGui_ControlPanel.get().x, positionGui_ControlPanel.get().y);
-		panel_Engine->setPosition(positionGui_Engine.get().x, positionGui_Engine.get().y);
-
-		//-
-
-		//theme
-		path_Theme = "assets/theme/";
-		path_Theme += "theme_ofxGuiExtended2.json";
-		loadTheme(path_Theme);
-
-		//panel_Control->setPosition(900, 600);//temp placement
-#endif
 	}
 
 
@@ -978,7 +946,7 @@ void ofxSurfingVideoSkip::draw_Gui()
 	//	moodsSurfer.draw();
 	//#endif
 
-		// bar controller 
+	// bar controller 
 	draw_VideoControls();
 }
 
@@ -1010,15 +978,6 @@ void ofxSurfingVideoSkip::setGuiVisible(bool b)
 	//{
 	//	presetsManager.setVisible_GUI_Internal(b);
 	//}
-#endif
-
-	//-
-
-#ifdef USE_ofxGuiExtended
-	//engine
-	gui.getVisible().set(b);//all
-	panel_Engine->getVisible().set(b);
-	panel_Control->getVisible().set(b && SHOW_Advanced.get());
 #endif
 
 	//-
@@ -1306,7 +1265,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 		ofLogNotice(__FUNCTION__) << "mod_SHIFT: " << (mod_SHIFT ? "ON" : "OFF");
 	}
 
-	guiManager.keyPressed(key);
+	//guiManager.keyPressed(key);
 
 
 	// ofxChannelFx
@@ -1836,15 +1795,6 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 		{
 			bool b = bGui_SurfingVideo.get();
 
-#ifdef USE_ofxGuiExtended
-			//toggle
-			//bool b = !panel_Engine->getVisible().get();
-			//panel_Engine->getVisible().set(b);
-
-			panel_Engine->getVisible().set(b);
-			//if (b)
-#endif
-
 			ENABLE_drawVideoControlBar = b;
 		}
 
@@ -1937,25 +1887,10 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 
 		//-
 
-#ifdef USE_ofxGuiExtended
-		//header
-		else if (name == SHOW_ControlPanel_Header.getName())
-		{
-
-			panel_Control->setShowHeader(SHOW_ControlPanel_Header.get());
-			panel_Engine->setShowHeader(SHOW_ControlPanel_Header.get());
-		}
-#endif
-
-		//-
-
 		//advanced
 		else if (name == SHOW_Advanced.getName())
 		{
 
-#ifdef USE_ofxGuiExtended
-			panel_Control->getVisible().set(SHOW_Advanced.get() && bGui_SurfingVideo.get());
-#endif
 		}
 	}
 }
@@ -2349,178 +2284,11 @@ void ofxSurfingVideoSkip::saveGroup(ofParameterGroup &g, string path)
 	settings.save(path);
 }
 
-#ifdef USE_ofxGuiExtended
-//gui customize
-//--------------------------------------------------------------
-void ofxSurfingVideoSkip::gui_CustomizeDefine()
-{
-	//--
-
-	//ofxGui
-	//TODO: not implemented kind of lite version without ofxGuiExtended
-
-#ifdef USE_ofxGui
-	filename_Font = "telegrama_render.otf";
-	std::string _path = "assets/fonts/" + filename_Font;
-	ofFile file(_path);
-	if (file.exists())
-	{
-		ofLogNotice(__FUNCTION__) << _path << " FOUND";
-		ofxGuiSetFont(path, 8);
-	}
-	else
-	{
-		ofLogError(__FUNCTION__) << _path << " NOT FOUND!";
-	}
-#endif
-
-#ifdef USE_ofxGui
-	ofxGuiSetDefaultHeight(18);
-	ofxGuiSetBorderColor(16);
-	ofxGuiSetFillColor(ofColor(48));
-	ofxGuiSetTextColor(ofColor::white);
-	ofxGuiSetHeaderColor(ofColor(32));
-#endif
-
-	//-
-
-	jConf_BigBut1 =
-	{
-		{"type", "fullsize"},
-		{"text-align", "center"},
-		{"height", 22},
-	};
-
-	jConf_BigBut2 =//highlighted darken widgets: fx enablers, position,
-	{
-		{"type", "fullsize"},
-		{"height", 35},
-	};
-
-	jConf_BigBut3 =//play button
-	{
-		{"type", "fullsize"},
-		{"text-align", "center"},
-		{"height", 45},
-	};
-
-	//jConf_Highligthed =//highlighted 
-	//{
-	//	{"border-width", 2 },
-	//	{"border-color", "rgba(0,0,0,0.5)" }//black color
-	//	//{"border-color", "rgba(200,200,0,0.4)" }//yellow color
-	//};
-
-	jConf_Labl =//labels highlighted
-	{
-		{"text-align", "center"},
-		{"height", 20},
-	};
-
-	jConf_Labl_Hide =//hiden labels
-	{
-		{"show-name", false},
-		{"text-align", "center"},
-		{"height", 5},
-	};
-}
-
-//--------------------------------------------------------------
-void ofxSurfingVideoSkip::gui_CustomizeApply()
-{
-	//if (0)
-	{
-		//panels control
-		(panel_Control->getToggle(bGui_SurfingVideo.getName()))->setConfig(jConf_BigBut2);
-#ifdef USE_ofxChannelFx
-		(panel_Control->getGroup(_param_ChannelFx.getName())->getToggle("ENABLE FX"))->setConfig(jConf_BigBut2);
-		(panel_Control->getGroup(_param_ChannelFx.getName())->getToggle("SHOW FX"))->setConfig(jConf_BigBut2);
-#endif
-#ifdef USE_ofxSurfingMoods
-		(panel_Control->getGroup(_param_MoodMachine.getName())->getToggle(SHOW_MoodMachine.getName()))->setConfig(jConf_BigBut2);
-#endif
-
-		//-
-
-		//engine
-		(panel_Engine->getToggle("EDIT"))->setConfig(jConf_BigBut3);
-		(panel_Engine->getToggle("PLAY"))->setConfig(jConf_BigBut3);
-		(panel_Engine->getToggle("LOOP"))->setConfig(jConf_BigBut1);
-
-		(panel_Engine->getFloatSlider("POSITION"))->setConfig(jConf_BigBut1);
-		(panel_Engine->getFloatSlider("POSITION"))->unregisterMouseEvents();
-
-		(panel_Engine)->getFloatSlider("START")->setConfig(jConf_BigBut1);
-		(panel_Engine)->getFloatSlider("END")->setConfig(jConf_BigBut1);
-		(panel_Engine)->getFloatSlider("SPEED")->setConfig(jConf_BigBut2);
-		//(panel_Engine)->getFloatSlider("SPEED")->setConfig(ofJson{ {{"height", 35}} });
-		//(panel_Engine)->getFloatSlider("SPEED")->setConfig(jConf_BigBut1);
-
-		(panel_Engine->getToggle("SET START"))->setConfig(jConf_BigBut1);
-		(panel_Engine->getToggle("SET END"))->setConfig(jConf_BigBut1);
-		(panel_Engine->getToggle("LOOPED BACK"))->setConfig(jConf_BigBut1);
-		(panel_Engine->getToggle("REVERSE"))->setConfig(jConf_BigBut1);
-
-		//(panel_Engine->getControl("ENGINE"))->setConfig(jConf_Labl);//label
-
-		//-
-
-		//skip timers 
-
-		//(panel_Engine->getGroup(_param_SkipEngine.getName()))->getControl("_spacer1_")->setConfig(jConf_Labl_Hide);
-		//(panel_Engine->getGroup(_param_SkipEngine.getName()))->getControl("_spacer2_")->setConfig(jConf_Labl_Hide);
-
-		(panel_Engine->getGroup(_param_SkipEngine.getName()))->getToggle("ENABLE TIMERS")->setConfig(jConf_BigBut1);
-		(panel_Engine->getGroup(_param_SkipEngine.getName()))->getToggle("A MODE SKIP")->setConfig(jConf_BigBut1);
-		(panel_Engine->getGroup(_param_SkipEngine.getName()))->getToggle("TRIG SKIP")->setConfig(jConf_BigBut1);
-		(panel_Engine->getGroup(_param_SkipEngine.getName()))->getToggle("B MODE REV")->setConfig(jConf_BigBut1);
-		(panel_Engine->getGroup(_param_SkipEngine.getName()))->getToggle("TRIG REV")->setConfig(jConf_BigBut1);
-
-		//(panel_Engine->getGroup(_param_SkipEngine.getName()))->getToggle("ENABLE TIMERS")->setConfig(jConf_Highligthed);
-		//(panel_Engine->getGroup(_param_SkipEngine.getName()))->getToggle("A MODE SKIP")->setConfig(jConf_Highligthed);
-		//(panel_Engine->getGroup(_param_SkipEngine.getName()))->getToggle("B MODE REV")->setConfig(jConf_Highligthed);
-
-		//(panel_Engine->getGroup(_param_SkipEngine.getName()))->getIntSlider("SKIP-TIME TIME")->setConfig(jConf_BigBut1);
-		//(panel_Engine->getGroup(_param_SkipEngine.getName()))->getIntSlider("SKIP-REVERSE TIME")->setConfig(jConf_BigBut1);
-
-
-		ofJson _j =//hide labels and slim sliders to debug timers progress
-		{
-			{"show-name", false},
-			{"text-color", "transparent"},
-			{"height", 8}
-		};
-		(panel_Engine->getGroup(_param_SkipEngine.getName()))->getControl(timer_SkipTime.getName())->setConfig(_j);
-		(panel_Engine->getGroup(_param_SkipEngine.getName()))->getControl(timer_SkipRev.getName())->setConfig(_j);
-
-		//TODO: collapse
-//		//(panel_Engine->getGroup(_param_SkipEngine.getName()))->mini;
-
-		//bpm
-		(panel_Engine
-			->getGroup(_param_SkipEngine.getName())
-			->getGroup(_param_Clock.getName())
-			->getFloatSlider(bpmTimer.getName()))
-			->setConfig(jConf_BigBut2);
-	}
-}
-#endif
-
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::exit()
 {
-	// settings
-#ifdef USE_ofxGuiExtended
-	positionGui_ControlPanel = glm::vec2(panel_Control->getPosition().x, panel_Control->getPosition().y);
-	positionGui_Engine = glm::vec2(panel_Engine->getPosition().x, panel_Engine->getPosition().y);
-#endif
-
 	// save app settings
 	saveGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
-
-#ifndef USE_ofxPresetsManager__VIDEO_SKIP
-	saveGroup(params_Preset, path_GLOBAL_Folder + "/" + path_Preset);
-#endif
 
 	// channel fx
 #ifdef USE_ofxChannelFx
@@ -2577,16 +2345,16 @@ void ofxSurfingVideoSkip::setPath_GlobalFolder(std::string folder)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::setup_ImGui()
 {
-	guiManager.setImGuiAutodraw(true);
+
+	//// -> required to allow custom docking layout. 
+	//// instead of the default centralized.
+	//guiManager.setAutoSaveSettings(true);
+	//guiManager.setImGuiDocking(true);
+	//guiManager.setImGuiDockingModeCentered(true);
+	//guiManager.setImGuiAutodraw(true);
 	//guiManager.setSharedMode(true);
-
-
-	// -> required to allow custom docking layout. 
-	// instead of the default centralized.
-	guiManager.setAutoSaveSettings(true);
-	guiManager.setImGuiDocking(true);
-	guiManager.setImGuiDockingModeCentered(true);
-	guiManager.setImGuiAutodraw(true);
+	
+	guiManager.setup(IM_GUI_MODE_INSTANTIATED_DOCKING);
 
 	//-
 
@@ -2602,22 +2370,22 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	// -> layouts presets
 	// this bool toggles will control the show of the added window
 	// and will be added too to layout presets engine
-	guiManager.addWindow(bGui_SurfingVideo);
+	guiManager.addWindowSpecial(bGui_SurfingVideo);
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
-	guiManager.addWindow(presets.bGui);
+	guiManager.addWindowSpecial(presets.bGui);
 #endif
 
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-	guiManager.addWindow(mMidiParams.bGui);
+	guiManager.addWindowSpecial(mMidiParams.bGui);
 #endif
 
 #ifdef USE_ofxSurfingMoods 
-	guiManager.addWindow(moodsSurfer.bGui);
+	guiManager.addWindowSpecial(moodsSurfer.bGui);
 #endif
 
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
-	guiManager.addWindow(beatClock.bGui);
+	guiManager.addWindowSpecial(beatClock.bGui);
 #endif
 
 	//-
@@ -2901,7 +2669,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			// position
 			guiManager.Add(POSITION, SurfingImGuiTypes::OFX_IM_SLIDER);
 			// range
-			ofxImGuiSurfing::AddRangeParam("CLIP", POSITION_Start, POSITION_End, "%.3f      %.3f", 1.0f);
+			ofxImGuiSurfing::AddRangeParam("CLIP", POSITION_Start, POSITION_End, "%.3f      %.3f", 1.0f, ImVec2(-1,-1), true);
 
 			//ImGui::Dummy(ImVec2(0, 5));
 			ImGui::Spacing();
@@ -3016,6 +2784,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				//-
 
 				//TODO:
+
+#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
 				static bool bPopulateMidiToggles = false;
 				if (ofxImGuiSurfing::ToggleRoundedButton("Populate Midi", &bPopulateMidiToggles))
@@ -3023,13 +2793,13 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					mMidiParams.add(presets.getParametersSelectorToggles());
 				}
 #endif
+#endif
 				//-
 
 				// extra panel
 				//if (guiManager.bExtra) 
 				{
-					//ImGui::Dummy(ImVec2(0, 5));
-					guiManager.drawAdvancedSubPanel();
+					guiManager.drawAdvanced();
 				}
 				ImGui::Unindent();
 			}
@@ -3208,7 +2978,7 @@ void ofxSurfingVideoSkip::draw_ImGuiMenu()
 			ImGui::EndMenu();
 		}
 
-		ofxImGuiSurfing::HelpMarker(
+		ofxImGuiSurfing::AddTooltipHelp(
 			"This is not operative here. Just for testing menus!" "\n\n"
 			"When docking is enabled, you can ALWAYS dock MOST window into another! Try it now!" "\n"
 			"- Drag from window title bar or their tab to dock/undock." "\n"

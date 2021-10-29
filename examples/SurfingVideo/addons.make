@@ -2,7 +2,6 @@ ofxAbletonLink
 ofxBeatClock
 ofxGui
 ofxHapPlayer
-ofxHistoryPlot
 ofxImGui
 ofxMidi
 ofxMidiParams
@@ -12,6 +11,7 @@ ofxSurfingAnimators
 ofxSurfingHelpers
 ofxSurfingImGui
 ofxSurfingMoods
+ofxSurfingPlayer
 ofxSurfingPresets
 ofxSurfingVideoSkip
 ofxWindowApp

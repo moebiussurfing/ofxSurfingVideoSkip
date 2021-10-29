@@ -48,7 +48,6 @@
 #define USE_MIDI_PARAMS__VIDEO_SKIP // -> MIDI input to control gui and switch presets
 
 //#define USE_ofxChannelFx // fx
-//#define USE_ofxGuiExtended // -> deprectaed
 
 //----------------------------------------------
 
@@ -71,10 +70,6 @@
 #include "ofxSurfingMoods.h"
 #endif
 
-#ifdef USE_ofxGuiExtended
-#include "ofxGuiExtended2.h"
-#endif
-
 #include "ofxHapPlayer.h"
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
@@ -91,8 +86,90 @@
 //--------------------------------------------------------------
 class ofxSurfingVideoSkip
 {
+	//--
 
 public:
+
+	//--------------------------------------------------------------
+	ofxSurfingVideoSkip()
+	{
+		//ofAddListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
+		ofAddListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
+		ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
+		//ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);
+
+		addMouseListeners();
+
+		setup();
+	};
+
+	//--------------------------------------------------------------
+	~ofxSurfingVideoSkip()
+	{
+		//ofRemoveListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
+		ofRemoveListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
+		ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
+		//ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);		
+
+		removeMouseListeners();
+
+		exit();
+	};
+
+	//--
+
+public:
+
+	void setup();
+
+	//void update();
+	//void draw();
+
+	void update(ofEventArgs & args);
+	void draw(ofEventArgs & args);
+
+	void exit();
+
+private:
+
+	// keys
+	void keyPressed(ofKeyEventArgs &eventArgs);
+	void keyReleased(ofKeyEventArgs &eventArgs) {};
+	void addKeysListeners();
+	void removeKeysListeners();
+
+	// mouse
+	void mouseDragged(ofMouseEventArgs &eventArgs);
+	void mousePressed(ofMouseEventArgs &eventArgs);
+	void mouseReleased(ofMouseEventArgs &eventArgs);
+	void mouseMoved(ofMouseEventArgs &eventArgs);
+
+	void refreshMouse(int button, float position);
+
+	void addMouseListeners();
+	void removeMouseListeners();
+
+public:
+
+	void windowResized(int w, int h);
+	void dragEvent(ofDragInfo dragInfo);
+
+private:
+
+	void startup();
+	void updateVideoPLayer();
+	void updateTimers();
+
+public:
+
+	void draw_Gui();
+	void draw_Video();
+	void draw_VideoControls();
+
+	//-
+
+public:
+
 	ofxInteractiveRect myRect = { "myRect" };
 
 	//-
@@ -173,36 +250,6 @@ private:
 #ifdef USE_ofxChannelFx
 	ofxChannelFx channelFx;
 #endif
-
-	//--
-
-public:
-
-	//--------------------------------------------------------------
-	ofxSurfingVideoSkip() 
-	{
-		//ofAddListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
-		ofAddListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
-		ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
-		//ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);
-
-		addMouseListeners();
-
-		setup();
-	};
-
-	//--------------------------------------------------------------
-	~ofxSurfingVideoSkip()
-	{
-		//ofRemoveListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
-		ofRemoveListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
-		ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
-		//ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);		
-
-		removeMouseListeners();
-
-		exit();
-	};
 
 	//----
 
@@ -318,56 +365,6 @@ private:
 	ofParameter<bool> SHOW_Video_FX;
 #endif
 
-	//--
-
-public:
-
-	void setup();
-
-	//void update();
-	//void draw();
-
-	void update(ofEventArgs & args);
-	void draw(ofEventArgs & args);
-
-	void exit();
-
-private:
-
-	// keys
-	void keyPressed(ofKeyEventArgs &eventArgs);
-	void keyReleased(ofKeyEventArgs &eventArgs) {};
-	void addKeysListeners();
-	void removeKeysListeners() ;
-
-	// mouse
-	void mouseDragged(ofMouseEventArgs &eventArgs);
-	void mousePressed(ofMouseEventArgs &eventArgs);
-	void mouseReleased(ofMouseEventArgs &eventArgs);
-	void mouseMoved(ofMouseEventArgs &eventArgs);
-	
-	void refreshMouse(int button, float position);
-
-	void addMouseListeners();
-	void removeMouseListeners();
-
-public:
-
-	void windowResized(int w, int h);
-	void dragEvent(ofDragInfo dragInfo);
-
-private:
-
-	void startup();
-	void updateVideoPLayer();
-	void updateTimers();
-
-public:
-
-	void draw_Gui();
-	void draw_Video();
-	void draw_VideoControls();
-
 private:
 
 	// hap video player
@@ -424,7 +421,7 @@ private:
 
 	//--
 
-	//to jumps frames with keys
+	// to jumps frames with keys
 	void calculateKick();
 	int numFramesToKick = 1;//size of frames seek
 	float kickSizeFrame;//size of frames seek normalized to full video player normalized duration
@@ -442,7 +439,7 @@ private:
 
 private:
 
-	//skipper engine
+	// skipper engine
 	float positionSeconds;
 	ofParameter<std::string> videoTIME;
 	ofParameter<std::string> videoFRAME;
@@ -477,7 +474,7 @@ private:
 	ofParameter<int> timePeriod_skipper;
 	ofParameter<int> timePeriod_reverser;
 #else
-	//60,000 ms (1 minute) / Tempo (BPM) = Delay Time in ms
+	// 60,000 ms (1 minute) / Tempo (BPM) = Delay Time in ms
 	ofParameter<float> bpmTimer;
 	ofParameter<int> bpmDivider;
 	ofParameter<float> timer_SkipTime;
@@ -516,7 +513,7 @@ private:
 
 	//-
 
-	//video
+	// video
 	ofParameter<std::string> videoFilePath;
 	ofParameter<std::string> videoName;
 
@@ -598,67 +595,13 @@ private:
 
 	//--
 
-#ifdef USE_ofxGuiExtended
-
-private:
-
-	//gui
-	ofxGui gui;
-	ofxGuiPanel *panel_Engine;
-	//ofxGuiGroup2 *panel_Engine;
-	ofxGuiPanel *panel_Control;
-
-private:
-
-	//customize guiExtended
-	void gui_CustomizeDefine();
-	void gui_CustomizeApply();
-	bool bLoadedGuiFont = false;
-	ofJson jConf_BigBut1;//center text
-	ofJson jConf_BigBut2;//highlighted
-	ofJson jConf_BigBut3;//play
-	ofJson jConf_Labl;//labels
-	//ofJson jConf_Highligthed;//highlighted color
-	ofJson jConf_Labl_Hide;//labels
-
-public:
-
-	//--------------------------------------------------------------
-	glm::vec2 getGuiPosition()
-	{
-		glm::vec2 gPos = glm::vec2(panel_Engine->getPosition().x, panel_Engine->getPosition().y);
-		return gPos;
-	}
-	//--------------------------------------------------------------
-	float getGuiWidth()
-	{
-		float gwidth = panel_Engine->getWidth();
-		return gwidth;
-	}
-
-private:
-
-	std::string path_Theme;
-
-public:
-
-	//--------------------------------------------------------------
-	void loadTheme(std::string _path) {
-		path_Theme = _path;
-		ofLogNotice(__FUNCTION__) << path_Theme;
-		panel_Control->loadTheme(path_Theme);
-		//crash!
-		panel_Engine->loadTheme(path_Theme);
-		}
-
-#endif
-
 	float _w100;
 	float _w50;
 	float _h = WIDGETS_HEIGHT;
+	//--------------------------------------------------------------
 	void refreshLayout() {
 		// update sizes to current window shape
-		guiManager.refresh();
+		guiManager.refreshLayout();
 		_w100 = ofxImGuiSurfing::getWidgetsWidth(1);
 		_w50 = ofxImGuiSurfing::getWidgetsWidth(2);
 	}

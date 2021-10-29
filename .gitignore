@@ -553,3 +553,7 @@ MigrationBackup/
 *.json
 *.xml
 *.ini
+*.ini
+*.json
+*.xml
+*.ini

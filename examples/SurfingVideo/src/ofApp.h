@@ -4,7 +4,7 @@
 
 //----
 
-#define INCLUDE_ofxWindowApp // -> not required
+#define INCLUDE_ofxWindowApp // -> Not required
 
 //----
 
@@ -15,7 +15,6 @@
 #endif
 
 class ofApp : public ofBaseApp {
-
 public:
 
 	void setup();
