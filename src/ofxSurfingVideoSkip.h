@@ -303,7 +303,7 @@ public:
 	//--------------------------------------------------------------
 	//bool isPlaying_MoodMachine()
 	//{
-	//	return moodsSurfer.isPlaying();
+	//	return surfingMoods.isPlaying();
 	//}
 	//--------------------------------------------------------------
 	void play()
@@ -337,15 +337,15 @@ public:
 	void setPlay_MoodMachine(bool b)
 	{
 		if (b)
-			moodsSurfer.play();
+			surfingMoods.play();
 		else
-			moodsSurfer.stop();
+			surfingMoods.stop();
 	}
 
 	//--------------------------------------------------------------
 	bool isPlaying_MoodMachine()
 	{
-		return moodsSurfer.isPlaying();
+		return surfingMoods.isPlaying();
 	}
 
 	////--------------------------------------------------------------
@@ -534,10 +534,10 @@ private:
 	//--
 
 #ifdef USE_ofxSurfingMoods
-	ofxSurfingMoods moodsSurfer;
+	ofxSurfingMoods surfingMoods;
 
 	void Changed_Mood_RANGE(int & targetVal);
-	void Changed_Mood_TARGET(int &targetVal);//listener for inside class moodsSurfer
+	void Changed_Mood_TARGET(int &targetVal);//listener for inside class surfingMoods
 	void Changed_Mood_PRESET_A(int &targetVal);
 	void Changed_Mood_PRESET_B(int &targetVal);
 	void Changed_Mood_PRESET_C(int &targetVal);
