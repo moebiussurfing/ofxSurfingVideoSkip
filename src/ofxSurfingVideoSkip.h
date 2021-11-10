@@ -82,6 +82,8 @@
 
 #include "ofxInteractiveRect.h"
 
+#include "ofxSurfing_ImGui_WindowFbo.h"
+
 
 //--------------------------------------------------------------
 class ofxSurfingVideoSkip
@@ -89,6 +91,10 @@ class ofxSurfingVideoSkip
 	//--
 
 public:
+	SurfingPreview surfingPreview;
+	void draw_ImGuiPreview();
+
+	//--
 
 	//--------------------------------------------------------------
 	ofxSurfingVideoSkip()
@@ -170,14 +176,14 @@ public:
 
 public:
 
-	ofxInteractiveRect myRect = { "myRect" };
+	//ofxInteractiveRect myRect = { "myRect" };
 
 	//-
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 public:
 
-	ofxSurfingPresets presets;
+	ofxSurfingPresets presetsManager;
 #endif
 
 	//-
