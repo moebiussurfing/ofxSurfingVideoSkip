@@ -174,12 +174,6 @@ public:
 
 	//-
 
-public:
-
-	//ofxInteractiveRect rectDraggable = { "rectDraggable" };
-
-	//-
-
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 public:
 

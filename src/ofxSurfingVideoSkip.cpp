@@ -59,7 +59,7 @@ void ofxSurfingVideoSkip::setup()
 
 	inScrub = false;
 
-	bGui_VideoControlBar.set("Control Bar", true);//var used to hide/show player bar and gui also
+	bGui_VideoControlBar.set("Control Bar", false);//var used to hide/show player bar and gui also
 	//bGui_VideoControlBar.addListener(this, &ofxSurfingVideoSkip::Changed_draw_Autohide);
 
 	//--
@@ -2163,7 +2163,7 @@ void ofxSurfingVideoSkip::draw_Video()
 				else
 				{
 					// Draggable viewport
-					if (surfingPreview.bInDocked) 
+					if (surfingPreview.bInDocked)
 					{
 						r.scaleTo(guiManager.getRectangleCentralDocking(), surfingPreview.scaleMode);
 						surfingPreview.updateRectDraggable(r);
@@ -2551,7 +2551,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 
 					// draw progress bar
 					////guiManager.Add(timer_SkipTime, OFX_IM_DEFAULT);
-					ofxImGuiSurfing::AddProgressBar(timer_SkipTime);
+					ofxImGuiSurfing::AddProgressBar(timer_SkipTime, true);
 				}
 
 				ImGui::TreePop();
@@ -2575,7 +2575,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 
 					// draw progress bar
 					////guiManager.Add(timer_SkipRev, OFX_IM_DEFAULT);
-					ofxImGuiSurfing::AddProgressBar(timer_SkipRev);
+					ofxImGuiSurfing::AddProgressBar(timer_SkipRev, true);
 				}
 
 				ImGui::TreePop();
@@ -2627,6 +2627,25 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 		guiManager.beginWindow(n.c_str(), (bool*)&bGui_SurfingVideo.get(), flagsw);
 		{
 			refreshLayout();
+			{
+				ofxImGuiSurfing::AddToggleRoundedButton(guiManager.bMinimize);
+
+				if (!guiManager.bMinimize)
+				{
+					// Skip Panel
+					guiManager.Add(bGui_SkipTimers, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
+
+					// Preview
+					guiManager.Add(surfingPreview.bGui, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
+					guiManager.Add(surfingPreview.bBigScreen, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
+					if (surfingPreview.bBigScreen)
+					{
+						//guiManager.Add(surfingPreview.bInDocked, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+						// Control Bar
+						guiManager.Add(bGui_VideoControlBar, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+					}
+				}
+			}
 
 			{
 				// File
@@ -2655,23 +2674,6 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				// Play
 				guiManager.Add(PLAYING, OFX_IM_TOGGLE_BIG);
 				guiManager.Add(MODE_EDIT, OFX_IM_TOGGLE_BIG);
-
-				// Skip Panel
-				guiManager.Add(bGui_SkipTimers, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
-
-				// Preview
-				guiManager.Add(surfingPreview.bGui, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
-				guiManager.Add(surfingPreview.bBigScreen, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
-				if (surfingPreview.bBigScreen)
-				{
-					guiManager.Add(surfingPreview.bInDocked, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
-					// Control Bar
-					guiManager.Add(bGui_VideoControlBar, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
-				}
-
-				//// Edit
-				//guiManager.Add(surfingPreview.rectDraggable.bEditMode, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
-				////guiManager.Add(rectDraggable.bEditMode, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 
 				// Preset Clicker
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
@@ -2752,7 +2754,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 				//--
 
-				ofxImGuiSurfing::AddToggleRoundedButton(guiManager.bExtra);
+				guiManager.Add(guiManager.bExtra, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
+				//ofxImGuiSurfing::AddToggleRoundedButton(guiManager.bExtra);
 				if (guiManager.bExtra)
 				{
 					ImGui::Indent();
