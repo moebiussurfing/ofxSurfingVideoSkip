@@ -4,15 +4,9 @@
 
 //----
 
-#define INCLUDE_ofxWindowApp // -> Not required
-
-//----
-
 #include "ofxSurfingVideoSkip.h"
 
-#ifdef INCLUDE_ofxWindowApp
 #include "ofxWindowApp.h"
-#endif
 
 class ofApp : public ofBaseApp {
 public:
@@ -26,8 +20,5 @@ public:
 
 	ofxSurfingVideoSkip player;
 
-#ifdef INCLUDE_ofxWindowApp
 	ofxWindowApp windowApp;
-#endif
-
 };

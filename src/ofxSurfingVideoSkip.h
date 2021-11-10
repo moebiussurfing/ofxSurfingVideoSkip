@@ -11,7 +11,7 @@
 	TODO:
 
 	+ fix presets path empty on startup
-		+ fix route paths for Windos/macOS
+		+ fix route paths for Windows/macOS
 
 	+ full screen/dual window. external output.
 
@@ -106,7 +106,7 @@ public:
 
 		addMouseListeners();
 
-		setup();
+		//setup();
 	};
 
 	//--------------------------------------------------------------
@@ -176,7 +176,7 @@ public:
 
 public:
 
-	//ofxInteractiveRect myRect = { "myRect" };
+	//ofxInteractiveRect rectDraggable = { "rectDraggable" };
 
 	//-
 
@@ -382,8 +382,8 @@ private:
 
 	// autohide
 	bool ENABLE_GuiVisibleByAutoHide = false;
-	ofParameter<bool> ENABLE_drawVideoControlBar;
-	bool draw_Autohide_PRE;
+	ofParameter<bool> bGui_VideoControlBar;
+	bool bGui_VideoControlBar_PRE;
 	//void Changed_draw_Autohide(bool &b);
 	int time_autoHide = 2500;
 	bool inScrub;
