@@ -15,12 +15,14 @@
 
 	+ full screen/dual window. external output.
 
-	+ popoulate midi notes for available presets
+	+ populate midi notes for available presets
 		or make an engine to centralize all midi stuff for different modules.
 
 	+ fix docking for all panels. Should split main 3 panels too..
 
 	+ add slow skip timers
+
+	+ add tap tempo or surfingPlayer add-on
 
 	+ add new fx skip-engine jump bpm timed shutter
 
@@ -37,6 +39,11 @@
 //
 //	OPTIONAL DEFINES
 
+#define USE_MINIMAL_ofxSurfingVideoSkip
+// -> Disable all optional below. Just the core add-on.
+
+#ifndef USE_MINIMAL_ofxSurfingVideoSkip
+
 #define USE_ofxSurfingMoods // -> Mood machine
 
 #define USE_OF_BEAT_CLOCK__VIDEO_SKIP // -> Beat clock
@@ -49,10 +56,18 @@
 
 //#define USE_ofxChannelFx // fx
 
+#endif
+
 //----------------------------------------------
 
 
+#include "ofxHapPlayer.h"
+
 #include "ofxSurfingImGui.h"
+
+#include "ofxInteractiveRect.h"
+
+#include "ofxSurfing_ImGui_WindowFbo.h"
 
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP 
 #include "ofxMidiParams.h"
@@ -70,8 +85,6 @@
 #include "ofxSurfingMoods.h"
 #endif
 
-#include "ofxHapPlayer.h"
-
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 #include "ofxSurfingPresets.h"
 #endif
@@ -79,10 +92,6 @@
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 #include "ofxPresetsManager.h"
 #endif
-
-#include "ofxInteractiveRect.h"
-
-#include "ofxSurfing_ImGui_WindowFbo.h"
 
 
 //--------------------------------------------------------------
@@ -242,6 +251,7 @@ private:
 #endif
 
 	bool ENABLE_Active = true;
+	bool bLoaded = false;
 
 	ofParameter<bool> ENABLE_Keys_Player{ "Keys", true };
 	ofParameter<bool> ENABLE_Keys_Presets{ "ENABLE KEYS PRESETS", false };
@@ -460,7 +470,7 @@ private:
 	ofParameter<float> speedNorm;
 	ofParameter<bool> speed_Reset;
 	ofParameter<bool> ENABLE_AutoHide;
-	ofParameter<bool> ENABLE_TimersSkipRev;
+	ofParameter<bool> ENABLE_TimersGlobal;
 	ofParameter<bool> TRIG_time_Skiper;
 	ofParameter<bool> TRIG_bReverseSkipper;
 	ofParameter<bool> reverseSpeed;
