@@ -2699,7 +2699,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 				// loop
 				guiManager.Add(MODE_LOOP, OFX_IM_TOGGLE_BIG, 1, false);
-				if (MODE_LOOP)
+				//if (MODE_LOOP)
 				{
 					guiManager.Add(loopedBack, OFX_IM_TOGGLE_SMALL, 2, true);
 					guiManager.Add(reverseSpeed, OFX_IM_TOGGLE_SMALL, 2, false);
