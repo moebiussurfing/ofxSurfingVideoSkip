@@ -4,6 +4,9 @@
 
 ##-------------------------------
 
+*.ps1
+*.bat
+
 ## can exclude some sttings files
 
 #*.XML
@@ -550,10 +553,32 @@ MigrationBackup/
 
 # Ionide (cross platform F# VS Code tools) working folder
 .ionide/
-*.json
-*.xml
-*.ini
-*.ini
-*.json
-*.xml
-*.ini
+example2/bin/data/Rectangle_Rect_Plots.xml
+example2/bin/data/Rectangle_myRect.xml
+example2/bin/data/ofxMidiParams/Midi-Params.xml
+example2/bin/data/ofxMidiParams/AppState.xml
+example2/bin/data/example-midi-params.xml
+example2/bin/data/DataStreamGroup.xml
+example2/bin/imgui.ini
+example2/bin/data/DataStreamGroup.xml
+example2/bin/data/ofxMidiParams/AppState.xml
+example2/bin/data/ofxMidiParams/Midi-Params.xml
+example2/bin/data/Rectangle_Rect_Plots.xml
+example2/bin/data/settings.json
+example2/bin/imgui.ini
+example2/bin/data/DataStreamGroup.xml
+example2/bin/data/ofxMidiParams/AppState.xml
+example2/bin/data/Rectangle_Rect_Plots.xml
+example2/bin/data/settings.json
+example2/bin/imgui.ini
+example-Basic/bin/data/DataStreamGroup.xml
+example-Basic/bin/imgui.ini
+example-Basic/bin/imgui.ini
+example-Basic/bin/data/Rectangle_Rect_Plots.xml
+example-Basic/bin/data/Rectangle_Rect_Plots.xml
+example-Basic/bin/data/Rectangle_Rect_Plots.xml
+example-Randomizer/bin/data/DataStreamGroup.xml
+example-Randomizer/bin/data/ofxSurfingRandomizer/ofxSurfingRandomizer_Editor.json
+example-Randomizer/bin/data/ofxSurfingRandomizer/ofxSurfingRandomizer_State.json
+example-Randomizer/bin/data/Rectangle_Rect_Plots.xml
+example-Randomizer/bin/imgui.ini
