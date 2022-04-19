@@ -10,10 +10,14 @@
 
 	TODO:
 
+	+ add another skip mode: powered or ranged
+
 	+ fix presets path empty on startup
 		+ fix route paths for Windows/macOS
 
 	+ full screen/dual window. external output.
+
+	+ add tap tempo or surfingPlayer add-on
 
 	+ populate midi notes for available presets
 		or make an engine to centralize all midi stuff for different modules.
@@ -21,8 +25,6 @@
 	+ fix docking for all panels. Should split main 3 panels too..
 
 	+ add slow skip timers
-
-	+ add tap tempo or surfingPlayer add-on
 
 	+ add new fx skip-engine jump bpm timed shutter
 
@@ -40,7 +42,7 @@
 //	OPTIONAL DEFINES
 
 #define USE_MINIMAL_ofxSurfingVideoSkip
-// -> Disable all optional below. Just the core add-on.
+// -> Force disable ALL the optionals below. To use only the minimal core add-on.
 
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
 
@@ -478,6 +480,11 @@ private:
 	ofParameter<bool> MODE_SkipReverse;
 	ofParameter<bool> TRIG_bResetEngine;
 	ofParameter<bool> TRIG_Reset_Bpm;
+
+	//TODO:
+	ofParameter<float> skipPower;
+	ofParameter<bool> bModeSkipPowered;
+	ofParameter<bool> bModeSkipLooped;
 
 #define USE_BPM_TIMER_MODE
 #ifndef USE_BPM_TIMER_MODE
