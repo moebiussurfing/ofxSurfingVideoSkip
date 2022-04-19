@@ -10,6 +10,8 @@
 
 	TODO:
 
+	+ start / end buttons with ctrl to go/set
+
 	+ add another skip mode: powered or ranged
 
 	+ fix presets path empty on startup
@@ -460,8 +462,8 @@ private:
 	ofParameter<bool> bKickR;
 
 	ofParameter<bool> PLAYING;
-	ofParameter<bool> MODE_EDIT;
-	ofParameter<bool> MODE_LOOP;
+	ofParameter<bool> bMODE_EDIT;
+	ofParameter<bool> bMODE_Clamp;
 	ofParameter<bool> loopedBack;
 	ofParameter<float> POSITION_Start;
 	ofParameter<float> POSITION_End;
