@@ -472,16 +472,16 @@ private:
 	ofParameter<bool> bSET_END;
 	ofParameter<float> speed;
 	ofParameter<float> speedNorm;
-	ofParameter<bool> speed_Reset;
+	ofParameter<bool> bReset_Speed;
 	ofParameter<bool> ENABLE_AutoHide;
 	ofParameter<bool> ENABLE_TimersGlobal;
-	ofParameter<bool> TRIG_time_Skiper;
-	ofParameter<bool> TRIG_bReverseSkipper;
+	ofParameter<bool> bTRIG_SkipTime;
+	ofParameter<bool> bTRIG_SkipReverse;
 	ofParameter<bool> reverseSpeed;
 	ofParameter<bool> MODE_SkipTime;
 	ofParameter<bool> MODE_SkipReverse;
-	ofParameter<bool> TRIG_bResetEngine;
-	ofParameter<bool> TRIG_Reset_Bpm;
+	ofParameter<bool> bTRIG_ResetEngine;
+	ofParameter<bool> bTRIG_Reset_Bpm;
 
 	//TODO:
 	ofParameter<float> skipPower;

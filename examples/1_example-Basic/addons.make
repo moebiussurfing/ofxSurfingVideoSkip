@@ -1,9 +1,5 @@
 ofxGui
 ofxHapPlayer
 ofxImGui
-ofxMSAInteractiveObject
-ofxScaleDragRect
-ofxSurfingHelpers
 ofxSurfingImGui
-ofxSurfingPlayer
 ofxSurfingVideoSkip

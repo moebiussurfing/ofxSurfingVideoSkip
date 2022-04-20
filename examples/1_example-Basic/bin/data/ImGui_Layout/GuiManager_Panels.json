@@ -20,7 +20,7 @@
             "Auto_Save": "1",
             "Extra": "0",
             "Layout_Preset": "3",
-            "Layouts": "1",
+            "Layouts": "0",
             "SURFING_VIDEO": "0",
             "Solo": "0",
             "Viewport": "0"
@@ -34,7 +34,7 @@
             "Help": "0",
             "Keys": "1",
             "Lock_Move": "0",
-            "Minimize": "0",
+            "Minimize": "1",
             "MouseWheel": "1",
             "No_Scroll": "0"
         }

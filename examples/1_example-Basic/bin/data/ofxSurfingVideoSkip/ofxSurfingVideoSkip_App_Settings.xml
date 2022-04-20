@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <AppSettings>
 	<PLAY>1</PLAY>
-	<LOOP>1</LOOP>
+	<CLAMP>1</CLAMP>
 	<FILE>"NightmoVES4.mov"</FILE>
 	<videoFilePath>E:\DATA\NightmoVES4.mov</videoFilePath>
 	<MODE_App>0</MODE_App>

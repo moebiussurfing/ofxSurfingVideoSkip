@@ -109,12 +109,12 @@ void ofxSurfingVideoSkip::setup()
 #define SPEED_MIN 0.20f
 #define SPEED_MAX 50.0f
 	speed.set("SPEED_", 1.0f, SPEED_MIN, SPEED_MAX);
-	speed_Reset.set("RESET SPEED", false);
+	bReset_Speed.set("RESET SPEED", false);
 
 	loopedBack.set("LOOP BACK", false);
 	reverseSpeed.set("REVERSE", false);
-	TRIG_bResetEngine.set("RESET ENGINE", false);
-	TRIG_Reset_Bpm.set("RESET BPM", false);
+	bTRIG_ResetEngine.set("RESET ENGINE", false);
+	bTRIG_Reset_Bpm.set("RESET BPM", false);
 	SHOW_Advanced.set("SHOW ADVANCED", false);
 
 	POSITION_Start.set("START", 0.0f, 0.0f, 1.0f);
@@ -123,8 +123,8 @@ void ofxSurfingVideoSkip::setup()
 	bSET_START.set("SET START", false);
 	bSET_END.set("SET END", false);
 	ENABLE_TimersGlobal.set("ENABLE TIMERS", false);
-	TRIG_time_Skiper.set("TRIG SKIP", false);
-	TRIG_bReverseSkipper.set("TRIG REV", false);
+	bTRIG_SkipTime.set("A SKIP", false);
+	bTRIG_SkipReverse.set("B REV", false);
 	MODE_SkipTime.set("A MODE SKIP", false);
 	MODE_SkipReverse.set("B MODE REV", false);
 
@@ -152,9 +152,9 @@ void ofxSurfingVideoSkip::setup()
 	last_TRIG_reverse = 0;
 	bMODE_EDIT.setSerializable(false);
 	speed.setSerializable(false);
-	speed_Reset.setSerializable(false);
-	TRIG_bResetEngine.setSerializable(false);
-	TRIG_Reset_Bpm.setSerializable(false);
+	bReset_Speed.setSerializable(false);
+	bTRIG_ResetEngine.setSerializable(false);
+	bTRIG_Reset_Bpm.setSerializable(false);
 	timer_SkipTime.setSerializable(false);
 	timer_SkipRev.setSerializable(false);
 
@@ -203,7 +203,7 @@ void ofxSurfingVideoSkip::setup()
 
 	params_Engine.add(speedNorm);
 	params_Engine.add(speed);
-	params_Engine.add(speed_Reset);
+	params_Engine.add(bReset_Speed);
 
 	params_Engine.add(bModeSkipLooped);
 	params_Engine.add(bModeSkipPowered);
@@ -248,7 +248,7 @@ void ofxSurfingVideoSkip::setup()
 	_param_SkipEngine.add(divBeatSkipper);
 #endif
 	_param_SkipEngine.add(timer_SkipTime);
-	_param_SkipEngine.add(TRIG_time_Skiper);
+	_param_SkipEngine.add(bTRIG_SkipTime);
 
 	_param_SkipEngine.add(bModeSkipLooped);
 	_param_SkipEngine.add(bModeSkipPowered);
@@ -265,15 +265,15 @@ void ofxSurfingVideoSkip::setup()
 	_param_SkipEngine.add(divBeatReverse);
 #endif
 	_param_SkipEngine.add(timer_SkipRev);
-	_param_SkipEngine.add(TRIG_bReverseSkipper);
+	_param_SkipEngine.add(bTRIG_SkipReverse);
 
-	_param_SkipEngine.add(TRIG_bResetEngine);
+	_param_SkipEngine.add(bTRIG_ResetEngine);
 
 #ifdef USE_BPM_TIMER_MODE
 	_param_Clock.add(bpmTimer);
 	_param_Clock.add(bpmDivider);
 #endif
-	_param_Clock.add(TRIG_Reset_Bpm);
+	_param_Clock.add(bTRIG_Reset_Bpm);
 	_param_SkipEngine.add(_param_Clock);
 
 	//_param_SkipEngine.add(SHOW_Advanced);
@@ -297,7 +297,7 @@ void ofxSurfingVideoSkip::setup()
 	params_Preset.add(POSITION_Start);
 	params_Preset.add(POSITION_End);
 
-	params_Preset.add(speed_Reset);
+	params_Preset.add(bReset_Speed);
 	params_Preset.add(speedNorm);
 	//params_Preset.add(speed);
 
@@ -929,13 +929,13 @@ void ofxSurfingVideoSkip::updateTimers()
 			last_TRIG_time = ofGetElapsedTimeMillis();
 
 			// trig jump skip
-			TRIG_time_Skiper = true;
+			bTRIG_SkipTime = true;
 
 			//// workflow
 			//if (MODE_SkipReverse)
 			//{
 			//	last_TRIG_reverse = ofGetElapsedTimeMillis();
-			//	TRIG_bReverseSkipper = true;
+			//	bTRIG_SkipReverse = true;
 			//}
 		}
 
@@ -962,7 +962,7 @@ void ofxSurfingVideoSkip::updateTimers()
 			last_TRIG_reverse = ofGetElapsedTimeMillis();
 
 			//trig jump skip
-			TRIG_bReverseSkipper = true;
+			bTRIG_SkipReverse = true;
 		}
 
 		timer_SkipRev = MAX(0, t / (float)tmax);
@@ -972,9 +972,9 @@ void ofxSurfingVideoSkip::updateTimers()
 
 	// time trigger
 
-	if (TRIG_time_Skiper == true)
+	if (bTRIG_SkipTime == true)
 	{
-		TRIG_time_Skiper = false;
+		bTRIG_SkipTime = false;
 
 		float skipPos;
 
@@ -1013,9 +1013,9 @@ void ofxSurfingVideoSkip::updateTimers()
 
 	// reverse trigger
 
-	if (TRIG_bReverseSkipper == true)
+	if (bTRIG_SkipReverse == true)
 	{
-		TRIG_bReverseSkipper = false;
+		bTRIG_SkipReverse = false;
 
 		//if (MODE_SkipReverse)
 		{
@@ -1512,7 +1512,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 			// reset preset. basic settings only
 			else if (key == 'r' || key == 'R')
 			{
-				TRIG_bResetEngine = true;
+				bTRIG_ResetEngine = true;
 			}
 		}
 
@@ -1521,7 +1521,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 		//// helpers triggers
 		//else if (key == 's')
 		//{
-		//	TRIG_time_Skiper = true;
+		//	bTRIG_SkipTime = true;
 		//}
 		//else if (key == 'S')
 		//{
@@ -1639,10 +1639,10 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 		std::string name = e.getName();
 
 		if (name != "" &&
-			name != "TRIG SKIP" &&
-			name != "TRIG REV" &&
-			name != "POSITION" &&
-			name != "REVERSE" &&
+			name != bTRIG_SkipTime.getName() &&
+			name != bTRIG_SkipReverse.getName() &&
+			name != POSITION.getName() &&
+			name != reverseSpeed.getName() &&
 			name != timer_SkipTime.getName() &&
 			name != timer_SkipRev.getName()
 			)
@@ -1820,18 +1820,18 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 		{
 			player.setSpeed((reverseSpeed ? (-1.0f) : (1.0f)) * speed);
 		}
-		else if (name == speed_Reset.getName() && speed_Reset)
+		else if (name == bReset_Speed.getName() && bReset_Speed)
 		{
-			speed_Reset = false;
+			bReset_Speed = false;
 			speedNorm = 0.0f;
 			//speed = 1.0f;
 		}
 
 		//-
 
-		else if (name == TRIG_bResetEngine.getName() && TRIG_bResetEngine)
+		else if (name == bTRIG_ResetEngine.getName() && bTRIG_ResetEngine)
 		{
-			TRIG_bResetEngine = false;
+			bTRIG_ResetEngine = false;
 
 			//ENABLE_TimersGlobal = false;
 			//MODE_SkipTime = false;
@@ -1840,21 +1840,22 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 			loopedBack = false;
 			reverseSpeed = false;
 
-			speed_Reset = true;
+			bReset_Speed = true;
 			//speed = 1.0f;
 
 			divBeatSkipper = 4;
 			divBeatReverse = 2;
+
 		}
-		else if (name == TRIG_Reset_Bpm.getName())
+		else if (name == bTRIG_Reset_Bpm.getName())
 		{
-			TRIG_Reset_Bpm = false;
+			bTRIG_Reset_Bpm = false;
 
 			bpmTimer = 120.f;
 			bpmDivider = 2;
 		}
 
-		else if (name == "REVERSE")
+		else if (name == reverseSpeed.getName())
 		{
 			player.setSpeed((reverseSpeed ? (-1.0f) : (1.0f)) * speed);
 
@@ -2562,8 +2563,8 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 			refreshLayout();
 
 			// manual triggers
-			guiManager.Add(TRIG_time_Skiper, OFX_IM_BUTTON_BIG, 1, false);
-			guiManager.Add(TRIG_bReverseSkipper, OFX_IM_BUTTON_BIG, 1, false);
+			guiManager.Add(bTRIG_SkipTime, OFX_IM_BUTTON_BIG, 2, true);
+			guiManager.Add(bTRIG_SkipReverse, OFX_IM_BUTTON_BIG, 2, false);
 
 			ImGui::Spacing();
 
@@ -2601,7 +2602,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 					}
 
 					// reset
-					guiManager.Add(TRIG_Reset_Bpm, OFX_IM_BUTTON_SMALL);
+					guiManager.Add(bTRIG_Reset_Bpm, OFX_IM_BUTTON_SMALL);
 
 					ImGui::TreePop();
 				}
@@ -2627,7 +2628,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 						{
 							refreshLayout();
 
-							//guiManager.Add(TRIG_time_Skiper, OFX_IM_BUTTON_BIG, 1, false);
+							//guiManager.Add(bTRIG_SkipTime, OFX_IM_BUTTON_BIG, 1, false);
 
 							if (MODE_SkipTime && ENABLE_TimersGlobal)
 							{
@@ -2663,7 +2664,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 						{
 							refreshLayout();
 
-							//guiManager.Add(TRIG_bReverseSkipper, OFX_IM_BUTTON_BIG, 1, false);
+							//guiManager.Add(bTRIG_SkipReverse, OFX_IM_BUTTON_BIG, 1, false);
 
 							if (MODE_SkipReverse && ENABLE_TimersGlobal)
 							{
@@ -2684,7 +2685,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 			//ImGui::Spacing();
 			ofxImGuiSurfing::AddSpacingSeparated();
 
-			guiManager.Add(TRIG_bResetEngine, OFX_IM_BUTTON_SMALL);
+			guiManager.Add(bTRIG_ResetEngine, OFX_IM_BUTTON_SMALL);
 
 			//--
 
@@ -2797,7 +2798,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				//TODO:			
 				guiManager.Add(speedNorm, OFX_IM_SLIDER);
 				//guiManager.Add(speed, OFX_IM_SLIDER);
-				guiManager.Add(speed_Reset, OFX_IM_BUTTON_SMALL);
+				guiManager.Add(bReset_Speed, OFX_IM_BUTTON_SMALL);
 
 				guiManager.Add(loopedBack, OFX_IM_TOGGLE_SMALL, 2, true);
 				guiManager.Add(reverseSpeed, OFX_IM_TOGGLE_SMALL, 2, false);
