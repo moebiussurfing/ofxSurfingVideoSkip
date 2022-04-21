@@ -463,7 +463,7 @@ private:
 
 	ofParameter<bool> PLAYING;
 	ofParameter<bool> bMODE_EDIT;
-	ofParameter<bool> bMODE_Clamp;
+	ofParameter<bool> bMODE_Loop;
 	ofParameter<bool> loopedBack;
 	ofParameter<float> POSITION_Start;
 	ofParameter<float> POSITION_End;
@@ -503,7 +503,7 @@ private:
 #endif
 	ofParameter<bool> SHOW_Presets;
 	//ofParameter<bool> SHOW_MoodMachine;
-	ofParameter<bool> SHOW_Advanced;
+	ofParameter<bool> bGui_Advanced;
 
 	// engine
 	uint64_t last_TRIG_time = 0;
