@@ -10,9 +10,14 @@
 
 	TODO:
 
-	+ start / end buttons with ctrl to go/set
+	+ when edit mode, and dragging start/end, move position
+	+ add shift loop
+		+ lock start/end then move "centered" on edit
+	+ add locker for duration locked (opened/without ending) to bpm ? 
+		+ could be better to link bpm to skippers only, not to loop duration. easy to user
+		+ add control to move the loop clip with same duration
 
-	+ add another skip mode: powered or ranged
+	+ start / end buttons with ctrl to go/set
 
 	+ fix presets path empty on startup
 		+ fix route paths for Windows/macOS
@@ -20,19 +25,14 @@
 	+ full screen/dual window. external output.
 
 	+ add tap tempo or surfingPlayer add-on
+		+ add slow skip timers
 
 	+ populate midi notes for available presets
 		or make an engine to centralize all midi stuff for different modules.
 
 	+ fix docking for all panels. Should split main 3 panels too..
 
-	+ add slow skip timers
-
 	+ add new fx skip-engine jump bpm timed shutter
-
-	+ add locker for duration locked (opened/without ending) to bpm ? 
-		+ could be better to link bpm to skippers only, not to loop duration. easy to user
-		+ add control to move the loop clip with same duration
 
 	+ zoom on loop zone. maybe with stills
 
@@ -43,22 +43,33 @@
 //
 //	OPTIONAL DEFINES
 
-#define USE_MINIMAL_ofxSurfingVideoSkip
-// -> Force disable ALL the optionals below. To use only the minimal core add-on.
+//#define USE_MINIMAL_ofxSurfingVideoSkip
+// -> Uncomment to 
+// Force disable ALL the optionals below. To use only the minimal core add-on.
 
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
 
-#define USE_ofxSurfingMoods // -> Mood machine
+//-
 
-#define USE_OF_BEAT_CLOCK__VIDEO_SKIP // -> Beat clock
+// Optional compatible add-ons list:
 
 // Presets. Two alternatives:
-#define USE_ofxSurfingPresets__VIDEO_SKIP // -> A. simple presets
-//#define USE_ofxPresetsManager__VIDEO_SKIP // -> B. power presets
+// -> 1A. simple presets
+#define USE_ofxSurfingPresets__VIDEO_SKIP
+// -> 1B. power presets
+//#define USE_ofxPresetsManager__VIDEO_SKIP 
 
-#define USE_MIDI_PARAMS__VIDEO_SKIP // -> MIDI input to control gui and switch presets
+// -> 2. Mood machine
+//#define USE_ofxSurfingMoods 
 
-//#define USE_ofxChannelFx // fx
+// -> 3. Beat clock
+//#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
+
+// -> 4. MIDI input to control gui and switch presets
+//#define USE_MIDI_PARAMS__VIDEO_SKIP 
+
+// -> 5. FX
+//#define USE_ofxChannelFx 
 
 #endif
 
@@ -66,12 +77,17 @@
 
 
 #include "ofxHapPlayer.h"
-
-#include "ofxSurfingImGui.h"
-
 #include "ofxInteractiveRect.h"
-
+#include "ofxSurfingImGui.h"
 #include "ofxSurfing_ImGui_WindowFbo.h"
+
+#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+#include "ofxSurfingPresets.h"
+#endif
+
+#ifdef USE_ofxPresetsManager__VIDEO_SKIP
+#include "ofxPresetsManager.h"
+#endif
 
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP 
 #include "ofxMidiParams.h"
@@ -81,20 +97,12 @@
 #include "ofxBeatClock.h"
 #endif
 
-#ifdef USE_ofxChannelFx
-#include "ofxChannelFx.h"
-#endif
-
 #ifdef USE_ofxSurfingMoods
 #include "ofxSurfingMoods.h"
 #endif
 
-#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
-#include "ofxSurfingPresets.h"
-#endif
-
-#ifdef USE_ofxPresetsManager__VIDEO_SKIP
-#include "ofxPresetsManager.h"
+#ifdef USE_ofxChannelFx
+#include "ofxChannelFx.h"
 #endif
 
 

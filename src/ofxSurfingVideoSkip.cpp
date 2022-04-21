@@ -2740,6 +2740,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 		{
 			refreshLayout();
 
+			// minimize
 			ofxImGuiSurfing::AddToggleRoundedButton(guiManager.bMinimize);
 			ImGui::Spacing();
 
@@ -2772,13 +2773,22 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			{
 				refreshLayout();
 
-				//-
-
 				ImGui::Spacing();
 
+				//-
+
 				// Play
-				guiManager.Add(PLAYING, OFX_IM_TOGGLE_BIG_XXXL_BORDER_BLINK);
-				//guiManager.Add(PLAYING, OFX_IM_TOGGLE_BIG);
+
+				//guiManager.Add(PLAYING, OFX_IM_TOGGLE_BIG_XXXL_BORDER_BLINK);
+				////guiManager.Add(PLAYING, OFX_IM_TOGGLE_BIG);
+				{
+					float _w1 = ofxImGuiSurfing::getWidgetsWidth(1);
+					float _w2 = ofxImGuiSurfing::getWidgetsWidth(2);
+					float _h = ofxImGuiSurfing::getWidgetsHeightUnit();
+					ofxImGuiSurfing::AddBigToggleNamed(PLAYING, _w1, 3.0f * _h, "PLAYING", "PLAY", true);
+				}
+
+				//-
 
 				ImGui::Spacing();
 
@@ -2817,7 +2827,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 				bool bReturn;
 				if (bMODE_Loop)
-					bReturn = (ofxImGuiSurfing::AddHSliderRanged(p, ImVec2(_ww, __h), POSITION_Start, POSITION_End, true, true));
+					bReturn = (ofxImGuiSurfing::AddHSliderRanged2(p, ImVec2(_ww, __h), POSITION_Start, POSITION_End, true, true));
 				else
 					bReturn = (ofxImGuiSurfing::AddHSlider(p, ImVec2(_ww, __h), true, true));
 
@@ -2832,11 +2842,21 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				// Loop
 				guiManager.Add(bMODE_Loop, OFX_IM_TOGGLE_BIG, 1, false);
 
+				// Mark clip start/end
+				//if (bMODE_EDIT)
+				if (bMODE_Loop)
+				{
+					guiManager.Add(bSET_START, OFX_IM_BUTTON_SMALL, 2, true);
+					guiManager.Add(bSET_END, OFX_IM_BUTTON_SMALL, 2, false);
+					ImGui::Spacing();
+				}
+
 				//-
 
 				// Range
 				if (bMODE_Loop)
 				{
+					// Start/Finish
 					ImGui::Text("START|END");
 					guiManager.Add(POSITION_Start, OFX_IM_HSLIDER_MINI_NO_LABELS);
 					guiManager.Add(POSITION_End, OFX_IM_HSLIDER_MINI_NO_LABELS);
@@ -2848,18 +2868,10 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				{
 					if (!guiManager.bMinimize)
 					{
+						ImGui::Spacing();
 						guiManager.Add(bMODE_EDIT, OFX_IM_TOGGLE_BIG_BORDER);
 
 						//ImGui::Indent();
-
-						// Mark clip start/end
-						if (bMODE_EDIT)
-							if (bMODE_Loop)
-							{
-								guiManager.Add(bSET_START, OFX_IM_BUTTON_SMALL, 2, true);
-								guiManager.Add(bSET_END, OFX_IM_BUTTON_SMALL, 2, false);
-								ImGui::Spacing();
-							}
 					}
 
 					// Preset Clicker
@@ -2871,6 +2883,10 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					if (!guiManager.bMinimize)
 						if (bMODE_EDIT)
 						{
+							// TODO:
+							// disable range bc is too small and duplicated from the above controls
+
+							/*
 							refreshLayout();
 
 							// Position
@@ -2882,15 +2898,15 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 							}
 
 							ImGui::Spacing();
+							*/
 
 							//--
 
 							if (!guiManager.bMinimize)
 							{
+								ImGui::Spacing();
 
-								//ImGui::Spacing();
-
-								// Start/Finish
+								// finetune
 								static bool bFineTune = false;
 								ToggleRoundedButton("FineTune", &bFineTune, ImVec2(30, 20));
 								ImGui::Spacing();

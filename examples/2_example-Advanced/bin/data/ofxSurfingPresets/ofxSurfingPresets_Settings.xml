@@ -4,12 +4,12 @@
         "AutoSave_Timed": "0",
         "Clicker": "1",
         "Cycled": "1",
-        "Editor": "1",
+        "Editor": "0",
         "FLOAT_CLICKER": {
             "Auto_Resize": "1",
             "Extra": "0",
             "MaxBut": "3",
-            "Minimize": "0",
+            "Minimize": "1",
             "Responsive": "1"
         },
         "INNER_CLICKER": {
@@ -19,8 +19,19 @@
         "Inner_Clicker": "0",
         "Keys": "1",
         "Minimize": "0",
-        "PRESETS": "0",
+        "PRESETS": "1",
         "Parameters": "0",
-        "Preset_Index": "8"
+        "Preset_Index": "7",
+        "SurfingPlayer": {
+            "Bpm": "30",
+            "Minimize": "1",
+            "Play": "0",
+            "Player": "0",
+            "ms": "2000"
+        },
+        "_Smoother": {
+            "Smooth": "0",
+            "Speed": "0"
+        }
     }
 }

@@ -1,0 +1,8 @@
+{
+    "Ports": {
+        "In": "TouchOSC Bridge 0",
+        "Midi_In": "0",
+        "Midi_Out": "2",
+        "Out": ""
+    }
+}

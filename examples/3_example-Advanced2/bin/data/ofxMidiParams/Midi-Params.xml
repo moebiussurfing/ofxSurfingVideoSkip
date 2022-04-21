@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<midiparams>
+	<param paramName="PLAY" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="EDIT" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="FRAME_L" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="FRAME_R" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="SET_START" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="SET_END" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="POSITION" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="START" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="END" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="RESET_SPEED" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="SPEED" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="LOOPED_BACK" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="REVERSE" group="SKIP_PLAYER" midiid="-1" displayName="" />
+	<param paramName="ENABLE_TIMERS" group="TIMERS" midiid="-1" displayName="" />
+	<param paramName="A_MODE_SKIP" group="TIMERS" midiid="-1" displayName="" />
+	<param paramName="T_SKIP" group="TIMERS" midiid="-1" displayName="" />
+	<param paramName="B_MODE_REV" group="TIMERS" midiid="-1" displayName="" />
+	<param paramName="T_REV" group="TIMERS" midiid="-1" displayName="" />
+</midiparams>

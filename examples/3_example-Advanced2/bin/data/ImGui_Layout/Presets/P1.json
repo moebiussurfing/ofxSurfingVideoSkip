@@ -1,0 +1,15 @@
+{
+    "_LayoutsPresets": {
+        "Extra_Params": {
+            "Log": "0",
+            "Menu": "0"
+        },
+        "_LayoutsVisible": {
+            "CLOCK": "1",
+            "MIDI": "0",
+            "MOODS": "1",
+            "PRESETS": "0",
+            "SKIP_PLAYER": "0"
+        }
+    }
+}

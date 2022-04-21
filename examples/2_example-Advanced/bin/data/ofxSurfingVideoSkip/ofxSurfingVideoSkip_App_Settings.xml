@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <AppSettings>
 	<PLAY>1</PLAY>
-	<CLAMP>1</CLAMP>
+	<LOOP>1</LOOP>
 	<FILE>"Trinity03_HAP.mov"</FILE>
 	<videoFilePath>E:\DATA\Trinity03_HAP.mov</videoFilePath>
 	<MODE_App>0</MODE_App>
