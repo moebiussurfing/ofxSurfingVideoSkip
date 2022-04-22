@@ -10,9 +10,10 @@
 
 	TODO:
 
+	+ disable beat mode bc speed affects all durations
+
 	+ improve Edit mode and lock
-
-
+	
 	+ fix save screens/control bar
 	+ fix imgui layout windows: store settings, hide/disable modes
 
