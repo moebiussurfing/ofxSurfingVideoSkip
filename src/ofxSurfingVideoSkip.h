@@ -12,6 +12,10 @@
 
 	+ improve Edit mode and lock
 
+
+	+ fix save screens/control bar
+	+ fix imgui layout windows: store settings, hide/disable modes
+
 	+ add locker for duration locked (opened/without ending) to bpm ? 
 		+ could be better to link bpm to skippers only, not to loop duration. easy to user
 		+ add control to move the loop clip with same duration

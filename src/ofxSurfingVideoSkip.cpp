@@ -334,6 +334,11 @@ void ofxSurfingVideoSkip::setup()
 	params_Preset.add(divBeatReverse);
 #endif
 
+	params_Preset.add(bMODE_Beat);
+	params_Preset.add(bMODE_Lock);
+	params_Preset.add(beatDuration);
+	params_Preset.add(beatRescale);
+
 	// should add more params like direction/reverse/..
 
 	//--
@@ -539,7 +544,7 @@ void ofxSurfingVideoSkip::setup()
 
 	// startup 
 	startup(); // video file path will (must) be loaded now
-}
+	}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::startup()
@@ -918,6 +923,12 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::updateTimers()
 {
+	//-
+
+	// Mode beat
+
+	//TODO:
+	// this is wrong bc time and durations depends of play speed!
 	if (bMODE_Beat)
 	{
 		int videoDur = player.getDuration() * 1000;//video duration in ms
@@ -929,7 +940,7 @@ void ofxSurfingVideoSkip::updateTimers()
 
 	//--
 
-	// time
+	// Timers
 
 	if (ENABLE_TimersGlobal && bMODE_SkipTime && !inScrub && bPlay)
 	{
@@ -962,7 +973,7 @@ void ofxSurfingVideoSkip::updateTimers()
 
 	//-
 
-	// reverse
+	// Reverse
 
 	if (ENABLE_TimersGlobal && bMODE_SkipReverse && !inScrub && bPlay)
 	{
@@ -988,7 +999,9 @@ void ofxSurfingVideoSkip::updateTimers()
 
 	//--
 
-	// time trigger
+	// A - B Trigers
+
+	// Time trigger
 
 	if (bTRIG_SkipTime == true)
 	{
@@ -1030,7 +1043,7 @@ void ofxSurfingVideoSkip::updateTimers()
 
 	//--
 
-	// reverse trigger
+	// Reverse Trigger
 
 	if (bTRIG_SkipReverse == true)
 	{
@@ -1368,7 +1381,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 		ofLogNotice(__FUNCTION__) << "mod_CONTROL: " << (mod_CONTROL ? "ON" : "OFF");
 		ofLogNotice(__FUNCTION__) << "mod_ALT: " << (mod_ALT ? "ON" : "OFF");
 		ofLogNotice(__FUNCTION__) << "mod_SHIFT: " << (mod_SHIFT ? "ON" : "OFF");
-	}
+}
 
 	//guiManager.keyPressed(key);
 
@@ -1645,7 +1658,7 @@ void ofxSurfingVideoSkip::Changed_DONE_load(bool &DONE_load)
 
 		//// workflow
 		//if (!bMODE_Loop) bMODE_Loop = true;
-}
+	}
 }
 #endif
 
@@ -1712,7 +1725,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
 			}
-		}
+	}
 		else if (name == bMODE_Loop.getName())
 		{
 			if (bMODE_Loop)
@@ -1928,7 +1941,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 			//ofxChannelFx
 			channelFx.setVisibleGui(b);
 			//channelFx.setVisible_PresetClicker(b);
-	}
+		}
 #endif
 		//-
 
@@ -1982,7 +1995,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 			presetsManager.setEnableKeys(ENABLE_Keys_Presets);
 #endif
-			}
+		}
 		else if (name == ENABLE_Keys_Fx.getName())
 		{
 			DISABLE_CALLBACKS = true;
@@ -2183,7 +2196,7 @@ void ofxSurfingVideoSkip::draw(ofEventArgs & args)
 
 		// draw processed
 		channelFx.draw();
-}
+	}
 
 	// raw clean
 	else
@@ -2825,6 +2838,9 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				//guiManager.Add(speed, OFX_IM_SLIDER);
 				guiManager.Add(bReset_Speed, OFX_IM_BUTTON_SMALL);
 
+				//ImGui::Spacing();
+				AddSpacingSeparated();
+				ImGui::Spacing();
 				ImGui::Spacing();
 
 				//-
@@ -2857,6 +2873,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				}
 				IMGUI_SUGAR__SLIDER_ADD_MOUSE_WHEEL(p);
 
+				ImGui::Spacing();
+
 				//-
 
 				// Loop
@@ -2877,16 +2895,19 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 				//-
 
-
 				// Beat mode
-				ImGui::Spacing();
-				guiManager.Add(bMODE_Beat, OFX_IM_TOGGLE_SMALL_BORDER, 2, true);
-				guiManager.Add(bMODE_Lock, OFX_IM_TOGGLE_SMALL_BORDER, 2, false);
-				if (bMODE_Beat) {
-					ofxImGuiSurfing::AddParameter(beatDuration);
-					ofxImGuiSurfing::AddParameter(beatRescale);
-				}
-				ImGui::Spacing();
+				if (!guiManager.bMinimize)
+					if (bMODE_Loop)
+					{
+						ImGui::Spacing();
+						guiManager.Add(bMODE_Beat, OFX_IM_TOGGLE_SMALL_BORDER, 2, true);
+						guiManager.Add(bMODE_Lock, OFX_IM_TOGGLE_SMALL_BORDER, 2, false);
+						if (bMODE_Beat) {
+							ofxImGuiSurfing::AddParameter(beatDuration);
+							ofxImGuiSurfing::AddParameter(beatRescale);
+						}
+						ImGui::Spacing();
+					}
 
 				//--
 
@@ -2981,8 +3002,10 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 				if (!guiManager.bMinimize)
 				{
+					AddSpacingSeparated();
 					ImGui::Spacing();
-					guiManager.Add(bMODE_Edit, OFX_IM_TOGGLE_BIG_BORDER);
+
+					guiManager.Add(bMODE_Edit, OFX_IM_TOGGLE_BIG_BORDER_BLINK);
 
 					//ImGui::Indent();
 				}
@@ -2990,8 +3013,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				//-
 
 				ImGui::Spacing();
-
 				AddSpacingSeparated();
+
 				//guiManager.Add(bMODE_Edit, OFX_IM_TOGGLE_BIG_BORDER);
 
 				//refreshLayout();
@@ -3100,14 +3123,14 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 						// Extra panel
 						guiManager.drawAdvanced(true, true);
-					}
-					ImGui::Unindent();
-				}
 			}
+					ImGui::Unindent();
 		}
+	}
+}
 
 		//ImGui::PopItemWidth();
-	}
+}
 	guiManager.endWindow();
 }
 //}
@@ -3216,7 +3239,7 @@ void ofxSurfingVideoSkip::Changed_BeatBpm()
 #ifdef USE_ofxSurfingMoods
 	surfingMoods.setBpm(beatClock.getBpm());
 #endif
-	}
+}
 #endif
 
 //--------------------------------------------------------------
