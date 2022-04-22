@@ -2639,7 +2639,8 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 
 								// draw progress bar
 								////guiManager.Add(timer_SkipTime, OFX_IM_DEFAULT);
-								ofxImGuiSurfing::AddProgressBar(timer_SkipTime, true);
+								//ofxImGuiSurfing::AddProgressBar(timer_SkipTime, true);
+								guiManager.Add(timer_SkipTime, OFX_IM_PROGRESS_BAR_NO_TEXT);
 							}
 
 							guiManager.Add(bModeSkipLooped, OFX_IM_TOGGLE_SMALL, 2, true);
@@ -2677,7 +2678,8 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 
 								// draw progress bar
 								////guiManager.Add(timer_SkipRev, OFX_IM_DEFAULT);
-								ofxImGuiSurfing::AddProgressBar(timer_SkipRev, true);
+								//ofxImGuiSurfing::AddProgressBar(timer_SkipRev, true);
+								guiManager.Add(timer_SkipRev, OFX_IM_PROGRESS_BAR_NO_TEXT);
 							}
 
 							ImGui::TreePop();

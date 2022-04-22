@@ -10,13 +10,16 @@
 
 	TODO:
 
-	+ when edit mode, and dragging start/end, move position
-	+ add shift loop
-		+ lock start/end then move "centered" on edit
+	+ remove % in progress bars
+
 	+ add locker for duration locked (opened/without ending) to bpm ? 
 		+ could be better to link bpm to skippers only, not to loop duration. easy to user
 		+ add control to move the loop clip with same duration
 
+	+ add shift loop
+		+ lock start/end then move "centered" on edit
+
+	+ when edit mode, and dragging start/end, move position
 	+ start / end buttons with ctrl to go/set
 
 	+ fix presets path empty on startup

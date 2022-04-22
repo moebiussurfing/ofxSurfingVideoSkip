@@ -5,10 +5,8 @@ ofxHapPlayer
 ofxImGui
 ofxMidi
 ofxMidiParams
-ofxMSAInteractiveObject
 ofxOsc
 ofxRemoteParameters
-ofxScaleDragRect
 ofxSurfingAnimators
 ofxSurfingHelpers
 ofxSurfingImGui
