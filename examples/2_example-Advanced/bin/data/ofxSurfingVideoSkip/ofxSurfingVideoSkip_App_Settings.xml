@@ -15,7 +15,7 @@
 	<SKIP_PLAYER>1</SKIP_PLAYER>
 	<Gui_Panel_Position>500, 500</Gui_Panel_Position>
 	<Gui_Engine_Position>700, 500</Gui_Engine_Position>
-	<Auto_Resize>0</Auto_Resize>
+	<Auto_Resize>1</Auto_Resize>
 	<Debug>0</Debug>
 	<Extra>0</Extra>
 </AppSettings>

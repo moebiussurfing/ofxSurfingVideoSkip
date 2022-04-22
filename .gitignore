@@ -582,3 +582,11 @@ example-Randomizer/bin/data/ofxSurfingRandomizer/ofxSurfingRandomizer_Editor.jso
 example-Randomizer/bin/data/ofxSurfingRandomizer/ofxSurfingRandomizer_State.json
 example-Randomizer/bin/data/Rectangle_Rect_Plots.xml
 example-Randomizer/bin/imgui.ini
+examples/2_example-Advanced/bin/data/ofxSurfingPresets/Preset.json
+examples/2_example-Advanced/bin/data/ofxSurfingPresets/Trinity03_HAP/Clips_03.json
+examples/2_example-Advanced/bin/data/ofxSurfingPresets/Trinity03_HAP/Clips_04.json
+examples/2_example-Advanced/bin/data/ofxSurfingPresets/Trinity03_HAP/Clips_05.json
+examples/2_example-Advanced/bin/data/ofxSurfingPresets/Trinity03_HAP/Clips_06.json
+examples/2_example-Advanced/bin/data/ofxSurfingPresets/Trinity03_HAP/Clips_07.json
+examples/2_example-Advanced/bin/data/ofxSurfingPresets/Trinity03_HAP/Clips_08.json
+examples/2_example-Advanced/bin/data/ofxSurfingVideoSkip/ofxSurfingVideoSkip_App_Settings.xml

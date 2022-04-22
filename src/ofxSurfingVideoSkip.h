@@ -10,7 +10,7 @@
 
 	TODO:
 
-	+ remove % in progress bars
+	+ improve Edit mode and lock
 
 	+ add locker for duration locked (opened/without ending) to bpm ? 
 		+ could be better to link bpm to skippers only, not to loop duration. easy to user
@@ -187,7 +187,7 @@ public:
 private:
 
 	void startup();
-	void updateVideoPLayer();
+	void updateVideoPlayer();
 	void updateTimers();
 
 public:
@@ -321,7 +321,7 @@ public:
 	//--------------------------------------------------------------
 	void setAudoHide(bool b)
 	{
-		ENABLE_AutoHide = b;
+		bAutoHide = b;
 		//lastMovement = ofGetSystemTimeMillis();
 	}
 
@@ -333,28 +333,28 @@ public:
 	//--------------------------------------------------------------
 	void play()
 	{
-		PLAYING = true;
+		bPlay = true;
 	}
 	//--------------------------------------------------------------
 	void stop()
 	{
-		PLAYING = false;
+		bPlay = false;
 	}
 
 	//--------------------------------------------------------------
 	void setPlay(bool b)
 	{
-		PLAYING = b;
+		bPlay = b;
 	}
 	//--------------------------------------------------------------
 	void setTogglePlay()
 	{
-		PLAYING = !PLAYING;
+		bPlay = !bPlay;
 	}
 	//--------------------------------------------------------------
 	bool isPlaying()
 	{
-		return PLAYING;
+		return bPlay;
 	}
 
 #ifdef USE_ofxSurfingMoods
@@ -464,7 +464,6 @@ private:
 
 private:
 
-	// skipper engine
 	float positionSeconds;
 	ofParameter<std::string> videoTIME;
 	ofParameter<std::string> videoFRAME;
@@ -472,32 +471,43 @@ private:
 	ofParameter<bool> bKickL;
 	ofParameter<bool> bKickR;
 
-	ofParameter<bool> PLAYING;
-	ofParameter<bool> bMODE_EDIT;
-	ofParameter<bool> bMODE_Loop;
-	ofParameter<bool> loopedBack;
 	ofParameter<float> POSITION_Start;
 	ofParameter<float> POSITION_End;
 	ofParameter<float> POSITION;
+
 	ofParameter<bool> bSET_START;
 	ofParameter<bool> bSET_END;
+
 	ofParameter<float> speed;
 	ofParameter<float> speedNorm;
+	
+	ofParameter<bool> bPlay;
+	
+	ofParameter<bool> bMODE_Edit;
+	ofParameter<bool> bMODE_Loop;
+	ofParameter<bool> bMODE_LoopedBack;
+	ofParameter<bool> bMODE_Reversed;
+	ofParameter<bool> bMODE_SkipTime;
+	ofParameter<bool> bMODE_SkipReverse;
+
 	ofParameter<bool> bReset_Speed;
-	ofParameter<bool> ENABLE_AutoHide;
-	ofParameter<bool> ENABLE_TimersGlobal;
 	ofParameter<bool> bTRIG_SkipTime;
 	ofParameter<bool> bTRIG_SkipReverse;
-	ofParameter<bool> reverseSpeed;
-	ofParameter<bool> MODE_SkipTime;
-	ofParameter<bool> MODE_SkipReverse;
 	ofParameter<bool> bTRIG_ResetEngine;
 	ofParameter<bool> bTRIG_Reset_Bpm;
 
+	ofParameter<bool> bAutoHide;
+	ofParameter<bool> ENABLE_TimersGlobal;
+
+	ofParameter<bool> bMODE_Beat;
+	ofParameter<bool> bMODE_Lock;
+	ofParameter<int> beatDuration;
+	ofParameter<int> beatRescale;
+
 	//TODO:
+	ofParameter<bool> bMODE_SkipLooped;
+	ofParameter<bool> bMODE_SkipPowered;
 	ofParameter<float> skipPower;
-	ofParameter<bool> bModeSkipPowered;
-	ofParameter<bool> bModeSkipLooped;
 
 #define USE_BPM_TIMER_MODE
 #ifndef USE_BPM_TIMER_MODE
@@ -512,7 +522,8 @@ private:
 	ofParameter<int> divBeatSkipper;//skiper
 	ofParameter<int> divBeatReverse;//reverse
 #endif
-	ofParameter<bool> SHOW_Presets;
+
+	ofParameter<bool> bGui_Presets;
 	//ofParameter<bool> SHOW_MoodMachine;
 	ofParameter<bool> bGui_Advanced;
 
@@ -525,8 +536,8 @@ private:
 	bool DISABLE_CALLBACKS;
 
 	ofParameterGroup params_Control;
-	ofParameter<bool> SHOW_ControlPanel;
-	ofParameter<bool> SHOW_ControlPanel_Header;
+	ofParameter<bool> bGui_ControlPanel;
+	ofParameter<bool> bGui_ControlPanel_Header;
 	ofParameter<glm::vec2> positionGui_ControlPanel;
 	ofParameter<glm::vec2> positionGui_Engine;
 
@@ -543,7 +554,8 @@ private:
 
 	//-
 
-	// video
+	// video file
+
 	ofParameter<std::string> videoFilePath;
 	ofParameter<std::string> videoName;
 
