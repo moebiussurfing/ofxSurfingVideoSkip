@@ -10,11 +10,12 @@
 
 	TODO:
 
-	+ disable beat mode bc speed affects all durations
+	+ should be oriented more to start point..
+
+	+ disable widgets
 
 	+ improve Edit mode and lock
 	
-	+ fix save screens/control bar
 	+ fix imgui layout windows: store settings, hide/disable modes
 
 	+ add locker for duration locked (opened/without ending) to bpm ? 
@@ -68,7 +69,7 @@
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
 // -> 2. Mood machine
-//#define USE_ofxSurfingMoods 
+#define USE_ofxSurfingMoods 
 
 // -> 3. Beat clock
 //#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
@@ -483,6 +484,9 @@ private:
 
 	ofParameter<bool> bSET_START;
 	ofParameter<bool> bSET_END;
+
+	ofParameter<bool> bGo_START;
+	ofParameter<bool> bGo_END;
 
 	ofParameter<float> speed;
 	ofParameter<float> speedNorm;

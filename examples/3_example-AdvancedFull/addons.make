@@ -1,11 +1,12 @@
+ofxGui
+ofxOsc
 ofxAbletonLink
 ofxBeatClock
-ofxGui
 ofxHapPlayer
 ofxImGui
 ofxMidi
 ofxMidiParams
-ofxOsc
+ofxMSAInteractiveObject
 ofxRemoteParameters
 ofxSurfingAnimators
 ofxSurfingHelpers

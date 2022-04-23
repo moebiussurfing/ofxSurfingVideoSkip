@@ -1,0 +1,13 @@
+{
+    "_LayoutsPresets": {
+        "Extra_Params": {
+            "Log": "0",
+            "Menu": "0"
+        },
+        "_LayoutsVisible": {
+            "MOODS": "1",
+            "PRESETS": "1",
+            "SKIP_PLAYER": "1"
+        }
+    }
+}

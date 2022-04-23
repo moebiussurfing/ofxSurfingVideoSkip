@@ -122,6 +122,8 @@ void ofxSurfingVideoSkip::setup()
 	POSITION.set("POSITION", 0.0f, 0.0f, 1.0f);
 	bSET_START.set("SET START", false);
 	bSET_END.set("SET END", false);
+	bGo_START.set("GO START", false);
+	bGo_END.set("GO END", false);
 	ENABLE_TimersGlobal.set("ENABLE TIMERS", false);
 	bTRIG_SkipTime.set("A SKIP", false);
 	bTRIG_SkipReverse.set("B REV", false);
@@ -222,6 +224,8 @@ void ofxSurfingVideoSkip::setup()
 	params_Engine.add(bMODE_Loop);
 	params_Engine.add(bSET_START);
 	params_Engine.add(bSET_END);
+	params_Engine.add(bGo_START);
+	params_Engine.add(bGo_END);
 	params_Engine.add(POSITION_Start);
 	params_Engine.add(POSITION_End);
 
@@ -409,6 +413,7 @@ void ofxSurfingVideoSkip::setup()
 #ifdef USE_ofxSurfingMoods
 	surfingMoods.setup();
 	surfingMoods.bGui.setName("MOODS");
+	surfingMoods.setKeySpace(false);
 
 	// customize
 	//surfingMoods.setGui_Visible(SHOW_MoodMachine);
@@ -442,6 +447,8 @@ void ofxSurfingVideoSkip::setup()
 	params_ControlRemote.add(bKickR);
 	params_ControlRemote.add(bSET_START);
 	params_ControlRemote.add(bSET_END);
+	params_ControlRemote.add(bGo_START);
+	params_ControlRemote.add(bGo_END);
 	params_ControlRemote.add(POSITION);
 
 	//--
@@ -1165,7 +1172,7 @@ void ofxSurfingVideoSkip::setGuiVisible(bool b)
 	else {
 		channelFx.setVisibleGui(false);
 		//channelFx.setVisible_PresetClicker(false);
-}
+	}
 #endif
 
 	//-
@@ -1446,7 +1453,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 	if (ENABLE_Keys_Fx)
 	{
 		channelFx.keyPressed(key);
-}
+	}
 #endif
 
 	//----
@@ -1521,7 +1528,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 			setPlay_MoodMachine(b);
 			setPlay(b);
 #endif
-	}
+		}
 
 		//-
 
@@ -1550,6 +1557,21 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 			bMODE_Edit = true;
 		}
 
+		if (!bMODE_Edit)
+		{
+			// recall (go)
+			if (key == 'I')
+			{
+				//POSITION = POSITION_Start;
+				bGo_START = true;
+			}
+			else if (key == 'O')
+			{
+				//POSITION = POSITION_End;
+				bGo_END = true;
+			}
+		}
+
 		// edit mode
 		if (bMODE_Edit)
 		{
@@ -1565,15 +1587,15 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 				bSET_END = true;
 			}
 
-			// recall (go)
-			else if (key == 'I')
-			{
-				POSITION = POSITION_Start;
-			}
-			else if (key == 'O')
-			{
-				POSITION = POSITION_End;
-			}
+			//// recall (go)
+			//else if (key == 'I')
+			//{
+			//	POSITION = POSITION_Start;
+			//}
+			//else if (key == 'O')
+			//{
+			//	POSITION = POSITION_End;
+			//}
 
 			//// user kick-drift frame-by-frame
 			//else if (key == OF_KEY_LEFT && bMODE_Edit && !mod_CONTROL)
@@ -1777,11 +1799,12 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 				POSITION_Start = POSITION_End;
 			}
 
-			////if (!bPlay /*&& bMODE_Edit*/)
-			//if (bMODE_Edit)//breaks
-			//{
-			//	POSITION = POSITION_End;
-			//}
+			//if (!bPlay /*&& bMODE_Edit*/)
+			if (bMODE_Edit)//breaks
+			{
+				//POSITION = POSITION_End;
+				player.setPosition(POSITION);
+			}
 		}
 
 		//--
@@ -1845,6 +1868,19 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 
 		//--
 
+		// go
+		else if (name == bGo_START.getName() && bGo_START)
+		{
+			bGo_START = false;
+			POSITION = POSITION_Start;
+		}
+		else if (name == bGo_END.getName() && bGo_END)
+		{
+			bGo_END = false;
+			POSITION = POSITION_End;
+		}
+
+		// set
 		else if (name == bSET_START.getName() && bSET_START)
 		{
 			bSET_START = false;
@@ -2268,7 +2304,7 @@ void ofxSurfingVideoSkip::draw(ofEventArgs & args)
 
 		// draw processed
 		channelFx.draw();
-}
+	}
 
 	// raw clean
 	else
@@ -2295,7 +2331,7 @@ void ofxSurfingVideoSkip::draw(ofEventArgs & args)
 	////ofSetColor(ofColor(ofColor::red, 128));
 	////ofDrawRectangle(rectDraggable);
 	//rectDraggable.draw();
-	}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_Video()
@@ -3034,7 +3070,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 							// finetune
 							static bool bFineTune = false;
-							ToggleRoundedButton("FineTune", &bFineTune, ImVec2(30, 20));
+							ToggleRoundedButton("FINETUNE", &bFineTune, ImVec2(30, 20));
 							ImGui::Spacing();
 
 							if (bFineTune)
@@ -3048,12 +3084,12 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 									{
 										ImGui::PushButtonRepeat(true);
 										{
-											if (ImGui::Button("-", ImVec2(_w50, _h / 2)))
+											if (ImGui::Button("-", ImVec2(_w50, _h*0.75)))
 											{
 												bKickL = true;
 											}
 											ImGui::SameLine();
-											if (ImGui::Button("+", ImVec2(_w50, _h / 2)))
+											if (ImGui::Button("+", ImVec2(_w50, _h*0.75)))
 											{
 												bKickR = true;
 											}
@@ -3065,15 +3101,20 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 									if (bMODE_Loop) {
 										guiManager.Add(POSITION_Start, OFX_IM_STEPPER);
-										guiManager.Add(POSITION_End, OFX_IM_STEPPER);
+
+										if (!bMODE_Beat)
+											guiManager.Add(POSITION_End, OFX_IM_STEPPER);
 									}
 
 									// Mark clip start/end
 									//if (bMODE_Edit)
 									if (bMODE_Loop)
 									{
+										ImGui::Spacing();
 										guiManager.Add(bSET_START, OFX_IM_BUTTON_SMALL, 2, true);
-										guiManager.Add(bSET_END, OFX_IM_BUTTON_SMALL, 2, false);
+										if (!bMODE_Beat) guiManager.Add(bSET_END, OFX_IM_BUTTON_SMALL, 2, false);
+										guiManager.Add(bGo_START, OFX_IM_BUTTON_SMALL, 2, true);
+										if (!bMODE_Beat) guiManager.Add(bGo_END, OFX_IM_BUTTON_SMALL, 2, false);
 										ImGui::Spacing();
 									}
 								}
@@ -3194,11 +3235,11 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 						// Extra panel
 						guiManager.drawAdvanced(true, true);
-			}
+					}
 					ImGui::Unindent();
+				}
+			}
 		}
-	}
-}
 
 		//ImGui::PopItemWidth();
 	}
@@ -3297,7 +3338,7 @@ void ofxSurfingVideoSkip::Changed_BeatTick() // callback to receive BeatTicks
 #ifdef USE_ofxSurfingMoods
 		surfingMoods.doBeatTick();
 #endif
-}
+	}
 }
 
 //--------------------------------------------------------------
