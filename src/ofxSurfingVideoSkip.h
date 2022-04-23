@@ -179,7 +179,7 @@ private:
 	void mouseReleased(ofMouseEventArgs &eventArgs);
 	void mouseMoved(ofMouseEventArgs &eventArgs);
 
-	void refreshMouse(int button, float position);
+	void mouseRefresh(int button, float position);
 
 	void addMouseListeners();
 	void removeMouseListeners();
@@ -194,6 +194,7 @@ private:
 	void startup();
 	void updateVideoPlayer();
 	void updateTimers();
+	void updateConstraints();
 
 public:
 

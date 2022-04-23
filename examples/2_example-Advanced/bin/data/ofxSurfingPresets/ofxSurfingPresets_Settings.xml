@@ -21,13 +21,13 @@
         "Minimize": "0",
         "PRESETS": "1",
         "Parameters": "0",
-        "Preset_Index": "6",
+        "Preset_Index": "7",
         "SurfingPlayer": {
-            "Bpm": "30",
-            "Minimize": "1",
+            "Bpm": "120",
+            "Minimize": "0",
             "Play": "0",
             "Player": "0",
-            "ms": "2000"
+            "ms": "500"
         },
         "_Smoother": {
             "Smooth": "0",
