@@ -10,9 +10,13 @@
 
 	TODO:
 
-	+ should be oriented more to start point..
+	+ add preset retrig when same preset index
 
-	+ disable widgets
+	+ add OSC control or control add-on mixing midi+osc
+
+	+ should be oriented more to start point vs end/duration..
+
+	+ add/search disable widgets
 
 	+ improve Edit mode and lock
 	
@@ -45,6 +49,10 @@
 
 	+ zoom on loop zone. maybe with stills
 
+
+	BUGS:
+
+	 zero time loop wrong back...
 */
 
 
@@ -75,7 +83,7 @@
 //#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
 
 // -> 4. MIDI input to control gui and switch presets
-//#define USE_MIDI_PARAMS__VIDEO_SKIP 
+#define USE_MIDI_PARAMS__VIDEO_SKIP 
 
 // -> 5. FX
 //#define USE_ofxChannelFx 
@@ -93,9 +101,12 @@
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 #include "ofxSurfingPresets.h"
 #endif
-
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 #include "ofxPresetsManager.h"
+#endif
+
+#ifdef USE_ofxSurfingMoods
+#include "ofxSurfingMoods.h"
 #endif
 
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP 
@@ -104,10 +115,6 @@
 
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
 #include "ofxBeatClock.h"
-#endif
-
-#ifdef USE_ofxSurfingMoods
-#include "ofxSurfingMoods.h"
 #endif
 
 #ifdef USE_ofxChannelFx
