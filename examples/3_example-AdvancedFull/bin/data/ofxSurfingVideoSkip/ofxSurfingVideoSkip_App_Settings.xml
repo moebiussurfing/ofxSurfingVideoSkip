@@ -9,7 +9,7 @@
 	<Keys>1</Keys>
 	<SKIP_TIMERS>1</SKIP_TIMERS>
 	<SURFING_VIDEO>1</SURFING_VIDEO>
-	<SKIP_PLAYER>1</SKIP_PLAYER>
+	<SKIP_PLAYER>0</SKIP_PLAYER>
 	<Gui_Panel_Position>500, 500</Gui_Panel_Position>
 	<Gui_Engine_Position>700, 500</Gui_Engine_Position>
 	<Auto_Resize>1</Auto_Resize>

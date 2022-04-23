@@ -2923,10 +2923,10 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				//guiManager.Add(bPlay, OFX_IM_TOGGLE_BIG_XXXL_BORDER_BLINK);
 				////guiManager.Add(bPlay, OFX_IM_TOGGLE_BIG);
 				{
-					float _w1 = ofxImGuiSurfing::getWidgetsWidth(1);
-					float _w2 = ofxImGuiSurfing::getWidgetsWidth(2);
-					float _h = ofxImGuiSurfing::getWidgetsHeightUnit();
-					ofxImGuiSurfing::AddBigToggleNamed(bPlay, _w1, 3.0f * _h, "PLAYING", "PLAY", true);
+					float ___w1 = ofxImGuiSurfing::getWidgetsWidth(1);
+					float ___w2 = ofxImGuiSurfing::getWidgetsWidth(2);
+					float ___h = ofxImGuiSurfing::getWidgetsHeightUnit();
+					ofxImGuiSurfing::AddBigToggleNamed(bPlay, ___w1, 3.0f * ___h, "PLAYING", "PLAY", true);
 				}
 
 				//-
@@ -2965,15 +2965,17 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				ofParameter<float> p = POSITION.cast<float>();
 				auto tmpRef = p.get();
 				std::string name = p.getName();
-
-				float __h = getWidgetsHeightRelative(); // relative to theme
-				float _ww = ImGui::GetContentRegionAvail().x; // full window panel width
-
 				bool bReturn;
-				if (bMODE_Loop)
-					bReturn = (ofxImGuiSurfing::AddHSliderRanged2(p, ImVec2(_ww, __h), POSITION_Start, POSITION_End, true, true));
-				else
-					bReturn = (ofxImGuiSurfing::AddHSlider(p, ImVec2(_ww, __h), true, true));
+				
+				{
+					float __h = getWidgetsHeightRelative(); // relative to theme
+					float _ww = ImGui::GetContentRegionAvail().x; // full window panel width
+
+					if (bMODE_Loop)
+						bReturn = (ofxImGuiSurfing::AddHSliderRanged2(p, ImVec2(_ww, __h), POSITION_Start, POSITION_End, true, true));
+					else
+						bReturn = (ofxImGuiSurfing::AddHSlider(p, ImVec2(_ww, __h), true, true));
+				}
 
 				if (bReturn)
 				{
@@ -2984,6 +2986,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				ImGui::Spacing();
 
 				//-
+
+				refreshLayout();
 
 				// Loop
 				guiManager.Add(bMODE_Loop, OFX_IM_TOGGLE_BIG_BORDER, 1, false);
@@ -3020,6 +3024,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				if (!guiManager.bMinimize)
 					if (bMODE_Loop)
 					{
+						refreshLayout();
+					
 						ImGui::Spacing();
 						guiManager.Add(bMODE_Beat, OFX_IM_TOGGLE_SMALL_BORDER);
 						//guiManager.Add(bMODE_Beat, OFX_IM_TOGGLE_SMALL_BORDER, 2, true);
@@ -3041,8 +3047,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 #endif
 					refreshLayout();
 
-					if (!guiManager.bMinimize)
 						//if (bMODE_Edit)
+					if (!guiManager.bMinimize)
 					{
 						// TODO:
 						// disable range bc is too small and duplicated from the above controls
@@ -3084,12 +3090,12 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 									{
 										ImGui::PushButtonRepeat(true);
 										{
-											if (ImGui::Button("-", ImVec2(_w50, _h*0.75)))
+											if (ImGui::Button("-", ImVec2(_w50, _h*0.75f)))//fix
 											{
 												bKickL = true;
 											}
 											ImGui::SameLine();
-											if (ImGui::Button("+", ImVec2(_w50, _h*0.75)))
+											if (ImGui::Button("+", ImVec2(_w50, _h*0.75f)))
 											{
 												bKickR = true;
 											}
@@ -3119,6 +3125,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 									}
 								}
 								ImGui::Unindent();
+							
+								refreshLayout();
 							}
 
 							//ImGui::Unindent();
@@ -3178,6 +3186,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					if (bScreens)
 					{
 						ImGui::Indent();
+						refreshLayout();
 
 						// Preview
 						guiManager.Add(surfingPreview.bGui, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
@@ -3190,6 +3199,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 						}
 
 						ImGui::Unindent();
+						refreshLayout();
 					}
 				}
 			}
@@ -3199,6 +3209,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			if (!guiManager.bMinimize)
 			{
 				ImGui::Spacing();
+				refreshLayout();
 
 				// extra
 				guiManager.Add(guiManager.bExtra, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
@@ -3237,6 +3248,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 						guiManager.drawAdvanced(true, true);
 					}
 					ImGui::Unindent();
+					refreshLayout();
 				}
 			}
 		}

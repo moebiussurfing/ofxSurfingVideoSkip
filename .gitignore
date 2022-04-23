@@ -601,3 +601,13 @@ examples/2_example-Advanced/bin/data/ofxSurfingPresets/Trinity03_HAP/Clips_02.js
 examples/2_example-Advanced/bin/data/ofxSurfingPresets/Trinity03_HAP/Clips_01.json
 examples/2_example-Advanced/bin/data/ofxSurfingPresets/Trinity03_HAP/Clips_00.json
 examples/2_example-Advanced/bin/data/ofxSurfingPresets/Preset.json
+examples/3_example-AdvancedFull/bin/data/ImGui_Layout/Presets/P0.ini
+examples/3_example-AdvancedFull/bin/data/ImGui_Layout/Presets/P1.ini
+examples/3_example-AdvancedFull/bin/data/ImGui_Layout/Presets/P3.ini
+examples/3_example-AdvancedFull/bin/data/ofxSurfingMoods/Moods_AppSettings.xml
+examples/3_example-AdvancedFull/bin/data/ofxSurfingPresets/NightmoVES4/Clips_07.json
+examples/3_example-AdvancedFull/bin/data/ofxSurfingPresets/NightmoVES4/Clips_08.json
+examples/3_example-AdvancedFull/bin/data/ofxSurfingPresets/ofxSurfingPresets_Settings.xml
+examples/3_example-AdvancedFull/bin/data/ofxSurfingPresets/Preset.json
+examples/3_example-AdvancedFull/bin/data/ofxSurfingVideoSkip/ofxSurfingVideoSkip_App_Settings.xml
+examples/3_example-AdvancedFull/bin/imgui.ini
