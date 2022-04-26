@@ -3,7 +3,8 @@ ofxHapPlayer
 ofxImGui
 ofxMidi
 ofxMidiParams
-ofxMSAInteractiveObject
+ofxSurfingFxChannel
+ofxSurfingHelpers
 ofxSurfingImGui
 ofxSurfingMoods
 ofxSurfingPlayer

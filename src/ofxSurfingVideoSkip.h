@@ -61,8 +61,8 @@
 //	OPTIONAL DEFINES
 
 //#define USE_MINIMAL_ofxSurfingVideoSkip
-// -> Uncomment to 
-// Force disable ALL the optionals below. To use only the minimal core add-on.
+// -> Uncomment above line to 
+// Force disable ALL the optional add-ons below. To use only the minimal core add-on.
 
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
 
@@ -77,16 +77,16 @@
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
 // -> 2. Mood machine
-#define USE_ofxSurfingMoods 
+//#define USE_ofxSurfingMoods 
 
 // -> 3. Beat clock
 //#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
 
 // -> 4. MIDI input to control gui and switch presets
-#define USE_MIDI_PARAMS__VIDEO_SKIP 
+//#define USE_MIDI_PARAMS__VIDEO_SKIP 
 
 // -> 5. FX
-//#define USE_ofxChannelFx 
+#define USE_ofxSurfingFxChannel 
 
 #endif
 
@@ -117,8 +117,8 @@
 #include "ofxBeatClock.h"
 #endif
 
-#ifdef USE_ofxChannelFx
-#include "ofxChannelFx.h"
+#ifdef USE_ofxSurfingFxChannel
+#include "ofxSurfingFxChannel.h"
 #endif
 
 
@@ -286,8 +286,8 @@ private:
 	ofParameter<bool> ENABLE_Keys_Presets{ "ENABLE KEYS PRESETS", false };
 	ofParameter<bool> ENABLE_Keys_Fx{ "ENABLE KEYS FX", false };
 
-#ifdef USE_ofxChannelFx
-	ofxChannelFx channelFx;
+#ifdef USE_ofxSurfingFxChannel
+	ofxSurfingFxChannel channelFx;
 #endif
 
 	//----
@@ -398,10 +398,10 @@ public:
 
 private:
 
-#ifdef USE_ofxChannelFx
+#ifdef USE_ofxSurfingFxChannel
 	void setup_ChannelFx();
-	ofParameter<bool> ENABLE_Video_FX;
-	ofParameter<bool> SHOW_Video_FX;
+	//ofParameter<bool> ENABLE_Video_FX;
+	//ofParameter<bool> SHOW_Video_FX;
 #endif
 
 private:
@@ -558,7 +558,7 @@ private:
 	ofParameter<glm::vec2> positionGui_ControlPanel;
 	ofParameter<glm::vec2> positionGui_Engine;
 
-#ifdef USE_ofxChannelFx
+#ifdef USE_ofxSurfingFxChannel
 	ofParameterGroup _param_ChannelFx{ "FX" };
 #endif
 #ifdef USE_ofxSurfingMoods

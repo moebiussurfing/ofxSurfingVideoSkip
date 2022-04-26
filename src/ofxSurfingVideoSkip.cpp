@@ -42,7 +42,7 @@ void ofxSurfingVideoSkip::setup()
 
 #ifndef USE_ofxPresetsManager__VIDEO_SKIP
 	path_Preset = "ofxSurfingVideoSkip_Engine_Settings.xml";
-#ifdef USE_ofxChannelFx
+#ifdef USE_ofxSurfingFxChannel
 	path_fileName_ChannelFX = "ofxSurfingVideoSkip_ChannelFX_Settings.xml";
 #endif
 #endif
@@ -176,9 +176,10 @@ void ofxSurfingVideoSkip::setup()
 
 	// modes. not included into presets
 
-#ifdef USE_ofxChannelFx
-	ENABLE_Video_FX.set("ENABLE FX", false);
-	SHOW_Video_FX.set("SHOW FX", false);
+#ifdef USE_ofxSurfingFxChannel
+	channelFx.bGui.setName("Fx Channel");
+	//ENABLE_Video_FX.set("ENABLE FX", false);
+	//SHOW_Video_FX.set("SHOW FX", false);
 #endif
 
 	//TODO:
@@ -371,10 +372,10 @@ void ofxSurfingVideoSkip::setup()
 	params_Control.add(bGui_Presets);
 #endif
 
-#ifdef USE_ofxChannelFx
-	_param_ChannelFx.add(SHOW_Video_FX);
-	_param_ChannelFx.add(ENABLE_Video_FX);
-#endif
+//#ifdef USE_ofxSurfingFxChannel
+//	_param_ChannelFx.add(SHOW_Video_FX);
+//	_param_ChannelFx.add(ENABLE_Video_FX);
+//#endif
 
 	//#ifdef USE_ofxSurfingMoods
 	//	_param_MoodMachine.add(SHOW_MoodMachine);
@@ -386,11 +387,11 @@ void ofxSurfingVideoSkip::setup()
 	_param_Keys.add(ENABLE_Keys_Presets);
 #endif
 
-#ifdef USE_ofxChannelFx
+#ifdef USE_ofxSurfingFxChannel
 	_param_Keys.add(ENABLE_Keys_Fx);
 #endif
 
-#ifdef USE_ofxChannelFx
+#ifdef USE_ofxSurfingFxChannel
 	params_Control.add(_param_ChannelFx);
 #endif
 
@@ -406,7 +407,7 @@ void ofxSurfingVideoSkip::setup()
 	//--
 
 	// channel fx
-#ifdef USE_ofxChannelFx
+#ifdef USE_ofxSurfingFxChannel
 	setup_ChannelFx();
 #endif
 
@@ -471,14 +472,14 @@ void ofxSurfingVideoSkip::setup()
 	params_AppSettings.add(ENABLE_Keys_Presets);
 #endif
 
-#ifdef USE_ofxChannelFx
+#ifdef USE_ofxSurfingFxChannel
 	params_AppSettings.add(ENABLE_Keys_Fx);
 #endif
 
-#ifdef USE_ofxChannelFx
-	params_AppSettings.add(ENABLE_Video_FX);
-	params_AppSettings.add(SHOW_Video_FX);
-#endif
+//#ifdef USE_ofxSurfingFxChannel
+//	params_AppSettings.add(ENABLE_Video_FX);
+//	params_AppSettings.add(SHOW_Video_FX);
+//#endif
 
 	//#ifdef USE_ofxSurfingMoods
 	//	params_AppSettings.add(SHOW_MoodMachine);
@@ -583,7 +584,7 @@ void ofxSurfingVideoSkip::startup()
 #ifndef USE_ofxPresetsManager__VIDEO_SKIP
 		loadGroup(params_Preset, path_GLOBAL_Folder + "/" + path_Preset);
 
-		//#ifdef USE_ofxChannelFx
+		//#ifdef USE_ofxSurfingFxChannel
 		//		loadGroup(params_Preset, path_GLOBAL_Folder + "/" + path_fileName_ChannelFX);
 		//#endif
 #endif
@@ -698,7 +699,7 @@ void ofxSurfingVideoSkip::setKeysEnable(bool b)
 #endif
 }
 
-#ifdef USE_ofxChannelFx
+#ifdef USE_ofxSurfingFxChannel
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::setup_ChannelFx()
 {
@@ -706,9 +707,10 @@ void ofxSurfingVideoSkip::setup_ChannelFx()
 	channelFx.setPath_GlobalFolder(path_GLOBAL_Folder + "/ofxChannelFx");//ofxSurfingVideoSkip/ofxChannelFx
 	//channelFx.setPath_GlobalFolder(path_GLOBAL_Folder);
 	channelFx.setup();
+	channelFx.setVisibleGui(true);
 	//channelFx.setGuiPosition(glm::vec2(ofGetWidth() - 230, 10));
 	//channelFx.setPosition_PresetClicker(glm::vec2(ofGetWidth() - 230, 10));
-	channelFx.setEnableKeys(true);
+	//channelFx.setEnableKeys(true);
 }
 #endif
 
@@ -1181,17 +1183,17 @@ void ofxSurfingVideoSkip::setGuiVisible(bool b)
 
 	//-
 
-	//ofxChannelFx
-#ifdef USE_ofxChannelFx
-	if (b && SHOW_Video_FX) {
-		channelFx.setVisibleGui(true);
-		//channelFx.setVisible_PresetClicker(true);
-	}
-	else {
-		channelFx.setVisibleGui(false);
-		//channelFx.setVisible_PresetClicker(false);
-	}
-#endif
+//	//ofxChannelFx
+//#ifdef USE_ofxSurfingFxChannel
+//	if (b && SHOW_Video_FX) {
+//		channelFx.setVisibleGui(true);
+//		//channelFx.setVisible_PresetClicker(true);
+//	}
+//	else {
+//		channelFx.setVisibleGui(false);
+//		//channelFx.setVisible_PresetClicker(false);
+//	}
+//#endif
 
 	//-
 
@@ -1426,7 +1428,7 @@ void ofxSurfingVideoSkip::windowResized(int _w, int _h)
 
 	//--
 
-//#ifdef USE_ofxChannelFx
+//#ifdef USE_ofxSurfingFxChannel
 //	channelFx.windowResized(window_W, window_H);
 //
 //	//make space
@@ -1467,7 +1469,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 
 
 	// ofxChannelFx
-#ifdef USE_ofxChannelFx
+#ifdef USE_ofxSurfingFxChannel
 	if (ENABLE_Keys_Fx)
 	{
 		channelFx.keyPressed(key);
@@ -1489,7 +1491,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 //		}
 //		else if (key == OF_KEY_F3)
 //		{
-//#ifdef USE_ofxChannelFx
+//#ifdef USE_ofxSurfingFxChannel
 //			SHOW_Video_FX = !SHOW_Video_FX;
 //#endif
 //		}
@@ -2058,20 +2060,20 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 
 		//-
 
-		// fx
-#ifdef USE_ofxChannelFx
-		else if (name == ENABLE_Video_FX.getName())
-		{
-		}
-		else if (name == SHOW_Video_FX.getName())
-		{
-			bool b = SHOW_Video_FX.get();
-
-			//ofxChannelFx
-			channelFx.setVisibleGui(b);
-			//channelFx.setVisible_PresetClicker(b);
-		}
-#endif
+//		// fx
+//#ifdef USE_ofxSurfingFxChannel
+//		else if (name == ENABLE_Video_FX.getName())
+//		{
+//		}
+//		else if (name == SHOW_Video_FX.getName())
+//		{
+//			bool b = SHOW_Video_FX.get();
+//
+//			//ofxChannelFx
+//			channelFx.setVisibleGui(b);
+//			//channelFx.setVisible_PresetClicker(b);
+//		}
+//#endif
 		//-
 
 		// presets
@@ -2314,8 +2316,9 @@ void ofxSurfingVideoSkip::draw(ofEventArgs & args)
 	//	presetsManager.draw();
 	//#endif
 
-#ifdef USE_ofxChannelFx
-	if (ENABLE_Video_FX)
+#ifdef USE_ofxSurfingFxChannel
+	//if (ENABLE_Video_FX)
+	if (channelFx.ENABLE_FxChain)
 	{
 		channelFx.begin();
 		{
@@ -2573,7 +2576,7 @@ void ofxSurfingVideoSkip::exit()
 	saveGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
 
 	// channel fx
-#ifdef USE_ofxChannelFx
+#ifdef USE_ofxSurfingFxChannel
 
 //#ifndef USE_ofxPresetsManager__VIDEO_SKIP
 //	saveGroup(params_Preset, path_GLOBAL_Folder + "/" + path_fileName_ChannelFX);
@@ -2679,6 +2682,10 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	guiManager.addWindowSpecial(beatClock.bGui);
 #endif
 
+#ifdef USE_ofxSurfingFxChannel
+	guiManager.addWindowSpecial(channelFx.bGui);
+#endif
+
 	//-
 
 	// -> Extra params to include into layout presets
@@ -2691,7 +2698,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 
 	//-
 
-	// -> Initiates when adding finished
+	// -> Initiates when adding proccess finished
 	guiManager.startup();
 }
 
@@ -2905,6 +2912,21 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			// minimize
 			ofxImGuiSurfing::AddToggleRoundedButton(guiManager.bMinimize);
 			ImGui::Spacing();
+
+			//if (!guiManager.bMinimize)
+			{
+				//ImGui::Spacing();
+
+				// Skip Panel
+				guiManager.Add(bGui_SkipTimers, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
+
+				//ImGui::Spacing();
+			}
+
+			ImGui::Spacing();
+			ImGui::Spacing();
+
+			//-
 
 			// video tittle
 			if (!guiManager.bMinimize)
@@ -3187,19 +3209,6 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 			// minimize
 			{
-				ImGui::Spacing();
-
-				//if (!guiManager.bMinimize)
-				{
-					ImGui::Spacing();
-
-					// Skip Panel
-					guiManager.Add(bGui_SkipTimers, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
-
-					ImGui::Spacing();
-				}
-
-				//-
 
 				ImGui::Spacing();
 
@@ -3326,7 +3335,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 	}
 	guiManager.end();
 
-	//-
+	//--
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 	presetsManager.draw();
@@ -3338,6 +3347,10 @@ void ofxSurfingVideoSkip::draw_ImGui()
 
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
 	beatClock.draw();
+#endif
+
+#ifdef USE_ofxSurfingFxChannel
+	channelFx.drawGui();
 #endif
 }
 

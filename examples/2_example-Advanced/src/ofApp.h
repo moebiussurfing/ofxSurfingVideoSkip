@@ -11,7 +11,7 @@ go to ofxSurfingVideoSkip.h and comment the line
 //#define USE_MINIMAL_ofxSurfingVideoSkip
 That's to allow enable some of the optional add-ons.
 
-Then uncomment these lines to enable the add-ons like i.e.:
+Then uncomment only these lines to enable the optional add-ons like i.e.:
 #define USE_ofxSurfingPresets__VIDEO_SKIP // -> 1A. simple presets
 
 Let the other commented.
