@@ -7,10 +7,10 @@
         },
         "2_THREE_TONES": {
             "COLOR_0": "0, 0, 0, 255",
-            "COLOR_1": "0, 255, 0, 255",
+            "COLOR_1": "0, 32, 255, 255",
             "COLOR_2": "255, 255, 255, 255",
             "MIX": "1",
-            "THREETONES": "0",
+            "THREETONES": "1",
             "THRESHOLD_0_1": "0",
             "THRESHOLD_1_2": "0.4",
             "THRESHOLD_FADE": "0.1"

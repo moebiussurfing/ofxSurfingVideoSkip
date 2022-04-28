@@ -18,14 +18,14 @@
         "3_HSB": {
             "BRIGHTNESS": "0.26",
             "CONTRAST": "2",
-            "HSB": "0",
+            "HSB": "1",
             "HUE": "0",
             "SATURATION": "1.506"
         },
         "4_DELAY": {
             "BLENDMODE": "0",
             "DELAY": "1",
-            "FEEDBACK": "0"
+            "FEEDBACK": "0.383"
         },
         "5_ECHOTRACE": {
             "ECHOTRACE": "1",

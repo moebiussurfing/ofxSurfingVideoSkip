@@ -283,8 +283,8 @@ private:
 	bool bLoaded = false;
 
 	ofParameter<bool> bKeys{ "Keys", true };
-	ofParameter<bool> bKeys_Presets{ "Keys Presets", false };
-	ofParameter<bool> bKeys_Fx{ "Keys Fx", false };
+	//ofParameter<bool> bKeys_Presets{ "Keys Presets", false };
+	//ofParameter<bool> bKeys_Fx{ "Keys Fx", false };
 
 #ifdef USE_ofxSurfingFxChannel
 	ofxSurfingFxChannel channelFx;
@@ -319,11 +319,11 @@ public:
 #endif
 	}
 
-	//--------------------------------------------------------------
-	void setMODE_App(int m)
-	{
-		MODE_App = m;
-	}
+	////--------------------------------------------------------------
+	//void setMODE_App(int m)
+	//{
+	//	MODE_App = m;
+	//}
 
 	// auto hide controlled outside the class. internal by default
 	//--------------------------------------------------------------
@@ -607,16 +607,16 @@ private:
 	ofEventListener listener_SHOW_gui;
 	void Changed_bGui();
 
-	ofParameter<int> MODE_App;
-	ofEventListener listener_MODE_App;
-	void Changed_MODE_App();
+	//ofParameter<int> MODE_App;
+	//ofEventListener listener_MODE_App;
+	//void Changed_MODE_App();
 
 	//settings
 	std::string path_AppSettings;
 	void saveGroup(ofParameterGroup &g, std::string path);
 	void loadGroup(ofParameterGroup &g, std::string path);
 
-	ofParameter<int> window_W, window_H, window_X, window_Y;
+	//ofParameter<int> window_W, window_H, window_X, window_Y;
 
 	//--
 
