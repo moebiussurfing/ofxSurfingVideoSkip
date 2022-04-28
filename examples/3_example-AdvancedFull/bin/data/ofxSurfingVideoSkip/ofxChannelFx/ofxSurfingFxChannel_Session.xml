@@ -1,8 +1,8 @@
 {
     "AppSession": {
-        "GUI_POSITION": "958, 526.5",
-        "Minimize": "0",
-        "SELECT_FX": "4",
-        "SOLO": "0"
+        "FX": "5",
+        "Fx_Presets": "1",
+        "Fx_Settings": "1",
+        "Minimize": "1"
     }
 }

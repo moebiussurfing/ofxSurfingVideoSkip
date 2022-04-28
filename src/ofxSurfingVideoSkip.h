@@ -279,12 +279,12 @@ private:
 	std::string path_Preset;
 #endif
 
-	bool ENABLE_Active = true;
+	bool bActive = true;
 	bool bLoaded = false;
 
-	ofParameter<bool> ENABLE_Keys_Player{ "Keys", true };
-	ofParameter<bool> ENABLE_Keys_Presets{ "ENABLE KEYS PRESETS", false };
-	ofParameter<bool> ENABLE_Keys_Fx{ "ENABLE KEYS FX", false };
+	ofParameter<bool> bKeys{ "Keys", true };
+	ofParameter<bool> bKeys_Presets{ "Keys Presets", false };
+	ofParameter<bool> bKeys_Fx{ "Keys Fx", false };
 
 #ifdef USE_ofxSurfingFxChannel
 	ofxSurfingFxChannel channelFx;
@@ -511,10 +511,11 @@ private:
 	ofParameter<bool> bTRIG_SkipTime;
 	ofParameter<bool> bTRIG_SkipReverse;
 	ofParameter<bool> bTRIG_ResetEngine;
+	ofParameter<bool> bTRIG_ResetAll;
 	ofParameter<bool> bTRIG_Reset_Bpm;
 
 	ofParameter<bool> bAutoHide;
-	ofParameter<bool> ENABLE_TimersGlobal;
+	ofParameter<bool> bENABLE_TimersGlobal;
 
 	ofParameter<bool> bMODE_Beat;
 	ofParameter<bool> bMODE_Lock;
@@ -550,13 +551,9 @@ private:
 
 	ofParameterGroup params_Engine;
 	void Changed_Params(ofAbstractParameter &e);
-	bool DISABLE_CALLBACKS;
+	bool bDISABLECALLBACKS;
 
 	ofParameterGroup params_Control;
-	ofParameter<bool> bGui_ControlPanel;
-	ofParameter<bool> bGui_ControlPanel_Header;
-	ofParameter<glm::vec2> positionGui_ControlPanel;
-	ofParameter<glm::vec2> positionGui_Engine;
 
 #ifdef USE_ofxSurfingFxChannel
 	ofParameterGroup _param_ChannelFx{ "FX" };
