@@ -1,8 +1,8 @@
 {
     "FX_CHANNEL": {
         "1_MONOCHROME": {
-            "HIGH": "1",
-            "LOW": "0",
+            "HIGH": "0.825",
+            "LOW": "0.266",
             "MONOCHROME": "1"
         },
         "2_THREE_TONES": {
@@ -10,17 +10,17 @@
             "COLOR_1": "0, 168, 255, 255",
             "COLOR_2": "255, 255, 255, 255",
             "MIX": "1",
-            "THREETONES": "1",
+            "THREETONES": "0",
             "THRESHOLD_0_1": "0",
             "THRESHOLD_1_2": "0.4",
-            "THRESHOLD_FADE": "0.1"
+            "THRESHOLD_FADE": "0.3"
         },
         "3_HSB": {
-            "BRIGHTNESS": "0.26",
+            "BRIGHTNESS": "-0.494",
             "CONTRAST": "2",
-            "HSB": "1",
-            "HUE": "0",
-            "SATURATION": "1.506"
+            "HSB": "0",
+            "HUE": "0.812",
+            "SATURATION": "0.182"
         },
         "4_DELAY": {
             "BLENDMODE": "0",

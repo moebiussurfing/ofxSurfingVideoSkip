@@ -1,9 +1,9 @@
 {
     "FX_CHANNEL": {
         "1_MONOCHROME": {
-            "HIGH": "1",
-            "LOW": "0",
-            "MONOCHROME": "0"
+            "HIGH": "0.825",
+            "LOW": "0.266",
+            "MONOCHROME": "1"
         },
         "2_THREE_TONES": {
             "COLOR_0": "0, 0, 0, 255",

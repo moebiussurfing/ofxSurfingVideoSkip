@@ -628,3 +628,7 @@ examples/3_example-AdvancedFull/bin/data/ImGui_Layout/Presets/P2.ini
 examples/3_example-AdvancedFull/bin/data/ImGui_Layout/Presets/P1.json
 examples/3_example-AdvancedFull/bin/data/ImGui_Layout/Presets/P0.json
 examples/3_example-AdvancedFull/bin/data/ImGui_Layout/GuiManager_PanelsofxSurfingMoods_.json
+examples/3_example-AdvancedFull/bin/data/ImGui_Layout/GuiManager_Panels.json
+examples/3_example-AdvancedFull/bin/data/ofxSurfingVideoSkip/ofxChannelFx/ofxSurfingFxChannel_Preset.xml
+examples/3_example-AdvancedFull/bin/data/ofxSurfingVideoSkip/ofxChannelFx/Presets/FX_CHANNEL_03.json
+examples/3_example-AdvancedFull/bin/data/ofxSurfingVideoSkipofxSurfingPresets_Settings.xml

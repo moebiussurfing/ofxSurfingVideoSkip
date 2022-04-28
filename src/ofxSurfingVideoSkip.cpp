@@ -487,7 +487,7 @@ void ofxSurfingVideoSkip::setup()
 
 	//--
 
-	// presetsManager
+	// Presets Manager
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	//for video mark/loops engine
 	setup_PresetsManager();
@@ -666,9 +666,9 @@ void ofxSurfingVideoSkip::update(ofEventArgs & args)
 {
 	//--
 
-	// draw
+	// Draw
 
-	//// fbo
+	// Fbo
 	//fboPreview.begin();
 	//ofClear(0, 255);
 	//player.draw(0, 0, fboPreview.getWidth(), fboPreview.getHeight());
@@ -686,17 +686,14 @@ void ofxSurfingVideoSkip::update(ofEventArgs & args)
 
 	//--
 
-//#ifdef USE_ofxSurfingMoods
-//	surfingMoods.update();
-//#endif
-
-	//--
-
-	// Presets
+	// Presets Manager
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
-	//if(0)
-	if (presetsManager.isDoneLoad())
+	
+	// Simple callbacks 
+
+	// 1. To detected that preset index changed
+	if (presetsManager.isDoneLoad()|| presetsManager.isRetrigged())
 	{
 		ofLogNotice(__FUNCTION__) << "Preset Loaded";
 
@@ -706,11 +703,6 @@ void ofxSurfingVideoSkip::update(ofEventArgs & args)
 		{
 			POSITION = POSITION_Start;
 			player.setPosition(POSITION);
-
-			//-
-
-			//// workflow
-			//if (!bMODE_Loop) bMODE_Loop = true;
 		}
 	}
 #endif
@@ -1711,17 +1703,9 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 			{
 				player.setPaused(false);
 
-				// TODO:
-
 				// workflow
-				//if (!bMODE_Loop)
-				//{
-				//	bMODE_Loop = true;
-				//}
-				if (bMODE_Edit)
-				{
-					bMODE_Edit = false;
-				}
+				if (bMODE_Edit) bMODE_Edit = false;
+				//if (!bMODE_Loop) bMODE_Loop = true;
 			}
 		}
 
@@ -1730,9 +1714,9 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 		{
 			if (bMODE_Edit)
 			{
-				//// workflow
+				// workflow
+				if (bPlay) bPlay = false;
 				//if (!bMODE_Loop) bMODE_Loop = true;
-				//if (bPlay) bPlay = false;
 
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 				presetsManager.setEnableKeysArrowBrowse(false);
@@ -2463,7 +2447,7 @@ void ofxSurfingVideoSkip::exit()
 
 	//-
 
-	// presetsManager
+	// Presets Manager
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	presetsManager.DONE_save.removeListener(this, &ofxSurfingVideoSkip::Changed_DONE_save);
 	presetsManager.DONE_load.removeListener(this, &ofxSurfingVideoSkip::Changed_DONE_load);
