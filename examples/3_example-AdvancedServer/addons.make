@@ -1,0 +1,12 @@
+ofxGui
+ofxHapPlayer
+ofxImGui
+ofxOsc
+ofxRemoteParameters
+ofxSurfingFxChannel
+ofxSurfingHelpers
+ofxSurfingImGui
+ofxSurfingPlayer
+ofxSurfingPresets
+ofxSurfingVideoSkip
+ofxWindowApp

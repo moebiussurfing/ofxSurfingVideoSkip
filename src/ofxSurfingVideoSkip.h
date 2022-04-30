@@ -88,6 +88,12 @@
 // -> 5. FX
 #define USE_ofxSurfingFxChannel 
 
+// -> 6. Remote Parameters
+//TODO:
+// This add-on will server some parameters to allow remote control fast.
+// Will serve OSC/MIDI
+#define USE_ofxRemoteParameters 
+
 #endif
 
 //----------------------------------------------
@@ -121,17 +127,18 @@
 #include "ofxSurfingFxChannel.h"
 #endif
 
+#ifdef USE_ofxRemoteParameters
+#include "ofxRemoteParameters/Server.h"
+#endif
+
 
 //--------------------------------------------------------------
 class ofxSurfingVideoSkip
 {
+
 	//--
 
 public:
-	SurfingPreview surfingPreview;
-	void draw_ImGuiPreview();
-
-	//--
 
 	//--------------------------------------------------------------
 	ofxSurfingVideoSkip()
@@ -165,8 +172,12 @@ public:
 
 	void setup();
 
-	//void update();
-	//void draw();
+private:
+
+	void setup_AppSettings();
+	void setup_Remote();
+	void setup_Preset();
+	void setup_PresetsStuff();
 
 	void update(ofEventArgs & args);
 	void draw(ofEventArgs & args);
@@ -186,9 +197,7 @@ private:
 	void mousePressed(ofMouseEventArgs &eventArgs);
 	void mouseReleased(ofMouseEventArgs &eventArgs);
 	void mouseMoved(ofMouseEventArgs &eventArgs);
-
 	void mouseRefresh(int button, float position);
-
 	void addMouseListeners();
 	void removeMouseListeners();
 
@@ -237,22 +246,39 @@ private:
 
 	//-
 
+#ifdef USE_ofxRemoteParameters
+	ofxRemoteParameters::Server remoteServer;
+	ofParameterGroup params_Remote;
+#endif
+
+	//-
+
 public:
 
 	// gui
 
 	ofxSurfing_ImGui_Manager guiManager;
 
-	void draw_ImGuiMenu();
-	bool bDockingReset = false;
-	void dockingReset();
-	//void dockingPopulate();
-
 	void setup_ImGui();
 
 	void draw_ImGui();
 	void draw_ImGuiControls();
 	void draw_ImGuiSkipTimers();
+
+	//--
+
+private:
+	SurfingPreview surfingPreview;
+
+public:
+	void draw_ImGuiPreview();
+
+	void draw_ImGuiMenu();
+
+private:
+	bool bDockingReset = false;
+	void dockingReset();
+	//void dockingPopulate();
 
 private:
 
@@ -274,6 +300,7 @@ private:
 
 	void setPath_GlobalFolder(std::string folder);//path for root container folder
 	std::string path_GLOBAL_Folder;//main folder where nested folder goes inside
+
 #ifndef USE_ofxPresetsManager__VIDEO_SKIP
 	std::string path_fileName_ChannelFX;
 	std::string path_Preset;
@@ -294,14 +321,6 @@ private:
 
 public:
 
-#ifdef USE_ofxPresetsManager__VIDEO_SKIP
-	//--------------------------------------------------------------
-	void loadPreset(int p)
-	{
-		presetsManager.loadPreset(p);
-	}
-#endif
-
 	void setActive(bool b);
 	void setKeysEnable(bool b);
 	void setGuiVisible(bool b);
@@ -309,15 +328,21 @@ public:
 	void setGuiToggleVisible() {
 		bGui = !bGui;
 	}
+
+#ifdef USE_ofxPresetsManager__VIDEO_SKIP
+	//--------------------------------------------------------------
+	void loadPreset(int p)
+	{
+		presetsManager.loadPreset(p);
+	}
 	//--------------------------------------------------------------
 	void setUserVisible(bool b)
 	{
-#ifdef USE_ofxPresetsManager__VIDEO_SKIP
 		// presets
 		presetsManager.setVisible_PresetClicker(b);
 		presetsManager.setEnableKeys(b);
-#endif
 	}
+#endif
 
 	////--------------------------------------------------------------
 	//void setMODE_App(int m)
@@ -344,16 +369,17 @@ public:
 	//{
 	//	return surfingMoods.isPlaying();
 	//}
-	//--------------------------------------------------------------
-	void play()
-	{
-		bPlay = true;
-	}
-	//--------------------------------------------------------------
-	void stop()
-	{
-		bPlay = false;
-	}
+
+	////--------------------------------------------------------------
+	//void play()
+	//{
+	//	bPlay = true;
+	//}
+	////--------------------------------------------------------------
+	//void stop()
+	//{
+	//	bPlay = false;
+	//}
 
 	//--------------------------------------------------------------
 	void setPlay(bool b)
@@ -370,6 +396,8 @@ public:
 	{
 		return bPlay;
 	}
+
+	//--
 
 #ifdef USE_ofxSurfingMoods
 	//--------------------------------------------------------------
@@ -541,7 +569,7 @@ private:
 	ofParameter<int> divBeatReverse;//reverse
 #endif
 
-	ofParameter<bool> bGui_Presets;
+	//ofParameter<bool> bGui_Presets;
 	//ofParameter<bool> SHOW_MoodMachine;
 	ofParameter<bool> bGui_Advanced;
 
@@ -578,7 +606,7 @@ private:
 	// presetsManager
 
 	ofParameterGroup params_Preset; // -> the params to create presets
-	ofParameterGroup params_ControlRemote; // -> the params to control externally by user. ie: to assign to OSC/midi control
+	//ofParameterGroup params_Remote; // -> the params to control externally by user. ie: to assign to OSC/midi control
 
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	void setup_PresetsManager();

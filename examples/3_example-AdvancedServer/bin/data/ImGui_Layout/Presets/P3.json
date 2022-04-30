@@ -1,0 +1,13 @@
+{
+    "LayoutsPresets": {
+        "ExtraParams": {
+            "Log": "0",
+            "Menu": "0"
+        },
+        "PanelsVisible": {
+            "FX_CHANNEL": "1",
+            "SKIP_PLAYER": "1",
+            "SURFING_PRESETS": "1"
+        }
+    }
+}
