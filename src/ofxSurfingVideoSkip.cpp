@@ -2423,7 +2423,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	guiManager.setup();
 
 	// Customize default labels
-	guiManager.setLabelLayoutPanels("SURFING_VIDEO"); // global title
+	//guiManager.setLabelLayoutPanels("SURFING_VIDEO"); // global title
 
 	//-
 
@@ -2457,16 +2457,18 @@ void ofxSurfingVideoSkip::setup_ImGui()
 
 	//-
 
-	// -> 2. Extra params to include into Layout Presets
+	// -> 2. Extra Params to include into Layout Presets
 
-	guiManager.addParameterToLayoutPresets(surfingPreview.getParameters());//?group
-	//guiManager.addParameterToLayoutPresets(surfingPreview.bGui);
-	//guiManager.addParameterToLayoutPresets(surfingPreview.bBigScreen);
-	//guiManager.addParameterToLayoutPresets(surfingPreview.bFullScreen);
-	
-	guiManager.addParameterToLayoutPresets(guiManager.bMinimize);
-	guiManager.addParameterToLayoutPresets(bGui_SkipTimers);
-	guiManager.addParameterToLayoutPresets(bGui_VideoControlBar);
+	// Preview
+	//guiManager.addExtraParamToLayoutPresets(surfingPreview.getParameters());//group
+	guiManager.addExtraParamToLayoutPresets(surfingPreview.bGui);
+	guiManager.addExtraParamToLayoutPresets(surfingPreview.bBigScreen);
+	//guiManager.addExtraParamToLayoutPresets(surfingPreview.bFullScreen);
+	guiManager.addExtraParamToLayoutPresets(bGui_VideoControlBar);
+
+	// Other
+	guiManager.addExtraParamToLayoutPresets(guiManager.bMinimize);
+	guiManager.addExtraParamToLayoutPresets(bGui_SkipTimers);
 
 	//-
 

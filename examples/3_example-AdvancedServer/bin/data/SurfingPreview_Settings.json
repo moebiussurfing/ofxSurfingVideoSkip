@@ -1,6 +1,6 @@
 {
     "SurfingPreview": {
-        "Auto_Resize": "0",
+        "Auto_Resize": "1",
         "Bg": "0, 0, 0, 255",
         "Big_Screen": "1",
         "Extra": "0",
@@ -8,6 +8,6 @@
         "In_Docked": "1",
         "Preview": "1",
         "Scale_Mode": "0",
-        "recetParam": "251, 58.2188, 0, 1665, 936.562"
+        "recetParam": "0, 0, 0, 0, 0"
     }
 }

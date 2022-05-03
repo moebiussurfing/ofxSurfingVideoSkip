@@ -1,13 +1,18 @@
 {
     "LayoutsPresets": {
         "ExtraParams": {
+            "Big_Screen": "1",
+            "Control_Bar": "1",
             "Log": "0",
-            "Menu": "0"
+            "Menu": "0",
+            "Minimize": "0",
+            "Preview": "1",
+            "SKIP_TIMERS": "1"
         },
         "PanelsVisible": {
-            "FX_CHANNEL": "0",
+            "FX_CHANNEL": "1",
             "SKIP_PLAYER": "1",
-            "SURFING_PRESETS": "0"
+            "SURFING_PRESETS": "1"
         }
     }
 }
