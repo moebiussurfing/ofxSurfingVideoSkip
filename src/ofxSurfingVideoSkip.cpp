@@ -33,12 +33,20 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 	//-
 
 	// -> The parameters to include on each preset!
-	presetsManager.addGroup(params_Preset); 
+	presetsManager.addGroup(params_Preset);
+
+	//-
+
+	// Link to not autosave when non editing!
+	presetsManager.bAutoSave.makeReferenceTo(bMODE_Edit);
+	//presetsManager.bAutoSave.setName("EDIT");
+	//bMODE_Edit.setName("EDIT");
+	//bMODE_Edit.makeReferenceTo(presetsManager.bAutoSave);
 
 #endif
 
 	//--
-	
+
 	// We want to remote the preset controller vars.
 	// Add after created presets manager object.
 
@@ -212,7 +220,7 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 
 	// Force preferred settings
 	//surfingPreview.bGui = false;
-	//bGui_VideoControlBar = true;
+	//bGui_VideoBarControl = true;
 
 	//// Handled by ImGui Manager!
 	//params_AppSettings.add(bGui);
@@ -230,7 +238,7 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	//params_AppSettings.add(guiManager.bAutoSaveSettings);
 	//params_AppSettings.add(guiManager.bMinimize);
 
-	//params_AppSettings.add(bGui_VideoControlBar);
+	//params_AppSettings.add(bGui_VideoBarControl);
 	//params_AppSettings.add(surfingPreview.bGui);
 	//params_AppSettings.add(surfingPreview.bBigScreen);
 }
@@ -261,8 +269,8 @@ void ofxSurfingVideoSkip::setup()
 
 	inScrub = false;
 
-	bGui_VideoControlBar.set("Control Bar", false);//var used to hide/show player bar and gui also
-	//bGui_VideoControlBar.addListener(this, &ofxSurfingVideoSkip::Changed_draw_Autohide);
+	bGui_VideoBarControl.set("Control Bar", false);//var used to hide/show player bar and gui also
+	//bGui_VideoBarControl.addListener(this, &ofxSurfingVideoSkip::Changed_draw_Autohide);
 
 	//--
 
@@ -476,11 +484,11 @@ void ofxSurfingVideoSkip::setup()
 	params_Control.add(bGui_SkipTimers);
 	params_Control.add(bGui);
 
-//#ifdef USE_ofxPresetsManager__VIDEO_SKIP
-//	params_Control.add(bGui_Presets);
-//#endif
+	//#ifdef USE_ofxPresetsManager__VIDEO_SKIP
+	//	params_Control.add(bGui_Presets);
+	//#endif
 
-	//-
+		//-
 
 	_param_Keys.add(bKeys);
 
@@ -722,10 +730,14 @@ void ofxSurfingVideoSkip::update(ofEventArgs & args)
 
 	//--
 
-	//TODO:
-#ifdef USE_ofxRemoteParameters
-	//remoteServer.syncParameters();
-#endif
+//	//TODO:
+//	// sync max one time per frame. all the callbacks are "flagged to here".
+//#ifdef USE_ofxRemoteParameters
+//	if (bSyncRemote) {
+//		bSyncRemote = false;
+//		remoteServer.syncParameters();//hangs
+//	}
+//#endif
 
 }
 
@@ -913,15 +925,15 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 
 	//if (ofGetElapsedTimeMillis() - lastMovement < time_autoHide)
 	//{
-	//	bGui_VideoControlBar_PRE = bGui_VideoControlBar;
-	//	bGui_VideoControlBar = true;
+	//	bGui_VideoControlBar_PRE = bGui_VideoBarControl;
+	//	bGui_VideoBarControl = true;
 	//}
 	//else
 	//{
 	//	if (bAutoHide)
 	//	{
-	//		bGui_VideoControlBar = false;
-	//		bGui_VideoControlBar_PRE = bGui_VideoControlBar;
+	//		bGui_VideoBarControl = false;
+	//		bGui_VideoControlBar_PRE = bGui_VideoBarControl;
 	//	}
 	//}
 
@@ -930,10 +942,10 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 	//TODO
 	// disable to avoid bug with clicks l/r on gui (ofxGuiExtended2)
 	// hide mouse if changed
-	if ((bGui_VideoControlBar != bGui_VideoControlBar_PRE) || bAutoHide)
+	if ((bGui_VideoBarControl != bGui_VideoControlBar_PRE) || bAutoHide)
 	{
 		ofRectangle window = ofGetWindowRect();
-		if (!bGui_VideoControlBar && window.inside(ofGetMouseX(), ofGetMouseY()))
+		if (!bGui_VideoBarControl && window.inside(ofGetMouseX(), ofGetMouseY()))
 		{
 			ofHideCursor();
 		}
@@ -946,6 +958,7 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 	//----
 
 	// skipper engine:
+	//if(isPlaying && bPlay) 
 	updateTimers();
 }
 
@@ -1111,7 +1124,7 @@ void ofxSurfingVideoSkip::draw_Gui()
 	//#endif
 
 	// bar controller 
-	draw_VideoControls();
+	draw_VideoBarControl();
 }
 
 //--------------------------------------------------------------
@@ -1123,13 +1136,13 @@ void ofxSurfingVideoSkip::setGuiVisible(bool b)
 	//ENABLE_GuiVisibleByAutoHide = b;
 	if (b)
 	{
-		bGui_VideoControlBar_PRE = bGui_VideoControlBar;
-		//bGui_VideoControlBar = true;
+		bGui_VideoControlBar_PRE = bGui_VideoBarControl;
+		//bGui_VideoBarControl = true;
 		lastMovement = ofGetElapsedTimeMillis();
 	}
 
 	// draw control bar
-	//bGui_VideoControlBar = b;
+	//bGui_VideoBarControl = b;
 
 	//-
 
@@ -1370,7 +1383,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 			setPlay_MoodMachine(b);
 			setPlay(b);
 #endif
-		}
+	}
 
 		//-
 
@@ -1490,8 +1503,8 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 		}
 
 		//-
-		}
-	}
+}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::dragEvent(ofDragInfo dragInfo) // drag video to load another one
@@ -1583,14 +1596,16 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 			player.setPosition(POSITION);
 
 			// workflow
+
 			//if (!bPlay && bMODE_Edit)
 			if (bMODE_Edit)
 			{
 				POSITION_Start = POSITION;
 			}
-			if (!bPlay && !bMODE_Edit) {
-				bMODE_Edit = true;
-			}
+
+			//if (!bPlay && !bMODE_Edit) {
+			//	bMODE_Edit = true;
+			//}
 		}
 
 		else if (name == POSITION_Start.getName())
@@ -1607,7 +1622,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 				POSITION = POSITION_Start;
 			}
 			if (!bPlay && !bMODE_Edit) {
-				bMODE_Edit = true;
+				//bMODE_Edit = true;
 			}
 		}
 
@@ -1629,7 +1644,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 				bDISABLECALLBACKS = false;
 			}
 			if (!bPlay && !bMODE_Edit) {
-				bMODE_Edit = true;
+				//bMODE_Edit = true;
 			}
 		}
 
@@ -1649,6 +1664,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 				player.setPaused(false);
 
 				// workflow
+
 				if (bMODE_Edit) bMODE_Edit = false;
 				//if (!bMODE_Loop) bMODE_Loop = true;
 			}
@@ -1672,8 +1688,8 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
-			}
-			}
+		}
+	}
 
 		//// loop
 		//else if (name == bMODE_Loop.getName())
@@ -1853,7 +1869,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 		else if (name == bGui_SurfingVideo.getName())
 		{
 			//bool b = bGui_SurfingVideo.get();
-			//bGui_VideoControlBar = b;
+			//bGui_VideoBarControl = b;
 		}
 
 		//#ifdef USE_ofxSurfingMoods
@@ -1950,8 +1966,16 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 		{
 			bMODE_SkipLooped = !bMODE_SkipPowered.get();
 		}
-			}
-		}
+
+		//--
+
+		//TODO:
+#ifdef USE_ofxRemoteParameters
+		bSyncRemote = true;
+		//remoteServer.syncParameters();//hangs
+#endif
+}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_bGui()
@@ -1969,8 +1993,8 @@ void ofxSurfingVideoSkip::Changed_bGui()
 	{
 		setGuiVisible(true);
 
-		//bGui_VideoControlBar_PRE = bGui_VideoControlBar;
-		//bGui_VideoControlBar = true;
+		//bGui_VideoControlBar_PRE = bGui_VideoBarControl;
+		//bGui_VideoBarControl = true;
 		//lastMovement = ofGetElapsedTimeMillis();
 	}
 }
@@ -2002,35 +2026,35 @@ void ofxSurfingVideoSkip::Changed_bGui()
 //{
 //	//	if (bAutoHide)
 //	//	{
-//	//		if (bGui_VideoControlBar != bGui_VideoControlBar_PRE)
+//	//		if (bGui_VideoBarControl != bGui_VideoControlBar_PRE)
 //	//		{
-//	//			ofLogNotice(__FUNCTION__) << "Changed_draw_Autohide: " << ofToString(bGui_VideoControlBar ? "TRUE" : "FALSE");
+//	//			ofLogNotice(__FUNCTION__) << "Changed_draw_Autohide: " << ofToString(bGui_VideoBarControl ? "TRUE" : "FALSE");
 //	//
 //	//			if (MODE_App == 0)
 //	//			{
-//	//				if (!bGui && bGui_VideoControlBar)
+//	//				if (!bGui && bGui_VideoBarControl)
 //	//				{
-//	//					bGui_VideoControlBar_PRE = bGui_VideoControlBar;
-//	//					bGui_VideoControlBar = false;
+//	//					bGui_VideoControlBar_PRE = bGui_VideoBarControl;
+//	//					bGui_VideoBarControl = false;
 //	//				}
-//	//				setGuiVisible(bGui_VideoControlBar);
+//	//				setGuiVisible(bGui_VideoBarControl);
 //	//
 //	//#ifdef USE_ofxSurfingMoods
-//	//				//surfingMoods.setGui_visible(bGui_VideoControlBar&&SHOW_MoodMachine);
+//	//				//surfingMoods.setGui_visible(bGui_VideoBarControl&&SHOW_MoodMachine);
 //	//#endif
 //	//			}
 //	//			else if (MODE_App == 1)
 //	//			{
-//	//				if (!bGui && bGui_VideoControlBar)
+//	//				if (!bGui && bGui_VideoBarControl)
 //	//				{
-//	//					bGui_VideoControlBar_PRE = bGui_VideoControlBar;
-//	//					bGui_VideoControlBar = false;
+//	//					bGui_VideoControlBar_PRE = bGui_VideoBarControl;
+//	//					bGui_VideoBarControl = false;
 //	//				}
 //	//			}
 //	//		}
 //	//
 //	//		//hide/show cursor
-//	//		if (!bGui_VideoControlBar)
+//	//		if (!bGui_VideoBarControl)
 //	//		{
 //	//			ofHideCursor();
 //	//		}
@@ -2139,7 +2163,7 @@ void ofxSurfingVideoSkip::draw(ofEventArgs & args)
 		mMidiParams.draw();
 #endif
 		draw_Gui();
-	}
+}
 
 	//--
 
@@ -2192,7 +2216,7 @@ void ofxSurfingVideoSkip::draw_Video()
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::draw_VideoControls()
+void ofxSurfingVideoSkip::draw_VideoBarControl()
 {
 	if (player.isLoaded())
 	{
@@ -2200,7 +2224,7 @@ void ofxSurfingVideoSkip::draw_VideoControls()
 		float roundB = 5.0f;
 
 		// Draw the position bar if appropriate
-		if (bGui_VideoControlBar)
+		if (bGui_VideoBarControl)
 		{
 			ofPushStyle();
 
@@ -2386,7 +2410,7 @@ void ofxSurfingVideoSkip::exit()
 	//ofRemoveListener(params_Control_VideoFX.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_params_VideoFX);
 
 	//// auto hide callback
-	//bGui_VideoControlBar.removeListener(this, &ofxSurfingVideoSkip::Changed_draw_Autohide);
+	//bGui_VideoBarControl.removeListener(this, &ofxSurfingVideoSkip::Changed_draw_Autohide);
 
 	//-
 
@@ -2464,11 +2488,13 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	guiManager.addExtraParamToLayoutPresets(surfingPreview.bGui);
 	guiManager.addExtraParamToLayoutPresets(surfingPreview.bBigScreen);
 	//guiManager.addExtraParamToLayoutPresets(surfingPreview.bFullScreen);
-	guiManager.addExtraParamToLayoutPresets(bGui_VideoControlBar);
+	guiManager.addExtraParamToLayoutPresets(bGui_VideoBarControl);
 
 	// Other
 	guiManager.addExtraParamToLayoutPresets(guiManager.bMinimize);
 	guiManager.addExtraParamToLayoutPresets(bGui_SkipTimers);
+
+	guiManager.addExtraParamToLayoutPresets(presetsManager.surfingPlayer.bGui_Player);
 
 	//-
 
@@ -2978,7 +3004,11 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 						AddSpacingSeparated();
 						ImGui::Spacing();
 
-						guiManager.Add(bMODE_Edit, OFX_IM_TOGGLE_BIG_BORDER_BLINK);
+						//guiManager.Add(bMODE_Edit, OFX_IM_TOGGLE_BIG_BORDER_BLINK);
+						guiManager.Add(bMODE_Edit, OFX_IM_TOGGLE_BIG_XXL_BORDER_BLINK);
+
+						ImGui::Spacing();
+
 						guiManager.Add(bTRIG_ResetAll, OFX_IM_BUTTON_SMALL);
 					}
 
@@ -3016,7 +3046,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 						{
 							//guiManager.Add(surfingPreview.bInDocked, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 							// Control Bar
-							guiManager.Add(bGui_VideoControlBar, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+							guiManager.Add(bGui_VideoBarControl, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 						}
 
 						ImGui::Unindent();

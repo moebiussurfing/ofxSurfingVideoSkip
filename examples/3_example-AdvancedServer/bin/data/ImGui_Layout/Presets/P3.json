@@ -6,13 +6,14 @@
             "Log": "1",
             "Menu": "0",
             "Minimize": "0",
+            "Player": "0",
             "Preview": "1",
-            "SKIP_TIMERS": "1"
+            "SKIP_TIMERS": "0"
         },
         "PanelsVisible": {
             "FX_CHANNEL": "0",
-            "SKIP_PLAYER": "0",
-            "SURFING_PRESETS": "1"
+            "SKIP_PLAYER": "1",
+            "SURFING_PRESETS": "0"
         }
     }
 }

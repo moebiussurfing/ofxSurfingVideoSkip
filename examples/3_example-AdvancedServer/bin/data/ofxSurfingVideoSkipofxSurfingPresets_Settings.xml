@@ -9,7 +9,7 @@
             "Extra": "0",
             "MaxBut": "3",
             "Minimize": "1",
-            "Responsive": "1"
+            "Responsive": "0"
         },
         "INNER_CLICKER": {
             "Amt_Buttons": "3",
@@ -19,7 +19,14 @@
         "Keys": "1",
         "Minimize": "1",
         "Parameters": "0",
-        "Preset_Index": "8",
+        "Preset_Index": "4",
+        "SurfingPlayer": {
+            "Bpm": "120",
+            "Minimize": "1",
+            "Play": "0",
+            "Player": "1",
+            "ms": "500"
+        },
         "_Smoother": {
             "Smooth": "0",
             "Speed": "0"

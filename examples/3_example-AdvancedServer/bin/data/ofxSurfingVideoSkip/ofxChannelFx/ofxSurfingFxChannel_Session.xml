@@ -1,8 +1,8 @@
 {
     "AppSession": {
         "FX": "5",
-        "FX_SETTINGS": "1",
+        "FX_SETTINGS": "0",
         "Fx_Presets": "1",
-        "Minimize": "1"
+        "Minimize": "0"
     }
 }

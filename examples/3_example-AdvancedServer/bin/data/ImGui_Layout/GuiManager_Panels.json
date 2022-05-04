@@ -1,31 +1,5 @@
 {
     "AppSettings": {
-        "Engine_Windows": {
-            "Rectangles_Windows": {
-                "rect_Manager": "993, 5, 0, 186, 374",
-                "rect_Panels": "628, 593, 0, 700, 150",
-                "rect_Presets": "805, 5, 0, 186, 182"
-            },
-            "Window_Panels": {
-                "AutoResize_Panels": "1",
-                "Reset_Panels": "0"
-            },
-            "Window_Presets": {
-                "AutoResize": "1",
-                "Minimize": "1",
-                "Reset": "0"
-            }
-        },
-        "LayoutSettings": {
-            "Auto_Save": "1",
-            "Extra": "0",
-            "Layout_Preset": "2",
-            "Layouts": "1",
-            "Panels": "1",
-            "Solo": "0",
-            "Viewport": "0"
-        },
-        "Manager": "1",
         "Params_Advanced": {
             "Advanced": "0",
             "Auto_Resize": "1",
@@ -34,7 +8,7 @@
             "Help": "0",
             "Keys": "1",
             "Lock_Move": "0",
-            "Minimize": "0",
+            "Minimize": "1",
             "MouseWheel": "1",
             "No_Scroll": "0"
         }

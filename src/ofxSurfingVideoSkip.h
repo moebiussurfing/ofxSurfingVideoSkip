@@ -1,5 +1,5 @@
 //
-// Created by moebiusSurfing, 2019/2020/2021.
+// Created by moebiusSurfing, 2019/2020/2021/2022.
 //
 
 #pragma once
@@ -10,49 +10,43 @@
 
 	TODO:
 
-	+ add preset retrig when same preset index
-
 	+ add OSC control or control add-on mixing midi+osc
 
 	+ should be oriented more to start point vs end/duration..
 
-	+ add/search disable widgets
-
 	+ improve Edit mode and lock
+		+ when edit mode, and dragging start/end, move position
 	
-	+ fix imgui layout windows: store settings, hide/disable modes
-
-	+ add locker for duration locked (opened/without ending) to bpm ? 
-		+ could be better to link bpm to skippers only, not to loop duration. easy to user
-		+ add control to move the loop clip with same duration
-
 	+ add shift loop
+		+ add control to move the loop clip with same duration?
 		+ lock start/end then move "centered" on edit
 
-	+ when edit mode, and dragging start/end, move position
-	+ start / end buttons with ctrl to go/set
-
-	+ fix presets path empty on startup
-		+ fix route paths for Windows/macOS
+	+ fix route paths for Windows/macOS
 
 	+ full screen/dual window. external output.
 
 	+ add tap tempo or surfingPlayer add-on
-		+ add slow skip timers
+	
+	+ add slow skip timers
 
 	+ populate midi notes for available presets
 		or make an engine to centralize all midi stuff for different modules.
 
 	+ fix docking for all panels. Should split main 3 panels too..
+		+ preview window and central docking layouting
 
 	+ add new fx skip-engine jump bpm timed shutter
 
 	+ zoom on loop zone. maybe with stills
 
+	+ mark start points on bar
+
 
 	BUGS:
 
-	 zero time loop wrong back...
+	+ zero time loop wrong back...
+	+ finetunes: kicks working weird
+
 */
 
 
@@ -72,7 +66,7 @@
 
 // Presets. Two alternatives:
 // -> 1A. simple presets
-#define USE_ofxSurfingPresets__VIDEO_SKIP
+#define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for gui integration
 // -> 1B. power presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
@@ -217,7 +211,7 @@ public:
 
 	void draw_Gui();
 	void draw_Video();
-	void draw_VideoControls();
+	void draw_VideoBarControl();
 
 	//-
 
@@ -249,6 +243,7 @@ private:
 #ifdef USE_ofxRemoteParameters
 	ofxRemoteParameters::Server remoteServer;
 	ofParameterGroup params_Remote;
+	bool bSyncRemote = false;
 #endif
 
 	//-
@@ -443,7 +438,7 @@ private:
 
 	// autohide
 	bool ENABLE_GuiVisibleByAutoHide = false;
-	ofParameter<bool> bGui_VideoControlBar;
+	ofParameter<bool> bGui_VideoBarControl;
 	bool bGui_VideoControlBar_PRE;
 	//void Changed_draw_Autohide(bool &b);
 	int time_autoHide = 2500;
