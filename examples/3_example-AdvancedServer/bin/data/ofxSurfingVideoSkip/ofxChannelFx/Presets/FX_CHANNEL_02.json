@@ -23,9 +23,9 @@
             "SATURATION": "1.662"
         },
         "4_DELAY": {
-            "BLENDMODE": "0",
+            "BLENDMODE": "3",
             "DELAY": "1",
-            "FEEDBACK": "0.89"
+            "FEEDBACK": "0.877"
         },
         "5_ECHOTRACE": {
             "ECHOTRACE": "1",

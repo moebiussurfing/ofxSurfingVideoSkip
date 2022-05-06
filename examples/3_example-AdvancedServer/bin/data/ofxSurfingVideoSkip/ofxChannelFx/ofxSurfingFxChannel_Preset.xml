@@ -28,7 +28,7 @@
             "FEEDBACK": "0.89"
         },
         "5_ECHOTRACE": {
-            "ECHOTRACE": "1",
+            "ECHOTRACE": "0",
             "GAIN": "0.7",
             "HARDCUTOFF": "0",
             "INVERT": "0",

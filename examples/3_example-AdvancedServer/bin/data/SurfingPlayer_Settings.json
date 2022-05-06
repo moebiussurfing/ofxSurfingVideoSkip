@@ -1,9 +1,9 @@
 {
     "SurfingPlayer": {
+        "-1_PLAYER": "0",
         "Bpm": "120",
         "Minimize": "1",
-        "Play": "0",
-        "Player": "1",
+        "Play": "1",
         "ms": "500"
     }
 }

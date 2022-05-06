@@ -2494,7 +2494,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	guiManager.addExtraParamToLayoutPresets(guiManager.bMinimize);
 	guiManager.addExtraParamToLayoutPresets(bGui_SkipTimers);
 
-	guiManager.addExtraParamToLayoutPresets(presetsManager.surfingPlayer.bGui_Player);
+	guiManager.addExtraParamToLayoutPresets(presetsManager.surfingPlayer.bGui);
 
 	//-
 

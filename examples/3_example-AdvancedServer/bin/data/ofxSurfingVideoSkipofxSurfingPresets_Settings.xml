@@ -3,7 +3,7 @@
         "AutoSave": "1",
         "AutoSave_Timed": "0",
         "Cycled": "1",
-        "Editor": "0",
+        "EDITOR": "0",
         "FLOAT_CLICKER": {
             "Auto_Resize": "1",
             "Extra": "0",
@@ -18,13 +18,13 @@
         "Inner_Clicker": "0",
         "Keys": "1",
         "Minimize": "1",
-        "Parameters": "0",
-        "Preset_Index": "4",
+        "PARAMETERS": "0",
+        "Preset_Index": "5",
         "SurfingPlayer": {
+            "-1_PLAYER": "0",
             "Bpm": "120",
             "Minimize": "1",
-            "Play": "0",
-            "Player": "1",
+            "Play": "1",
             "ms": "500"
         },
         "_Smoother": {

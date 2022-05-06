@@ -1,12 +1,12 @@
 {
     "LayoutsPresets": {
         "ExtraParams": {
+            "-1_PLAYER": "0",
             "Big_Screen": "1",
             "Control_Bar": "1",
             "Log": "1",
             "Menu": "0",
             "Minimize": "0",
-            "Player": "0",
             "Preview": "1",
             "SKIP_TIMERS": "0"
         },
