@@ -5,8 +5,8 @@
             "Menu": "0"
         },
         "PanelsVisible": {
-            "PRESETS": "1",
-            "SKIP_PLAYER": "1"
+            "PRESETS": "0",
+            "SKIP_PLAYER": "0"
         }
     }
 }

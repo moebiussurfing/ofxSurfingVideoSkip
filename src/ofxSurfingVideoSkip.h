@@ -60,13 +60,15 @@
 
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
 
-//-
+//--
 
 // Optional compatible add-ons list:
 
 // Presets. Two alternatives:
+
 // -> 1A. simple presets
 #define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for gui integration
+
 // -> 1B. power presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
@@ -80,13 +82,13 @@
 //#define USE_MIDI_PARAMS__VIDEO_SKIP 
 
 // -> 5. FX
-#define USE_ofxSurfingFxChannel 
+//#define USE_ofxSurfingFxChannel 
 
 // -> 6. Remote Parameters
+//#define USE_ofxRemoteParameters 
 //TODO:
 // This add-on will server some parameters to allow remote control fast.
 // Will serve OSC/MIDI
-#define USE_ofxRemoteParameters 
 
 #endif
 

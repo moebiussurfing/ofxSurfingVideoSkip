@@ -1,34 +1,27 @@
 {
     "ofxSurfingPresets_AppSettings": {
-        "AutoSave": "1",
+        "AUTOSAVE": "1",
         "AutoSave_Timed": "0",
         "CLICKER": "0",
+        "CLICKER_SIMPLE": {
+            "Amt_Buttons": "2",
+            "Responsive": "1"
+        },
+        "Clicker_Simple": "1",
         "Cycled": "1",
         "EDITOR": "0",
         "FLOAT_CLICKER": {
-            "Auto_Resize": "1",
+            "Auto_Resize_Clicker": "1",
             "Extra": "0",
-            "MaxBut": "1",
+            "MaxBut": "2",
             "Minimize": "1",
             "Responsive": "1"
         },
         "Fx_Presets": "1",
-        "INNER_CLICKER": {
-            "Amt_Buttons": "1",
-            "Responsive": "1"
-        },
-        "Inner_Clicker": "1",
+        "Index": "0",
         "Keys": "1",
         "Minimize": "1",
         "PARAMETERS": "0",
-        "Preset_Index": "0",
-        "SurfingPlayer": {
-            "-1_PLAYER": "0",
-            "Bpm": "120",
-            "Minimize": "1",
-            "Play": "0",
-            "ms": "500"
-        },
         "_Smoother": {
             "Smooth": "0",
             "Speed": "0"

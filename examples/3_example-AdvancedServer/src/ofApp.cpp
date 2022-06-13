@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofApp::setup() 
 {
-	windowApp.setEnableTimerSaver(true);
+	//windowApp.setEnableTimerSaver(true);
 
 	player.setup();
 }
