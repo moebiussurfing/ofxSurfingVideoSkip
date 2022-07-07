@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<AppSettings>
+	<PLAY>1</PLAY>
+	<FILE>"NightmoVES4.mov"</FILE>
+	<videoFilePath>E:\_DATA\VIDEO\NightmoVES4.mov</videoFilePath>
+	<Keys>1</Keys>
+	<AutoHide_Bar>1</AutoHide_Bar>
+	<SKIP_TIMERS>1</SKIP_TIMERS>
+</AppSettings>

@@ -3,7 +3,7 @@
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::setup_PresetsStuff()
 {
-	//-
+	//--
 
 	// Load settings
 
@@ -19,10 +19,10 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 
-	// Customize befor add the group! that will call setup()
+	// Customize before add the group! that will call setup()
 	presetsManager.setKeyFirstChar('a'); // customize keys to avoid collide when using multiple presets manager instances!
 	//presetsManager.bGui.setName("SKIP PRESETS"); //-> Custom name
-	presetsManager.setEnableHandleSettingsFile(false); // disable saving settings to avoid collide with Gui Manager
+	//presetsManager.setEnableHandleSettingsFile(false); // disable saving settings to avoid collide with Gui Manager
 	presetsManager.setPathGlobal(path_GLOBAL_Folder); // custom path
 	presetsManager.setPathPresets(path_GLOBAL_Folder + "/" + "ofxSurfingVideoSkip" + "/" + "Presets");
 	//presetsManager.setAmountButtonsPerRowClickers(3);
@@ -37,8 +37,8 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 
 	//-
 
-	// Link to not autosave when non editing!
-	presetsManager.bAutoSave.makeReferenceTo(bMODE_Edit);
+	// Link to not auto save when non editing!
+	presetsManager.bEditMode.makeReferenceTo(bMODE_Edit);
 	//presetsManager.bAutoSave.setName("EDIT");
 	//bMODE_Edit.setName("EDIT");
 	//bMODE_Edit.makeReferenceTo(presetsManager.bAutoSave);
@@ -108,6 +108,7 @@ void ofxSurfingVideoSkip::setup_Preset()
 	params_Preset.add(beatDuration);
 	params_Preset.add(beatRescale);
 	//params_Preset.add(bMODE_Lock);
+
 
 	// should add more params like direction/reverse/..
 }
@@ -222,10 +223,11 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	//surfingPreview.bGui = false;
 	//bGui_VideoBarControl = true;
 
+	//TODO: fix
 	//// Handled by ImGui Manager!
 	//params_AppSettings.add(bGui);
 	//params_AppSettings.add(bGui_Presets);
-	//params_AppSettings.add(bGui_SkipTimers);
+	params_AppSettings.add(bGui_SkipTimers);
 	//params_AppSettings.add(bGui_SurfingVideo);
 
 	//params_AppSettings.add(guiManager.bAutoResize);
@@ -297,7 +299,7 @@ void ofxSurfingVideoSkip::setup()
 	speed.set("SPEED_", 1.0f, SPEED_MIN, SPEED_MAX);
 	bReset_Speed.set("RESET SPEED", false);
 
-	bMODE_LoopedBack.set("LOOP BACK", false);
+	bMODE_LoopedBack.set("LOOPB", false);
 	bMODE_Reversed.set("REVERSE", false);
 	bTRIG_ResetEngine.set("RESET ENGINE", false);
 	bTRIG_ResetAll.set("RESET", false);
@@ -554,10 +556,10 @@ void ofxSurfingVideoSkip::setup()
 	// Callbacks
 
 	// Gui
-	listener_SHOW_gui = bGui.newListener([this](bool &)
-	{
-		this->Changed_bGui();
-	});
+	listener_SHOW_gui = bGui.newListener([this](bool&)
+		{
+			this->Changed_bGui();
+		});
 
 	//// App Mode
 	//listener_MODE_App = MODE_App.newListener([this](int &)
@@ -682,7 +684,7 @@ void ofxSurfingVideoSkip::setup_ChannelFx()
 #endif
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::update(ofEventArgs & args)
+void ofxSurfingVideoSkip::update(ofEventArgs& args)
 {
 	//--
 
@@ -698,6 +700,18 @@ void ofxSurfingVideoSkip::update(ofEventArgs & args)
 	surfingPreview.begin();
 	player.draw(0, 0);
 	surfingPreview.end();
+
+
+	//--
+
+	// FxPro
+	{
+		fxPro.begin();
+		{
+			draw_Video();
+		}
+		fxPro.end(false);
+	}
 
 	//--
 
@@ -840,7 +854,7 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 	videoTIME = /*"Time " + */strMin + ":" + strSec;//std::string
 
 	// frame
-	videoFRAME = ofToString(POSITION*totalNumFrames, 0);
+	videoFRAME = ofToString(POSITION * totalNumFrames, 0);
 
 	////videoTIME += "  |  Frame " + ofToString(POSITION*totalNumFrames, 0);
 	//videoTIME += "          \t" + videoFRAME.get();
@@ -1009,7 +1023,7 @@ void ofxSurfingVideoSkip::updateTimers()
 #ifndef USE_BPM_TIMER_MODE
 		tmax = timePeriod_skipper;
 #else
-		tmax = divBeatSkipper.get()*((60000 / bpmDivider.get()) / (bpmTimer.get()));
+		tmax = divBeatSkipper.get() * ((60000 / bpmDivider.get()) / (bpmTimer.get()));
 #endif
 		if (t >= tmax) // done timer 
 		{
@@ -1042,7 +1056,7 @@ void ofxSurfingVideoSkip::updateTimers()
 #ifndef USE_BPM_TIMER_MODE
 		tmax = timePeriod_reverser;
 #else
-		tmax = divBeatReverse.get()*((60000 / bpmDivider.get()) / (bpmTimer.get()));
+		tmax = divBeatReverse.get() * ((60000 / bpmDivider.get()) / (bpmTimer.get()));
 #endif
 		if (t >= tmax)
 		{
@@ -1156,13 +1170,13 @@ void ofxSurfingVideoSkip::setGuiVisible(bool b)
 //--
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::mouseMoved(ofMouseEventArgs &eventArgs)
+void ofxSurfingVideoSkip::mouseMoved(ofMouseEventArgs& eventArgs)
 {
 	if (bActive)
 	{
-		const int &x = eventArgs.x;
-		const int &y = eventArgs.y;
-		const int &button = eventArgs.button;
+		const int& x = eventArgs.x;
+		const int& y = eventArgs.y;
+		const int& button = eventArgs.button;
 
 		{
 			lastMovement = ofGetElapsedTimeMillis();
@@ -1205,13 +1219,13 @@ void ofxSurfingVideoSkip::mouseRefresh(int button, float position)
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::mouseDragged(ofMouseEventArgs &eventArgs)
+void ofxSurfingVideoSkip::mouseDragged(ofMouseEventArgs& eventArgs)
 {
 	if (bActive)
 	{
-		const int &x = eventArgs.x;
-		const int &y = eventArgs.y;
-		const int &button = eventArgs.button;
+		const int& x = eventArgs.x;
+		const int& y = eventArgs.y;
+		const int& button = eventArgs.button;
 
 		//cout << "button:" << button << endl;
 
@@ -1247,13 +1261,13 @@ void ofxSurfingVideoSkip::mouseDragged(ofMouseEventArgs &eventArgs)
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::mousePressed(ofMouseEventArgs &eventArgs)
+void ofxSurfingVideoSkip::mousePressed(ofMouseEventArgs& eventArgs)
 {
 	if (bActive)
 	{
-		const int &x = eventArgs.x;
-		const int &y = eventArgs.y;
-		const int &button = eventArgs.button;
+		const int& x = eventArgs.x;
+		const int& y = eventArgs.y;
+		const int& button = eventArgs.button;
 
 		ofRectangle bar = getBarRectangle();
 		if (bar.inside(x, y))
@@ -1303,13 +1317,13 @@ void ofxSurfingVideoSkip::mousePressed(ofMouseEventArgs &eventArgs)
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::mouseReleased(ofMouseEventArgs &eventArgs)
+void ofxSurfingVideoSkip::mouseReleased(ofMouseEventArgs& eventArgs)
 {
 	if (bActive)
 	{
-		const int &x = eventArgs.x;
-		const int &y = eventArgs.y;
-		const int &button = eventArgs.button;
+		const int& x = eventArgs.x;
+		const int& y = eventArgs.y;
+		const int& button = eventArgs.button;
 
 		if (inScrub)
 		{
@@ -1331,12 +1345,15 @@ void ofxSurfingVideoSkip::windowResized(int _w, int _h)
 	//window_H = _h;
 
 	//player.set
+
+	fxPro.windowResized(_w, _h);
+
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
+void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 {
-	const int &key = eventArgs.key;
+	const int& key = eventArgs.key;
 	ofLogNotice(__FUNCTION__) << "'" << (char)key << "' \t\t[" << key << "]";
 
 	// modifiers
@@ -1351,6 +1368,10 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 		ofLogNotice(__FUNCTION__) << "mod_ALT: " << (mod_ALT ? "ON" : "OFF");
 		ofLogNotice(__FUNCTION__) << "mod_SHIFT: " << (mod_SHIFT ? "ON" : "OFF");
 	}
+
+	//--
+
+	fxPro.keyPressed(key);
 
 	//----
 
@@ -1383,7 +1404,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 			setPlay_MoodMachine(b);
 			setPlay(b);
 #endif
-		}
+	}
 
 		//-
 
@@ -1503,7 +1524,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs &eventArgs)
 		}
 
 		//-
-	}
+}
 }
 
 //--------------------------------------------------------------
@@ -1541,13 +1562,13 @@ void ofxSurfingVideoSkip::setup_PresetsManager()
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_DONE_save(bool &DONE_save)
+void ofxSurfingVideoSkip::Changed_DONE_save(bool& DONE_save)
 {
 	ofLogNotice(__FUNCTION__) << ofToString(DONE_save ? "TRUE" : "FALSE");
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_DONE_load(bool &DONE_load)
+void ofxSurfingVideoSkip::Changed_DONE_load(bool& DONE_load)
 {
 	ofLogNotice(__FUNCTION__) << ofToString(DONE_load ? "TRUE" : "FALSE");
 
@@ -1560,12 +1581,12 @@ void ofxSurfingVideoSkip::Changed_DONE_load(bool &DONE_load)
 
 		//// workflow
 		//if (!bMODE_Loop) bMODE_Loop = true;
-	}
+}
 }
 #endif
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
+void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 {
 	if (!bDISABLECALLBACKS)
 	{
@@ -1688,8 +1709,8 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
-			}
 		}
+	}
 
 		//// loop
 		//else if (name == bMODE_Loop.getName())
@@ -1974,7 +1995,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter &e) // patch change
 		bSyncRemote = true;
 		//remoteServer.syncParameters();//hangs
 #endif
-	}
+}
 }
 
 //--------------------------------------------------------------
@@ -2071,7 +2092,7 @@ void ofxSurfingVideoSkip::Changed_bGui()
 //listeners for inside surfingMoods
 
 //-------------------------------------------------
-void ofxSurfingVideoSkip::Changed_Mood_RANGE(int & targetVal)
+void ofxSurfingVideoSkip::Changed_Mood_RANGE(int& targetVal)
 {
 	ofLogNotice(__FUNCTION__) << targetVal;
 
@@ -2089,12 +2110,12 @@ void ofxSurfingVideoSkip::Changed_Mood_RANGE(int & targetVal)
 	//}
 }
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_Mood_TARGET(int &targetVal)
+void ofxSurfingVideoSkip::Changed_Mood_TARGET(int& targetVal)
 {
 	ofLogNotice(__FUNCTION__) << targetVal;
 }
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_Mood_PRESET_A(int &targetVal)
+void ofxSurfingVideoSkip::Changed_Mood_PRESET_A(int& targetVal)
 {
 	ofLogNotice(__FUNCTION__) << targetVal;
 
@@ -2110,22 +2131,23 @@ void ofxSurfingVideoSkip::Changed_Mood_PRESET_A(int &targetVal)
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_Mood_PRESET_B(int &targetVal)
+void ofxSurfingVideoSkip::Changed_Mood_PRESET_B(int& targetVal)
 {
 	ofLogNotice(__FUNCTION__) << targetVal;
 }
 
 //-------------------------------------------------
-void ofxSurfingVideoSkip::Changed_Mood_PRESET_C(int &targetVal)
+void ofxSurfingVideoSkip::Changed_Mood_PRESET_C(int& targetVal)
 {
 	ofLogNotice(__FUNCTION__) << targetVal;
 }
 #endif
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::draw(ofEventArgs & args)
+void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 {
 	ofClear(surfingPreview.colorBg);
+	//ofEnableDepthTest();
 
 	//--
 
@@ -2157,13 +2179,19 @@ void ofxSurfingVideoSkip::draw(ofEventArgs & args)
 
 	//--
 
+	// FxPro
+	fxPro.draw();
+
+	//--
+
 	if (bGui)
 	{
+		draw_Gui();
+
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
 		mMidiParams.draw();
 #endif
-		draw_Gui();
-	}
+}
 
 	//--
 
@@ -2366,7 +2394,7 @@ ofRectangle ofxSurfingVideoSkip::getBarRectangle() const
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::loadGroup(ofParameterGroup &g, std::string path)
+void ofxSurfingVideoSkip::loadGroup(ofParameterGroup& g, std::string path)
 {
 	ofLogNotice(__FUNCTION__) << path;
 	ofXml settings;
@@ -2375,7 +2403,7 @@ void ofxSurfingVideoSkip::loadGroup(ofParameterGroup &g, std::string path)
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::saveGroup(ofParameterGroup &g, string path)
+void ofxSurfingVideoSkip::saveGroup(ofParameterGroup& g, string path)
 {
 	ofLogNotice(__FUNCTION__) << path;
 	ofXml settings;
@@ -2480,6 +2508,8 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	guiManager.addWindowSpecial(channelFx.bGui);
 #endif
 
+	guiManager.addWindowSpecial(fxPro.bGui);
+	
 	//-
 
 	// -> 2. Extra Params to include into Layout Presets
@@ -2683,6 +2713,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 {
 	std::string n;
 
+	IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
+
 	//--
 
 	// Engine
@@ -2706,16 +2738,20 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 				// Skip Panel
 				guiManager.Add(bGui_SkipTimers, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
+				
+				guiManager.Add(fxPro.bGui, OFX_IM_TOGGLE_ROUNDED_MEDIUM);
 
 				//ImGui::Spacing();
 			}
 
-			ImGui::Spacing();
-			ImGui::Spacing();
+			guiManager.AddSpacingBigSeparated();
+			//ImGui::Spacing();
+			//ImGui::Spacing();
 
 			//-
 
 			// video tittle
+
 			if (!guiManager.bMinimize)
 			{
 				// File
@@ -2733,10 +2769,12 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					{
 						doOpenDialogToSetPath();
 					}
-
+					guiManager.AddSpacing();
 					ImGui::Text(videoFilePath.get().data());
 					ImGui::TreePop();
 				}
+
+				guiManager.AddSpacingBigSeparated();
 			}
 
 			//--
@@ -2744,7 +2782,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			{
 				ImGui::Spacing();
 
-				//-
+				//--
 
 				// Play
 
@@ -2763,6 +2801,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 				guiManager.Add(bMODE_LoopedBack, OFX_IM_TOGGLE_SMALL, 2, true);
 				guiManager.Add(bMODE_Reversed, OFX_IM_TOGGLE_SMALL, 2, false);
+				guiManager.AddSpacingBigSeparated();
 
 				//-
 
@@ -2811,13 +2850,15 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				}
 				IMGUI_SUGAR__SLIDER_ADD_MOUSE_WHEEL(p);
 
-				ImGui::Spacing();
+				//ImGui::Spacing();
 
 				//-
 
 				//// Loop
 				//guiManager.Add(bMODE_Loop, OFX_IM_TOGGLE_BIG_BORDER, 1, false);
 				//ImGui::Spacing();
+
+				guiManager.AddSpacingBigSeparated();
 
 				//-
 
@@ -2851,10 +2892,12 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					//	AddSpacingBig();
 					//}
 
-					ImGui::Spacing();
+					//ImGui::Spacing();
+					guiManager.AddSpacingBigSeparated();
 				}
 
 				//-
+
 
 				// Beat mode
 				if (!guiManager.bMinimize)
@@ -2863,7 +2906,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 						//AddSpacingSeparated();
 						ImGui::Spacing();
 
-						guiManager.Add(bMODE_Beat, OFX_IM_TOGGLE_SMALL_BORDER);
+						guiManager.Add(bMODE_Beat, OFX_IM_TOGGLE_BORDER);
 						//guiManager.Add(bMODE_Beat, OFX_IM_TOGGLE_SMALL_BORDER, 2, true);
 						//guiManager.Add(bMODE_Lock, OFX_IM_TOGGLE_SMALL_BORDER, 2, false);
 						if (bMODE_Beat)
@@ -2874,16 +2917,22 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 							//ofxImGuiSurfing::AddParameter(beatRescale);
 						}
 
-						ImGui::Spacing();
-						//AddSpacingSeparated();
+						//ImGui::Spacing();
+						guiManager.AddSpacingBigSeparated();
 					}
 
 				//--
 
 				// Preset Clicker
+
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+		
+				guiManager.AddLabelBig("PRESETS");
 				presetsManager.draw_ImGui_ClickerMinimal();
+				guiManager.AddSpacingBigSeparated();
+
 #endif
+				//--
 
 				if (!guiManager.bMinimize)
 				{
@@ -2910,8 +2959,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 					if (!guiManager.bMinimize)
 					{
-						ImGui::Spacing();
-						ImGui::Spacing();
+						//ImGui::Spacing();
+						//guiManager.AddSpacingBigSeparated();
 
 						// finetune
 						static bool bFineTune = false;
@@ -2929,18 +2978,19 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 								{
 									ImGui::PushButtonRepeat(true);
 									{
-										if (ImGui::Button("-", ImVec2(_w50, _h*0.7)))//fix
+										if (ImGui::Button("-", ImVec2(_w50, _h * 0.7)))//fix
 										{
 											bKickL = true;
 										}
 										ImGui::SameLine();
-										if (ImGui::Button("+", ImVec2(_w50, _h*0.7)))
+										if (ImGui::Button("+", ImVec2(_w50, _h * 0.7)))
 										{
 											bKickR = true;
 										}
 									}
 									ImGui::PopButtonRepeat();
 								}
+								guiManager.AddSpacing();
 
 								guiManager.Add(POSITION, OFX_IM_STEPPER);
 
@@ -2993,24 +3043,23 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 						ImGui::Spacing();
 
 						guiManager.Add(bTRIG_ResetAll, OFX_IM_BUTTON_SMALL);
+
+						guiManager.AddSpacingBigSeparated();
+
 					}
 
 				//-
-
-				ImGui::Spacing();
-				AddSpacingSeparated();
-
 			}//loop
 
 			//--
 
 			// minimize
 
-			ImGui::Spacing();
+			//ImGui::Spacing();
 
 			if (!guiManager.bMinimize)
 			{
-				static ofParameter<bool> bScreens{ "Screens", false };
+				static ofParameter<bool> bScreens{ "SCREENS", false };
 				//ofxImGuiSurfing::AddToggleRoundedButton(guiManager.bMinimize);
 				//guiManager.Add(guiManager.bMinimize, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
 				guiManager.Add(bScreens, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
@@ -3034,6 +3083,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					ImGui::Unindent();
 					refreshLayout();
 				}
+
+				guiManager.AddSpacingBigSeparated();
 			}
 
 			//-
@@ -3147,7 +3198,11 @@ void ofxSurfingVideoSkip::draw_ImGui()
 #ifdef USE_ofxSurfingFxChannel
 	channelFx.drawGui();
 #endif
-}
+
+	// FxPro
+	fxPro.drawGui();
+
+	}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::doOpenDialogToSetPath()

@@ -1,6 +1,7 @@
 ofxGui
 ofxHapPlayer
 ofxImGui
+ofxSurfingHelpers
 ofxSurfingImGui
 ofxSurfingPlayer
 ofxSurfingPresets

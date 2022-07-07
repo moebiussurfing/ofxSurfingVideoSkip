@@ -10,13 +10,16 @@
 
 	TODO:
 
+	+ fix imgui layout presets
+
+
 	+ add OSC control or control add-on mixing midi+osc
 
 	+ should be oriented more to start point vs end/duration..
 
 	+ improve Edit mode and lock
 		+ when edit mode, and dragging start/end, move position
-	
+
 	+ add shift loop
 		+ add control to move the loop clip with same duration?
 		+ lock start/end then move "centered" on edit
@@ -26,7 +29,7 @@
 	+ full screen/dual window. external output.
 
 	+ add tap tempo or surfingPlayer add-on
-	
+
 	+ add slow skip timers
 
 	+ populate midi notes for available presets
@@ -45,7 +48,7 @@
 	BUGS:
 
 	+ zero time loop wrong back...
-	+ finetunes: kicks working weird
+	+ fine tunes: kicks working weird
 
 */
 
@@ -64,21 +67,22 @@
 
 // Optional compatible add-ons list:
 
-// Presets. Two alternatives:
+// Presets. 
+// Two alternatives:
 
-// -> 1A. simple presets
+// -> 1A. Simple Presets
 #define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for gui integration
 
-// -> 1B. power presets
+// -> 1B. Power Presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
-// -> 2. Mood machine
-//#define USE_ofxSurfingMoods 
+// -> 2. Mood Machine
+#define USE_ofxSurfingMoods 
 
-// -> 3. Beat clock
+// -> 3. Beat Clock
 //#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
 
-// -> 4. MIDI input to control gui and switch presets
+// -> 4. MIDI Input to control GUI and switch presets
 //#define USE_MIDI_PARAMS__VIDEO_SKIP 
 
 // -> 5. FX
@@ -94,6 +98,7 @@
 
 //----------------------------------------------
 
+#include "ofxSurfingFxPro.h"
 
 #include "ofxHapPlayer.h"
 #include "ofxInteractiveRect.h"
@@ -103,6 +108,7 @@
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 #include "ofxSurfingPresets.h"
 #endif
+
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 #include "ofxPresetsManager.h"
 #endif
@@ -136,6 +142,8 @@ class ofxSurfingVideoSkip
 
 public:
 
+	ofxSurfingFxPro fxPro;
+
 	//--------------------------------------------------------------
 	ofxSurfingVideoSkip()
 	{
@@ -147,7 +155,7 @@ public:
 		addMouseListeners();
 
 		//setup();
-	};
+	}
 
 	//--------------------------------------------------------------
 	~ofxSurfingVideoSkip()
@@ -160,7 +168,7 @@ public:
 		removeMouseListeners();
 
 		exit();
-	};
+	}
 
 	//--
 
@@ -175,24 +183,27 @@ private:
 	void setup_Preset();
 	void setup_PresetsStuff();
 
-	void update(ofEventArgs & args);
-	void draw(ofEventArgs & args);
+	void update(ofEventArgs& args);
+	void draw(ofEventArgs& args);
 
 	void exit();
 
 private:
 
 	// keys
-	void keyPressed(ofKeyEventArgs &eventArgs);
-	void keyReleased(ofKeyEventArgs &eventArgs) {};
+	void keyPressed(ofKeyEventArgs& eventArgs);
+	void keyReleased(ofKeyEventArgs& eventArgs) {
+		const int& key = eventArgs.key;
+		fxPro.keyReleased(key);
+	};
 	void addKeysListeners();
 	void removeKeysListeners();
 
 	// mouse
-	void mouseDragged(ofMouseEventArgs &eventArgs);
-	void mousePressed(ofMouseEventArgs &eventArgs);
-	void mouseReleased(ofMouseEventArgs &eventArgs);
-	void mouseMoved(ofMouseEventArgs &eventArgs);
+	void mouseDragged(ofMouseEventArgs& eventArgs);
+	void mousePressed(ofMouseEventArgs& eventArgs);
+	void mouseReleased(ofMouseEventArgs& eventArgs);
+	void mouseMoved(ofMouseEventArgs& eventArgs);
 	void mouseRefresh(int button, float position);
 	void addMouseListeners();
 	void removeMouseListeners();
@@ -233,7 +244,7 @@ private:
 	//-
 
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
-	ofxBeatClock beatClock;	
+	ofxBeatClock beatClock;
 	ofEventListener listenerBeat;
 	ofEventListener listenerBpm;
 	void Changed_BeatTick();
@@ -522,9 +533,9 @@ private:
 
 	ofParameter<float> speed;
 	ofParameter<float> speedNorm;
-	
+
 	ofParameter<bool> bPlay;
-	
+
 	ofParameter<bool> bMODE_Edit;
 	ofParameter<bool> bMODE_Loop;
 	ofParameter<bool> bMODE_LoopedBack;
@@ -575,7 +586,7 @@ private:
 	uint64_t last_TRIG_reverse = 0;
 
 	ofParameterGroup params_Engine;
-	void Changed_Params(ofAbstractParameter &e);
+	void Changed_Params(ofAbstractParameter& e);
 	bool bDISABLECALLBACKS;
 
 	ofParameterGroup params_Control;
@@ -608,8 +619,8 @@ private:
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	void setup_PresetsManager();
 	ofxPresetsManager presetsManager;
-	void Changed_DONE_load(bool &DONE_load);
-	void Changed_DONE_save(bool &DONE_save);
+	void Changed_DONE_load(bool& DONE_load);
+	void Changed_DONE_save(bool& DONE_save);
 #endif
 
 	//--
@@ -617,18 +628,21 @@ private:
 #ifdef USE_ofxSurfingMoods
 	ofxSurfingMoods surfingMoods;
 
-	void Changed_Mood_RANGE(int & targetVal);
-	void Changed_Mood_TARGET(int &targetVal);//listener for inside class surfingMoods
-	void Changed_Mood_PRESET_A(int &targetVal);
-	void Changed_Mood_PRESET_B(int &targetVal);
-	void Changed_Mood_PRESET_C(int &targetVal);
+	void Changed_Mood_RANGE(int& targetVal);
+	void Changed_Mood_TARGET(int& targetVal);//listener for inside class surfingMoods
+	void Changed_Mood_PRESET_A(int& targetVal);
+	void Changed_Mood_PRESET_B(int& targetVal);
+	void Changed_Mood_PRESET_C(int& targetVal);
 #endif
 
 	ofParameter<bool> bGui_SurfingVideo;
 	ofParameter<bool> bGui_SkipTimers;
 
+public:
+
 	ofParameter<bool> bGui{ "SURFING VIDEO", true };//independent to autohide state
 
+private:
 	ofEventListener listener_SHOW_gui;
 	void Changed_bGui();
 
@@ -638,8 +652,8 @@ private:
 
 	//settings
 	std::string path_AppSettings;
-	void saveGroup(ofParameterGroup &g, std::string path);
-	void loadGroup(ofParameterGroup &g, std::string path);
+	void saveGroup(ofParameterGroup& g, std::string path);
+	void loadGroup(ofParameterGroup& g, std::string path);
 
 	//ofParameter<int> window_W, window_H, window_X, window_Y;
 
@@ -687,5 +701,5 @@ private:
 		_w50 = ofxImGuiSurfing::getWidgetsWidth(2);
 	}
 
-	};
+};
 
