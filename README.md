@@ -1,12 +1,15 @@
 # ofxSurfingVideoSkip
 
 ## Overview
-ofxSurfingVideoSkip is a setteable loops video player:
+A tweakeable loops video player.  
+
+- in / out marks
 - speed
 - reverse
 - skip timer
 - reverse timer
-- beat / bpm mode
+- beat / bpm mode and abs mode
+- 9 presets + player randomizer 
 
 ## Screenshot
 ![Screenshot](readme_images/Capture.PNG?raw=true "Screenshot")
