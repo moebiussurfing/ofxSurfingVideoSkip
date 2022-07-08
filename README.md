@@ -11,7 +11,7 @@ A tweakeable loops video player.
 - reverse timer
 - beat / bpm mode and abs mode
 - 9 presets + player randomizer
-- external / external clock
+- internal / external clock
 
 ## Screenshot
 ![Screenshot](readme_images/Capture.PNG?raw=true "Screenshot")
