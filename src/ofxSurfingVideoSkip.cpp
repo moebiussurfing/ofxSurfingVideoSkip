@@ -2131,9 +2131,11 @@ void ofxSurfingVideoSkip::Changed_Mood_PRESET_A(int& targetVal)
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_Mood_PRESET_B(int& targetVal)
+void ofxSurfingVideoSkip::Changed_Mood_PRESET_B(int& i)
 {
-	ofLogNotice(__FUNCTION__) << targetVal;
+	ofLogNotice(__FUNCTION__) << i;
+
+	fxPro.presetsManager.load(i);
 }
 
 //-------------------------------------------------
@@ -2739,7 +2741,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				// Skip Panel
 				guiManager.Add(bGui_SkipTimers, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
 				
-				guiManager.Add(fxPro.bGui, OFX_IM_TOGGLE_ROUNDED_MEDIUM);
+				//guiManager.Add(fxPro.bGui, OFX_IM_TOGGLE_ROUNDED_MEDIUM);
 
 				//ImGui::Spacing();
 			}
@@ -2893,7 +2895,6 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					//}
 
 					//ImGui::Spacing();
-					guiManager.AddSpacingBigSeparated();
 				}
 
 				//-
@@ -2901,6 +2902,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 				// Beat mode
 				if (!guiManager.bMinimize)
+					guiManager.AddSpacingBigSeparated();
 					if (bMODE_Loop)
 					{
 						//AddSpacingSeparated();
@@ -2918,7 +2920,6 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 						}
 
 						//ImGui::Spacing();
-						guiManager.AddSpacingBigSeparated();
 					}
 
 				//--
@@ -2927,15 +2928,16 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 		
-				guiManager.AddLabelBig("PRESETS");
-				presetsManager.draw_ImGui_ClickerMinimal();
-				guiManager.AddSpacingBigSeparated();
+				//guiManager.AddLabelBig("PRESETS");
+				//presetsManager.draw_ImGui_ClickerMinimal();
+				//guiManager.AddSpacingBigSeparated();
 
 #endif
 				//--
 
 				if (!guiManager.bMinimize)
 				{
+						guiManager.AddSpacingBigSeparated();
 					refreshLayout();
 
 					// TODO:
