@@ -11,13 +11,13 @@ A tweakeable loops video player.
 - reverse timer
 - beat / bpm mode and abs mode
 - 9 presets + player randomizer
-- external clock
+- external / external clock
 
 ## Screenshot
 ![Screenshot](readme_images/Capture.PNG?raw=true "Screenshot")
 
 ## Dependencies
-- ofxGui
-- ofxHapPlayer
-- ofxSurfingImGui
-- ofxImGui
+- ofxGui / oF core
+- [ofxHapPlayer](https://github.com/bangnoise/ofxHapPlayer)
+- [ofxSurfingImGui](https://github.com/moebiussurfing/ofxSurfingImGui)
+- [ofxImGui](https://github.com/Daandelange/ofxImGui/) / Fork
