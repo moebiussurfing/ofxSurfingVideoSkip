@@ -303,7 +303,7 @@ void ofxSurfingVideoSkip::setup()
 	// Beat
 	bMODE_Beat.set("MODE BEAT", false);
 	beatDuration.set("DURATION", 4, 1, 8);
-	beatRescale.set("RESCALE", 0, -8, 8);
+	beatRescale.set("SCALE", 0, -8, 8);
 	bMODE_Lock.set("LOCK", false);//?
 
 	indexPreviewSource.set("Source Preview", 0, 0, previewSources.size() - 1);
@@ -1083,14 +1083,23 @@ void ofxSurfingVideoSkip::updateTimers()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_Gui()
 {
-	draw_ImGui();
+	if (!bGui) return;
 
-	//#ifdef USE_ofxSurfingMoods
-	//	surfingMoods.draw();
-	//#endif
+	draw_ImGui();
 
 	// bar controller 
 	draw_VideoBarControl();
+
+	//--
+
+#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
+	mMidiParams.draw();
+#endif
+
+	//--
+
+	//TODO:remove
+	surfingPreview.draw_Rectangle();
 }
 
 //--------------------------------------------------------------
@@ -2019,7 +2028,8 @@ void ofxSurfingVideoSkip::Changed_Mood_PRESET_C(int& targetVal)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 {
-	ofClear(surfingPreview.colorBg);
+	//ofClear(surfingPreview.colorBg);
+
 	//ofEnableDepthTest();
 
 	//--
@@ -2028,6 +2038,9 @@ void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 	//	presetsManager.draw();
 	//#endif
 
+	//--
+
+	/*
 #ifdef USE_ofxSurfingFxChannel
 	//if (ENABLE_Video_FX)
 	if (channelFx.bENABLE_Fx)
@@ -2049,28 +2062,23 @@ void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 		ofEnableArbTex();
 		draw_Video();
 	}
+	*/
 
 	//--
 
 	// FxPro
 
-	if (surfingPreview.bGui_PreviewBig)
-		fxPro.draw();
+	// We can choose the behavior.. 
+	if (surfingPreview.bGui_PreviewBig) fxPro.draw();
 
-	//--
+	//----
+
+	// Gui
 
 	if (bGui)
 	{
 		draw_Gui();
-
-#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-		mMidiParams.draw();
-#endif
 	}
-
-	//--
-
-	surfingPreview.draw_Rectangle();
 }
 
 //--------------------------------------------------------------
@@ -2078,6 +2086,7 @@ void ofxSurfingVideoSkip::draw_Video()
 {
 	if (!player.isLoaded()) return;
 
+	// We can choose the behavior.. 
 	//if (surfingPreview.bGui_PreviewBig)
 	{
 		ofPushStyle();
@@ -2087,7 +2096,9 @@ void ofxSurfingVideoSkip::draw_Video()
 
 			//--
 
-			// Re scale player rect to surfingPreview viewport
+			// Re scale player rectangle to surfingPreview view port
+
+			// Full Screen mode
 
 			if (surfingPreview.bFullScreen)
 			{
@@ -2095,7 +2106,7 @@ void ofxSurfingVideoSkip::draw_Video()
 			}
 			else
 			{
-				// Draggable viewport
+				// A. Draggable view port
 
 				if (surfingPreview.bInDocked)
 				{
@@ -2103,7 +2114,9 @@ void ofxSurfingVideoSkip::draw_Video()
 					surfingPreview.updateRectDraggable(r);
 				}
 
-				// Inner central docking view rectangle
+				//--
+
+				// B. Inner central docking view rectangle
 
 				else
 				{
@@ -2114,9 +2127,10 @@ void ofxSurfingVideoSkip::draw_Video()
 			//--
 
 			// Draw video frame
-
-			ofSetColor(255, 255, 255, 255);
-			player.draw(r.x, r.y, r.width, r.height);
+			{
+				ofSetColor(255, 255, 255, 255);
+				player.draw(r.x, r.y, r.width, r.height);
+			}
 		}
 		ofPopStyle();
 	}
@@ -2441,14 +2455,14 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 					guiManager.Add(bpmTimer, OFX_IM_DEFAULT);
 					guiManager.Add(bpmDivider, OFX_IM_DEFAULT);
 
-					if (ImGui::Button("HALF", ImVec2(___w2, ___h / 2)))
+					if (ImGui::Button("HALF", ImVec2(___w2, ___h)))
 					{
 						bpmTimer /= 2.0f;
 					}
 
 					guiManager.SameLine();
 
-					if (ImGui::Button("DOUBLE", ImVec2(___w2, ___h / 2)))
+					if (ImGui::Button("DOUBLE", ImVec2(___w2, ___h)))
 					{
 						bpmTimer *= 2.0f;
 					}
@@ -2543,15 +2557,18 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGuiPreview()
 {
-	surfingPreview.draw_ImGuiPreview(guiManager.bMinimize);
-	//if minimized will draw only the floating preview, not the extra window
+	// append the source name to the window header label
+	string n = "";
+	if (indexPreviewSource < previewSources.size()) n = previewSources[indexPreviewSource];
+
+	surfingPreview.draw_ImGuiPreview(guiManager.bMinimize, n);
+
+	// if minimized will draw only the floating preview, not the extra window
 }
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGuiControls()
 {
-	IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
-
 	//--
 
 	// Engine
@@ -2559,6 +2576,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 	// Skip player window
 	if (bGui_SurfingVideo)
 	{
+		IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
+
 		if (guiManager.beginWindow(bGui_SurfingVideo))
 		{
 			float ___w1 = ofxImGuiSurfing::getWidgetsWidth(1);
@@ -2689,6 +2708,30 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 				//--
 
+				// Preset Clicker
+
+#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+
+				//guiManager.Add(presetsManager.bGui, OFX_IM_TOGGLE_ROUNDED);
+
+				if (!presetsManager.bGui)
+				{
+					//guiManager.AddLabelBig("PRESETS", false, true);
+
+					bool bHeader = true;
+					bool bMinimal = guiManager.bMinimize;
+					bool bShowMinimize = true;
+					bool bNoExtras = false;
+
+					presetsManager.draw_ImGui_ClickerSimple(bHeader, bMinimal, bShowMinimize, bNoExtras);
+
+					guiManager.AddSpacingSeparated();
+				}
+#endif
+				//--
+
+				//--
+
 				// Time 
 
 				string s = ("Time " + videoTIME.get()).data();
@@ -2783,20 +2826,6 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				guiManager.Add(bDoResetSpeed, OFX_IM_BUTTON_SMALL);
 				guiManager.AddSpacingSeparated();
 
-				//--
-
-				// Preset Clicker
-
-#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
-				if (!presetsManager.bGui)
-				{
-					//guiManager.AddLabelBig("PRESETS", false, true);
-
-					presetsManager.draw_ImGui_ClickerSimple();
-
-					guiManager.AddSpacingSeparated();
-				}
-#endif
 				//--
 
 				{

@@ -286,7 +286,7 @@ private:
 	// Preview Monitor
 	SurfingPreview surfingPreview;
 
-	std::vector<std::string> previewSources = { "SOURCE", "PROCESSED" };
+	std::vector<std::string> previewSources = { "Source", "Processed" };
 	ofParameter<int> indexPreviewSource;
 
 	//--
