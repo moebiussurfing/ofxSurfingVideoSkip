@@ -283,7 +283,13 @@ public:
 
 private:
 
+	// Preview Monitor
 	SurfingPreview surfingPreview;
+
+	std::vector<std::string> previewSources = { "SOURCE", "PROCESSED" };
+	ofParameter<int> indexPreviewSource;
+
+	//--
 
 public:
 
@@ -384,7 +390,7 @@ public:
 	{
 		bPlay = !bPlay;
 	}
-	
+
 	//--------------------------------------------------------------
 	bool isPlaying()
 	{
@@ -438,7 +444,7 @@ private:
 	bool wasPaused;
 
 	//--
-	 
+
 	// auto hide
 	bool ENABLE_GuiVisibleByAutoHide = false;
 	ofParameter<bool> bGui_VideoBarControl;
