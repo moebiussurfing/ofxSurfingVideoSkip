@@ -133,37 +133,31 @@
 #include "ofxRemoteParameters/Server.h"
 #endif
 
+#define SPEED_MIN 0.20f
+#define SPEED_MAX 50.0f
+
 
 //--------------------------------------------------------------
 class ofxSurfingVideoSkip
 {
-
 	//--
 
 public:
 
-	ofxSurfingFxPro fxPro;
-
 	//--------------------------------------------------------------
 	ofxSurfingVideoSkip()
 	{
-		//ofAddListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
 		ofAddListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
 		ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
-		//ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);
 
 		addMouseListeners();
-
-		//setup();
 	}
 
 	//--------------------------------------------------------------
 	~ofxSurfingVideoSkip()
 	{
-		//ofRemoveListener(ofEvents().setup, this, &ofxSurfingVideoSkip::setup);
 		ofRemoveListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
 		ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
-		//ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_AFTER_APP);		
 
 		removeMouseListeners();
 
@@ -190,7 +184,7 @@ private:
 
 private:
 
-	// keys
+	// Keys
 	void keyPressed(ofKeyEventArgs& eventArgs);
 	void keyReleased(ofKeyEventArgs& eventArgs) {
 		const int& key = eventArgs.key;
@@ -199,7 +193,7 @@ private:
 	void addKeysListeners();
 	void removeKeysListeners();
 
-	// mouse
+	// Mouse
 	void mouseDragged(ofMouseEventArgs& eventArgs);
 	void mousePressed(ofMouseEventArgs& eventArgs);
 	void mouseReleased(ofMouseEventArgs& eventArgs);
@@ -226,22 +220,27 @@ public:
 	void draw_Video();
 	void draw_VideoBarControl();
 
-	//-
+	//--
+
+	// FX Processor
+
+	ofxSurfingFxPro fxPro;
+
+	//--
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 public:
-
 	ofxSurfingPresets presetsManager;
 #endif
 
-	//-
+	//--
 
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
 private:
 	ofxMidiParams mMidiParams;
 #endif
 
-	//-
+	//--
 
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
 	ofxBeatClock beatClock;
@@ -251,7 +250,7 @@ private:
 	void Changed_BeatBpm();
 #endif
 
-	//-
+	//--
 
 #ifdef USE_ofxRemoteParameters
 	ofxRemoteParameters::Server remoteServer;
@@ -259,11 +258,11 @@ private:
 	bool bSyncRemote = false;
 #endif
 
-	//-
+	//--
 
 public:
 
-	// gui
+	// GUI
 
 	ofxSurfing_ImGui_Manager guiManager;
 
@@ -273,31 +272,35 @@ public:
 	void draw_ImGuiControls();
 	void draw_ImGuiSkipTimers();
 
+public:
+
+	ofParameter<bool> bGui; // independent to auto hide state
+	ofParameter<bool> bGui_SurfingVideo;
+	ofParameter<bool> bGui_SkipTimers;
+	ofParameter<bool> bGui_Previews;
+
 	//--
 
 private:
+
 	SurfingPreview surfingPreview;
 
 public:
+
 	void draw_ImGuiPreview();
 
 	void draw_ImGuiMenu();
 
 private:
+
 	bool bDockingReset = false;
 	void dockingReset();
-	//void dockingPopulate();
-
-private:
-
-	bool bOpen0 = true;
-	bool bOpen1 = true;
-	bool bOpen2 = true;
 
 	//-
 
 public:
 
+	//--------------------------------------------------------------
 	ofParameterGroup& getParams() {
 		return params_Preset;
 	}
@@ -318,8 +321,6 @@ private:
 	bool bLoaded = false;
 
 	ofParameter<bool> bKeys{ "Keys", true };
-	//ofParameter<bool> bKeys_Presets{ "Keys Presets", false };
-	//ofParameter<bool> bKeys_Fx{ "Keys Fx", false };
 
 #ifdef USE_ofxSurfingFxChannel
 	ofxSurfingFxChannel channelFx;
@@ -368,37 +369,22 @@ public:
 	//--------------------------------------------------------------
 	void setAudoHide(bool b)
 	{
-		bAutoHide = b;
+		bAutoHideVideoBar = b;
 		//lastMovement = ofGetSystemTimeMillis();
 	}
-
-	//--------------------------------------------------------------
-	//bool isPlaying_MoodMachine()
-	//{
-	//	return surfingMoods.isPlaying();
-	//}
-
-	////--------------------------------------------------------------
-	//void play()
-	//{
-	//	bPlay = true;
-	//}
-	////--------------------------------------------------------------
-	//void stop()
-	//{
-	//	bPlay = false;
-	//}
 
 	//--------------------------------------------------------------
 	void setPlay(bool b)
 	{
 		bPlay = b;
 	}
+
 	//--------------------------------------------------------------
 	void setTogglePlay()
 	{
 		bPlay = !bPlay;
 	}
+	
 	//--------------------------------------------------------------
 	bool isPlaying()
 	{
@@ -408,13 +394,12 @@ public:
 	//--
 
 #ifdef USE_ofxSurfingMoods
+
 	//--------------------------------------------------------------
 	void setPlay_MoodMachine(bool b)
 	{
-		if (b)
-			surfingMoods.play();
-		else
-			surfingMoods.stop();
+		if (b) surfingMoods.play();
+		else surfingMoods.stop();
 	}
 
 	//--------------------------------------------------------------
@@ -428,6 +413,7 @@ public:
 	//{
 	//	return SHOW_MoodMachine.get();
 	//}
+
 #endif
 
 	//--
@@ -440,16 +426,20 @@ private:
 	//ofParameter<bool> SHOW_Video_FX;
 #endif
 
+	//--
+
 private:
 
-	// hap video player
+	// Hap video player
 	void loadMovie(std::string movie);
 	ofRectangle getBarRectangle() const;
 	ofxHapPlayer player;
 	uint64_t lastMovement;
 	bool wasPaused;
 
-	// autohide
+	//--
+	 
+	// auto hide
 	bool ENABLE_GuiVisibleByAutoHide = false;
 	ofParameter<bool> bGui_VideoBarControl;
 	bool bGui_VideoControlBar_PRE;
@@ -457,6 +447,8 @@ private:
 	int time_autoHide = 2500;
 	bool inScrub;
 	bool ENABLE_AutoHide_external = false;
+
+	//--
 
 private:
 
@@ -477,38 +469,31 @@ public:
 		BarHeight = _h;
 	}
 
-	//-
+	//--
 
-	// transport
+	// Transport
 
 public:
 
 	//--------------------------------------------------------------
 	void goStart()
 	{
-		POSITION = POSITION_Start;
+		position = position_In;
 	}
 
 private:
 
-	// preset params
+	// Session params
 	ofParameterGroup params_AppSettings;
 
 	//--
 
-	// to jumps frames with keys
+	// To jump frames with keys
 	void calculateKick();
-	int numFramesToKick = 1;//size of frames seek
-	float kickSizeFrame;//size of frames seek normalized to full video player normalized duration
+	int numFramesToKick = 1; // size of frames seek
+	float kickSizeFrame; // size of frames seek normalized to full video player normalized duration
 	int totalNumFrames = 0;
 	float frameSizeNorm = 0;
-
-	//-
-
-	// labels
-	std::string myTTF;// gui font for all gui theme
-	int sizeTTF;
-	std::string filename_Font;
 
 	//--
 
@@ -518,18 +503,18 @@ private:
 	ofParameter<std::string> videoTIME;
 	ofParameter<std::string> videoFRAME;
 
-	ofParameter<bool> bKickL;
-	ofParameter<bool> bKickR;
+	ofParameter<bool> bDoKickL;
+	ofParameter<bool> bDoKickR;
 
-	ofParameter<float> POSITION_Start;
-	ofParameter<float> POSITION_End;
-	ofParameter<float> POSITION;
+	ofParameter<float> position_In;
+	ofParameter<float> position_Out;
+	ofParameter<float> position;
 
-	ofParameter<bool> bSET_START;
-	ofParameter<bool> bSET_END;
+	ofParameter<bool> bSet_In;
+	ofParameter<bool> bSet_Out;
 
-	ofParameter<bool> bGo_START;
-	ofParameter<bool> bGo_END;
+	ofParameter<bool> bGo_In;
+	ofParameter<bool> bGo_Out;
 
 	ofParameter<float> speed;
 	ofParameter<float> speedNorm;
@@ -543,14 +528,14 @@ private:
 	ofParameter<bool> bMODE_SkipTime;
 	ofParameter<bool> bMODE_SkipReverse;
 
-	ofParameter<bool> bReset_Speed;
-	ofParameter<bool> bTRIG_SkipTime;
-	ofParameter<bool> bTRIG_SkipReverse;
-	ofParameter<bool> bTRIG_ResetEngine;
-	ofParameter<bool> bTRIG_ResetAll;
-	ofParameter<bool> bTRIG_Reset_Bpm;
+	ofParameter<bool> bDoResetSpeed;
+	ofParameter<bool> bDoSkipTime;
+	ofParameter<bool> bDoSkipReverse;
+	ofParameter<bool> bDoResetEngine;
+	ofParameter<bool> bDoResetAll;
+	ofParameter<bool> bDoResetBpm;
 
-	ofParameter<bool> bAutoHide;
+	ofParameter<bool> bAutoHideVideoBar;
 	ofParameter<bool> bENABLE_TimersGlobal;
 
 	ofParameter<bool> bMODE_Beat;
@@ -558,7 +543,6 @@ private:
 	ofParameter<int> beatDuration;
 	ofParameter<int> beatRescale;
 
-	//TODO:
 	ofParameter<bool> bMODE_SkipLooped;
 	ofParameter<bool> bMODE_SkipPowered;
 	ofParameter<float> skipPower;
@@ -573,15 +557,13 @@ private:
 	ofParameter<int> bpmDivider;
 	ofParameter<float> timer_SkipTime;
 	ofParameter<float> timer_SkipRev;
-	ofParameter<int> divBeatSkipper;//skiper
-	ofParameter<int> divBeatReverse;//reverse
+	ofParameter<int> divBeatSkipper; // skipper
+	ofParameter<int> divBeatReverse; // reverse
 #endif
 
-	//ofParameter<bool> bGui_Presets;
-	//ofParameter<bool> SHOW_MoodMachine;
-	ofParameter<bool> bGui_Advanced;
+	//ofParameter<bool> bGui_Advanced;
 
-	// engine
+	// Engine
 	uint64_t last_TRIG_time = 0;
 	uint64_t last_TRIG_reverse = 0;
 
@@ -604,17 +586,18 @@ private:
 
 	//-
 
-	// video file
+	// Video file
 
 	ofParameter<std::string> videoFilePath;
 	ofParameter<std::string> videoName;
 
 	//--
 
-	// presetsManager
+	// Presets Manager
 
 	ofParameterGroup params_Preset; // -> the params to create presets
-	//ofParameterGroup params_Remote; // -> the params to control externally by user. ie: to assign to OSC/midi control
+	//ofParameterGroup params_Remote; // -> the params to control externally by user. 
+	// ie: to assign to OSC/midi control
 
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	void setup_PresetsManager();
@@ -629,20 +612,14 @@ private:
 	ofxSurfingMoods surfingMoods;
 
 	void Changed_Mood_RANGE(int& targetVal);
-	void Changed_Mood_TARGET(int& targetVal);//listener for inside class surfingMoods
+	void Changed_Mood_TARGET(int& targetVal); // listener for inside class surfingMoods
 	void Changed_Mood_PRESET_A(int& targetVal);
 	void Changed_Mood_PRESET_B(int& targetVal);
 	void Changed_Mood_PRESET_C(int& targetVal);
 #endif
 
-	ofParameter<bool> bGui_SurfingVideo;
-	ofParameter<bool> bGui_SkipTimers;
-
-public:
-
-	ofParameter<bool> bGui{ "SURFING VIDEO", true };//independent to autohide state
-
 private:
+
 	ofEventListener listener_SHOW_gui;
 	void Changed_bGui();
 
@@ -650,56 +627,7 @@ private:
 	//ofEventListener listener_MODE_App;
 	//void Changed_MODE_App();
 
-	//settings
+	// Settings
 	std::string path_AppSettings;
-	void saveGroup(ofParameterGroup& g, std::string path);
-	void loadGroup(ofParameterGroup& g, std::string path);
-
-	//ofParameter<int> window_W, window_H, window_X, window_Y;
-
-	//--
-
-private:
-
-	// check if a folder path exist and creates one if not
-	// many times when you try to save a file, this is not possible and do not happens bc the container folder do not exist
-	//--------------------------------------------------------------
-	void CheckFolder(std::string _path)
-	{
-		ofLogNotice(__FUNCTION__) << _path;
-
-		ofDirectory dataDirectory(ofToDataPath(_path, true));
-
-		//check if folder path exist
-		if (!dataDirectory.isDirectory())
-		{
-			ofLogError(__FUNCTION__) << "FOLDER NOT FOUND! TRYING TO CREATE...";
-
-			//try to create folder
-			bool b = dataDirectory.createDirectory(ofToDataPath(_path, true));
-
-			//debug if creation has been succeded
-			if (b) ofLogNotice(__FUNCTION__) << "CREATED '" << _path << "'  SUCCESSFULLY!";
-			else ofLogError(__FUNCTION__) << "UNABLE TO CREATE '" << _path << "' FOLDER!";
-		}
-		else
-		{
-			ofLogNotice(__FUNCTION__) << "OK! LOCATED FOLDER: '" << _path << "'";//nothing to do
-		}
-	}
-
-	//--
-
-	float _w100;
-	float _w50;
-	float _h = WIDGETS_HEIGHT;
-	//--------------------------------------------------------------
-	void refreshLayout() {
-		// update sizes to current window shape
-		guiManager.refreshLayout();
-		_w100 = ofxImGuiSurfing::getWidgetsWidth(1);
-		_w50 = ofxImGuiSurfing::getWidgetsWidth(2);
-	}
-
 };
 
