@@ -68,7 +68,7 @@ void ofxSurfingVideoSkip::setup_Preset()
 {
 	// Prepare params to save
 
-	// name will be use to prefix file names at /group folder
+	// Name will be use to prefix file names at /group folder
 	params_Preset.setName("CLIPS");
 
 	params_Preset.add(position_In);
@@ -94,7 +94,7 @@ void ofxSurfingVideoSkip::setup_Preset()
 	params_Preset.add(divBeatReverse);
 #else
 
-	//// exclude
+	//// Exclude
 	//params_Preset.add(bpmTimer);
 	//params_Preset.add(bpmDivider);
 
@@ -107,8 +107,8 @@ void ofxSurfingVideoSkip::setup_Preset()
 	params_Preset.add(bMODE_Beat);
 	params_Preset.add(beatDuration);
 	params_Preset.add(beatRescale);
-	//params_Preset.add(bMODE_Lock);
 
+	//params_Preset.add(bMODE_Lock);
 
 	// should add more params like direction/reverse/..
 }
@@ -119,12 +119,16 @@ void ofxSurfingVideoSkip::setup_Remote()
 	//--
 
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
-	beatClock.setup();
-	beatClock.bGui.setName("CLOCK");
 
-	// callback to receive BeatTicks
+	beatClock.setup();
+	//beatClock.bGui.setName("CLOCK");
+
+	// Callback to receive BeatTicks:
 	listenerBeat = beatClock.BeatTick.newListener([&](bool&) {this->Changed_BeatTick(); });
-	listenerBpm = beatClock.BPM_Global.newListener([&](float&) {this->Changed_BeatBpm(); });
+
+	// Callback to receive BPM changes:
+	//listenerBpm = beatClock.BPM_Global.newListener([&](float&) {this->Changed_BeatBpm(); });
+
 #endif
 
 	//--
@@ -133,6 +137,7 @@ void ofxSurfingVideoSkip::setup_Remote()
 	// to link to OSC/midi control
 
 #ifdef USE_ofxRemoteParameters
+
 	params_Remote.setName("VideoSkip REMOTE");
 
 	params_Remote.add(bPlay);
@@ -174,17 +179,20 @@ void ofxSurfingVideoSkip::setup_Remote()
 #endif
 
 	remoteServer.setup(params_Remote);
+
 #endif
 
 	//--
 
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
+
 	mMidiParams.connect();
 	mMidiParams.add(params_Remote);
 	//mMidiParams.add(params_Preset);
 
 	//TODO:
 	//mMidiParams.add(presetsManager.getParametersSelectorToggles());
+
 #endif
 }
 
@@ -486,22 +494,36 @@ void ofxSurfingVideoSkip::setup()
 	//--
 
 #ifdef USE_ofxSurfingMoods
-	surfingMoods.setup();
-	surfingMoods.bGui.setName("MOODS");
-	surfingMoods.setKeySpace(false);
+
+	// Link Mood BPM to BeatBlock instance:
+	moods.bpmSpeed.makeReferenceTo(beatClock.BPM_Global);
+	bpmTimer.makeReferenceTo(beatClock.BPM_Global);
+
+	// Link Mood PLAY to BeatBlock instance:
+	moods.bPLAY.makeReferenceTo(beatClock.bPlay);
+
+	moods.setEnableExternalClock(true); // Forced. Is not mandatory, can be modified using the GUI.
+
+	moods.setup();
+
+	//moods.bGui_Main.setName("MOODS");
+
+	moods.setKeySpace(false);
+
+	//--
 
 	// Customize
-	//surfingMoods.setGui_Visible(SHOW_MoodMachine);
-	//surfingMoods.setGui_AdvancedVertical_MODE(true);
+	//moods.setGui_Visible(SHOW_MoodMachine);
+	//moods.setGui_AdvancedVertical_MODE(true);
 
-	// Listeners for inside class surfingMoods
-	surfingMoods.RANGE_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_RANGE);
-	surfingMoods.TARGET_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_TARGET);
-	surfingMoods.PRESET_A_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_A);
-	surfingMoods.PRESET_B_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_B);
-	surfingMoods.PRESET_C_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_C);
+	// Listeners for inside class moods
+	moods.RANGE_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_RANGE);
+	moods.TARGET_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_TARGET);
+	moods.PRESET_A_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_A);
+	moods.PRESET_B_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_B);
+	moods.PRESET_C_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_C);
 
-	//surfingMoods.setTickMode(true);
+	//moods.setTickMode(true);
 #endif
 
 	//----
@@ -1348,7 +1370,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 		else if (key == OF_KEY_RETURN)
 		{
 #ifdef USE_ofxSurfingMoods
-			bool b = !surfingMoods.isPlaying();
+			bool b = !moods.isPlaying();
 			setPlay_MoodMachine(b);
 			setPlay(b);
 #endif
@@ -1517,7 +1539,7 @@ void ofxSurfingVideoSkip::Changed_DONE_load(bool& DONE_load)
 
 		//// workflow
 		//if (!bMODE_Loop) bMODE_Loop = true;
-	}
+}
 }
 #endif
 
@@ -1654,7 +1676,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
 			}
-		}
+			}
 
 		//// loop
 		//else if (name == bMODE_Loop.getName())
@@ -1844,7 +1866,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		//#ifdef USE_ofxSurfingMoods
 		//		else if (name == SHOW_MoodMachine.getName())
 		//		{
-		//			surfingMoods.setGui_Visible(SHOW_MoodMachine);
+		//			moods.setGui_Visible(SHOW_MoodMachine);
 		//		}
 		//#endif
 
@@ -1943,8 +1965,8 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		bSyncRemote = true;
 		//remoteServer.syncParameters();//hangs
 #endif
+		}
 	}
-}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_bGui()
@@ -1966,8 +1988,8 @@ void ofxSurfingVideoSkip::Changed_bGui()
 
 #ifdef USE_ofxSurfingMoods
 
-// surfingMoods
-// listeners for inside surfingMoods
+// moods
+// listeners for inside moods
 
 //-------------------------------------------------
 void ofxSurfingVideoSkip::Changed_Mood_RANGE(int& targetVal)
@@ -2327,12 +2349,12 @@ void ofxSurfingVideoSkip::exit()
 	//-
 
 #ifdef USE_ofxSurfingMoods
-	// Listener for inside class surfingMoods
-	surfingMoods.RANGE_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_RANGE);
-	surfingMoods.TARGET_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_TARGET);
-	surfingMoods.PRESET_A_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_A);
-	surfingMoods.PRESET_B_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_B);
-	surfingMoods.PRESET_C_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_C);
+	// Listener for inside class moods
+	moods.RANGE_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_RANGE);
+	moods.TARGET_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_TARGET);
+	moods.PRESET_A_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_A);
+	moods.PRESET_B_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_B);
+	moods.PRESET_C_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_C);
 #endif
 }
 
@@ -2358,7 +2380,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	// -> 1. Layouts Presets 
 	// passing toggles
 
-	// this bool toggles will control the show of the added window
+	// This bool toggles will control the show of the added window
 	// and will be added too to layout presets engine
 
 	guiManager.addWindowSpecial(bGui_SurfingVideo);
@@ -2372,7 +2394,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 #endif
 
 #ifdef USE_ofxSurfingMoods 
-	guiManager.addWindowSpecial(surfingMoods.bGui);
+	guiManager.addWindowSpecial(moods.bGui_Main);
 #endif
 
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
@@ -2437,6 +2459,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 			//--
 
 			//if (bENABLE_TimersGlobal && (bMODE_SkipReverse || bMODE_SkipTime)) 
+
 			if (bENABLE_TimersGlobal)
 			{
 				bool bOpen;
@@ -2492,13 +2515,10 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 
 							if (bMODE_SkipTime && bENABLE_TimersGlobal)
 							{
-								//ofxImGuiSurfing::AddParameter(divBeatSkipper);
 								guiManager.Add(divBeatSkipper, OFX_IM_DEFAULT);
 
 								// Draw progress bar
 								guiManager.Add(timer_SkipTime, OFX_IM_PROGRESS_BAR_NO_TEXT);
-								////guiManager.Add(timer_SkipTime, OFX_IM_DEFAULT);
-								//ofxImGuiSurfing::AddProgressBar(timer_SkipTime, true);
 							}
 
 							guiManager.Add(bMODE_SkipLooped, OFX_IM_TOGGLE_SMALL, 2, true);
@@ -2531,12 +2551,9 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 							if (bMODE_SkipReverse && bENABLE_TimersGlobal)
 							{
 								guiManager.Add(divBeatReverse, OFX_IM_DEFAULT);
-								//ofxImGuiSurfing::AddParameter(divBeatReverse);
 
 								// draw progress bar
-								////guiManager.Add(timer_SkipRev, OFX_IM_DEFAULT);
 								guiManager.Add(timer_SkipRev, OFX_IM_PROGRESS_BAR_NO_TEXT);
-								//ofxImGuiSurfing::AddProgressBar(timer_SkipRev, true);
 							}
 
 							ImGui::TreePop();
@@ -2574,6 +2591,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 	// Engine
 
 	// Skip player window
+
 	if (bGui_SurfingVideo)
 	{
 		IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
@@ -2629,14 +2647,11 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			guiManager.Add(bGui_Previews, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
 			guiManager.AddSpacing();
 
-			//minimized
+			// minimized
 			if (guiManager.bMinimize)
 				if (bGui_Previews)
 				{
 					guiManager.Indent();
-
-					// Source Selector
-					guiManager.AddCombo(indexPreviewSource, previewSources);
 
 					// Preview Big
 					guiManager.Add(surfingPreview.bGui_PreviewBig, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
@@ -2644,10 +2659,13 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					// Preview Float
 					guiManager.Add(surfingPreview.bGui_PreviewFloat, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
 
+					// Source Selector
+					guiManager.AddCombo(indexPreviewSource, previewSources);
+
 					guiManager.Unindent();
 				}
 
-			//expanded
+			// expanded
 			if (!guiManager.bMinimize)
 			{
 				if (bGui_Previews)
@@ -2658,7 +2676,6 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					guiManager.AddCombo(indexPreviewSource, previewSources);
 
 					// Preview Big
-
 					guiManager.Add(surfingPreview.bGui_PreviewBig, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
 
 					if (surfingPreview.bGui_PreviewBig)
@@ -2666,7 +2683,6 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 						guiManager.Indent();
 
 						// Control Bar
-
 						guiManager.Add(bGui_VideoBarControl, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 						if (bGui_VideoBarControl) guiManager.Add(bAutoHideVideoBar, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 
@@ -2674,7 +2690,6 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					}
 
 					// Preview Float
-
 					guiManager.Add(surfingPreview.bGui_PreviewFloat, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
 					guiManager.Add(surfingPreview.bGui_Extra, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 
@@ -2730,8 +2745,6 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 #endif
 				//--
 
-				//--
-
 				// Time 
 
 				string s = ("Time " + videoTIME.get()).data();
@@ -2755,13 +2768,12 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				{
 					bReturn = (ofxImGuiSurfing::AddHSlider(p, ImVec2(___w1, ___h), true, true));
 				}
+				IMGUI_SUGAR__SLIDER_ADD_MOUSE_WHEEL(p);
 
 				if (bReturn)
 				{
 					position = p;
 				}
-
-				IMGUI_SUGAR__SLIDER_ADD_MOUSE_WHEEL(p);
 
 				//--
 
@@ -2834,7 +2846,6 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					// FineTune
 					{
 						static ofParameter<bool> bFineTune{ "Fine Tune", false };
-
 						guiManager.Add(bFineTune, OFX_IM_TOGGLE_ROUNDED);
 
 						guiManager.AddSpacing();
@@ -2882,6 +2893,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 								// Mark clip In / Out
 
 								//if (bMODE_Edit)
+
 								if (bMODE_Loop)
 								{
 									guiManager.AddSpacing();
@@ -2912,7 +2924,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			{
 				guiManager.AddSpacingSeparated();
 
-				if (!guiManager.bMinimize) {
+				if (!guiManager.bMinimize)
+				{
 					guiManager.Add(bMODE_Edit, OFX_IM_TOGGLE_BIG_BORDER_BLINK);
 					guiManager.AddSpacing();
 				}
@@ -2969,7 +2982,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 {
 	if (!bGui) return;
 
-	//-
+	//--
 
 	guiManager.begin();
 	{
@@ -3012,25 +3025,28 @@ void ofxSurfingVideoSkip::draw_ImGui()
 
 	//--
 
+	// Presets Manager
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 	presetsManager.draw();
 #endif
 
+	// Moods
 #ifdef USE_ofxSurfingMoods
-	surfingMoods.draw_ImGui();
+	moods.draw_ImGui();
 #endif
 
+	// BeatClock
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
 	beatClock.draw();
 #endif
 
+	// FX Channel
 #ifdef USE_ofxSurfingFxChannel
 	channelFx.drawGui();
 #endif
 
 	// FxPro
 	fxPro.drawGui();
-
 }
 
 //--------------------------------------------------------------
@@ -3059,32 +3075,37 @@ void ofxSurfingVideoSkip::doOpenDialogToSetPath()
 	}
 }
 
+//--
+
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
+
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_BeatTick() // callback to receive BeatTicks
 {
-	//if (beatClock.BeatTick)
-	{
-		ofLogNotice(__FUNCTION__) << "Beat #" << beatClock.getBeat();
+	ofLogNotice(__FUNCTION__) << "Beat #" << beatClock.getBeat();
 
 #ifdef USE_ofxSurfingMoods
-		surfingMoods.doBeatTick();
+	moods.doBeatTick();
 #endif
-	}
+
 }
 
-//--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_BeatBpm()
-{
-	ofLogNotice(__FUNCTION__) << "Bpm " << beatClock.getBpm();
+////--------------------------------------------------------------
+//void ofxSurfingVideoSkip::Changed_BeatBpm()
+//{
+//	ofLogNotice(__FUNCTION__) << "BPM " << beatClock.getBpm();
+//
+//	//bpmTimer.set(beatClock.getBpm());
+//
+////#ifdef USE_ofxSurfingMoods
+////	moods.setBpm(beatClock.getBpm());
+////#endif
+//
+//}
 
-	bpmTimer.set(beatClock.getBpm());
+#endif
 
-#ifdef USE_ofxSurfingMoods
-	surfingMoods.setBpm(beatClock.getBpm());
-#endif
-}
-#endif
+//--
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::dockingReset() // not works on runtime..?

@@ -80,7 +80,7 @@
 #define USE_ofxSurfingMoods 
 
 // -> 3. Beat Clock
-//#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
+#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
 
 // -> 4. MIDI Input to control GUI and switch presets
 //#define USE_MIDI_PARAMS__VIDEO_SKIP 
@@ -245,9 +245,9 @@ private:
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
 	ofxBeatClock beatClock;
 	ofEventListener listenerBeat;
-	ofEventListener listenerBpm;
 	void Changed_BeatTick();
-	void Changed_BeatBpm();
+	//ofEventListener listenerBpm;
+	//void Changed_BeatBpm();
 #endif
 
 	//--
@@ -404,14 +404,14 @@ public:
 	//--------------------------------------------------------------
 	void setPlay_MoodMachine(bool b)
 	{
-		if (b) surfingMoods.play();
-		else surfingMoods.stop();
+		if (b) moods.play();
+		else moods.stop();
 	}
 
 	//--------------------------------------------------------------
 	bool isPlaying_MoodMachine()
 	{
-		return surfingMoods.isPlaying();
+		return moods.isPlaying();
 	}
 
 	////--------------------------------------------------------------
@@ -615,7 +615,7 @@ private:
 	//--
 
 #ifdef USE_ofxSurfingMoods
-	ofxSurfingMoods surfingMoods;
+	ofxSurfingMoods moods;
 
 	void Changed_Mood_RANGE(int& targetVal);
 	void Changed_Mood_TARGET(int& targetVal); // listener for inside class surfingMoods

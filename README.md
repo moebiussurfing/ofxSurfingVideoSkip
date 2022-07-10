@@ -1,23 +1,33 @@
 # ofxSurfingVideoSkip
 
 ## Overview
-A tweakeable loops video player.  
+A custom tweakable loops video player.  
 
-- hap codec player / fast scrub
-- in / out marks
-- speed
-- reverse
-- skip timer
-- reverse timer
-- beat / bpm mode and abs mode
+- Hap codec player / fast scrub
+- In / Out marks
+- Speed
+- Reverse
+- Skip Timer
+- Reverse Timer
+- Beat / BPM mode and absolute mode for the timers
 - 9 presets + player randomizer
-- internal / external clock
+- Optional: Presets management using **ofxSurfingPresets**.
+- Optional: External clock using **ofxBeatClock**.
+- Optional: Randomizer / MOOD Machine using **ofxSurfingMoods**.
 
 ## Screenshot
-![Screenshot](readme_images/Capture.PNG?raw=true "Screenshot")
+![](readme_images/Capture.PNG)
 
 ## Dependencies
 - ofxGui / oF core
 - [ofxHapPlayer](https://github.com/bangnoise/ofxHapPlayer)
 - [ofxSurfingImGui](https://github.com/moebiussurfing/ofxSurfingImGui)
 - [ofxImGui](https://github.com/Daandelange/ofxImGui/) / Fork
+- [ofxSurfingBox](https://github.com/moebiussurfing/ofxSurfingBox)
+- [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)
+
+#### Optional Add-ons
+Can be disabled / enabled using directives.  
+- [ofxSurfingPresets](https://github.com/moebiussurfing/ofxSurfingPresets)
+- [ofxSurfingMoods](https://github.com/moebiussurfing/ofxSurfingMoods)
+- [ofxBeatClock](https://github.com/moebiussurfing/ofxBeatClock)
