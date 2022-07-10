@@ -13,10 +13,11 @@ A custom tweakable loops video player.
 - Reverse Timer
 - Beat / BPM mode and absolute Duration mode for the Timers  
 
-- Optional: Presets management using **ofxSurfingPresets**.
+### Optional
+- Presets management using **ofxSurfingPresets**.
   - 9 Presets + Player Randomizer
-- Optional: External clock using **ofxBeatClock**.
-- Optional: Randomizer / MOOD Machine using **ofxSurfingMoods**.
+- External clock using **ofxBeatClock**.
+- Randomizer / MOOD Machine using **ofxSurfingMoods**.
 
 ## Screenshot
 ![](readme_images/Capture.PNG)
