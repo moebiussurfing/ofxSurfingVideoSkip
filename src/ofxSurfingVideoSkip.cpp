@@ -116,12 +116,16 @@ void ofxSurfingVideoSkip::setup_Preset()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::setup_Remote()
 {
+	// External connections
+	// - clock
+	// - osc  midi
+	// 
 	//--
 
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
 
 	beatClock.setup();
-	//beatClock.bGui.setName("CLOCK");
+	beatClock.bGui.setName("CLOCK");
 
 	// Callback to receive BeatTicks:
 	listenerBeat = beatClock.BeatTick.newListener([&](bool&) {this->Changed_BeatTick(); });
@@ -263,7 +267,7 @@ void ofxSurfingVideoSkip::setup()
 	speed.set("SPEED_", 1.0f, SPEED_MIN, SPEED_MAX);
 	bDoResetSpeed.set("RESET SPEED", false);
 
-	bMODE_LoopedBack.set("LOOP BK", false);
+	bMODE_LoopedBack.set("LOOP BACK", false);
 	bMODE_Reversed.set("REVERSE", false);
 	bDoResetEngine.set("RESET ENGINE", false);
 	bDoResetAll.set("RESET", false);
@@ -1539,7 +1543,7 @@ void ofxSurfingVideoSkip::Changed_DONE_load(bool& DONE_load)
 
 		//// workflow
 		//if (!bMODE_Loop) bMODE_Loop = true;
-}
+	}
 }
 #endif
 
@@ -1676,7 +1680,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
 			}
-			}
+		}
 
 		//// loop
 		//else if (name == bMODE_Loop.getName())
@@ -1965,8 +1969,8 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		bSyncRemote = true;
 		//remoteServer.syncParameters();//hangs
 #endif
-		}
 	}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_bGui()
@@ -2574,7 +2578,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGuiPreview()
 {
-	// append the source name to the window header label
+	// Append the source name to the window header label.
 	string n = "";
 	if (indexPreviewSource < previewSources.size()) n = previewSources[indexPreviewSource];
 
@@ -2660,7 +2664,8 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 					guiManager.Add(surfingPreview.bGui_PreviewFloat, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
 
 					// Source Selector
-					guiManager.AddCombo(indexPreviewSource, previewSources);
+					if (surfingPreview.bGui_PreviewFloat)
+						guiManager.AddCombo(indexPreviewSource, previewSources);
 
 					guiManager.Unindent();
 				}
@@ -3032,7 +3037,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 
 	// Moods
 #ifdef USE_ofxSurfingMoods
-	moods.draw_ImGui();
+	moods.drawGui();
 #endif
 
 	// BeatClock

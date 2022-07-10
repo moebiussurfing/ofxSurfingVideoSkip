@@ -26,7 +26,7 @@ A custom tweakable loops video player.
 - [ofxSurfingBox](https://github.com/moebiussurfing/ofxSurfingBox)
 - [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)
 
-#### Optional Add-ons
+#### Optional Add-ons:
 Can be disabled / enabled using directives.  
 - [ofxSurfingPresets](https://github.com/moebiussurfing/ofxSurfingPresets)
 - [ofxSurfingMoods](https://github.com/moebiussurfing/ofxSurfingMoods)

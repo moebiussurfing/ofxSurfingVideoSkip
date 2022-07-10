@@ -7,11 +7,20 @@
 #include "ofMain.h"
 
 /*
+* 
+* 
+
+	BUGS:
+
+	+ edit mode not working when using inner presets panel
+	+ zero time loop wrong back...
+	+ fine tunes: kicks working weird
+
+
 
 	TODO:
 
 	+ fix imgui layout presets
-
 
 	+ add OSC control or control add-on mixing midi+osc
 
@@ -45,11 +54,6 @@
 	+ mark start points on bar
 
 
-	BUGS:
-
-	+ zero time loop wrong back...
-	+ fine tunes: kicks working weird
-
 */
 
 
@@ -69,10 +73,10 @@
 
 // Presets. 
 // Two alternatives:
-
+//
 // -> 1A. Simple Presets
 #define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for gui integration
-
+//
 // -> 1B. Power Presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
