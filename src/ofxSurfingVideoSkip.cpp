@@ -118,7 +118,7 @@ void ofxSurfingVideoSkip::setup_Remote()
 {
 	// External connections
 	// - clock
-	// - osc  midi
+	// - osc / midi
 	// 
 	//--
 
@@ -2677,9 +2677,6 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				{
 					guiManager.Indent();
 
-					// Source Selector
-					guiManager.AddCombo(indexPreviewSource, previewSources);
-
 					// Preview Big
 					guiManager.Add(surfingPreview.bGui_PreviewBig, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
 
@@ -2696,6 +2693,11 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 
 					// Preview Float
 					guiManager.Add(surfingPreview.bGui_PreviewFloat, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
+					
+					// Source Selector
+					if (surfingPreview.bGui_PreviewFloat)
+						guiManager.AddCombo(indexPreviewSource, previewSources);
+
 					guiManager.Add(surfingPreview.bGui_Extra, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 
 					guiManager.Unindent();
@@ -2791,7 +2793,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 				if (bMODE_Loop)
 				{
 					// In / Out 
-					guiManager.AddLabelBig("In | Out", false, true);
+					guiManager.AddLabelBig("In|Out", false, true);
 					guiManager.Add(position_In, OFX_IM_HSLIDER_MINI_NO_LABELS);
 
 					if (!bMODE_Beat)

@@ -7,15 +7,12 @@
 #include "ofMain.h"
 
 /*
-* 
-* 
 
 	BUGS:
 
 	+ edit mode not working when using inner presets panel
 	+ zero time loop wrong back...
 	+ fine tunes: kicks working weird
-
 
 
 	TODO:
@@ -53,7 +50,6 @@
 
 	+ mark start points on bar
 
-
 */
 
 
@@ -76,7 +72,6 @@
 //
 // -> 1A. Simple Presets
 #define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for gui integration
-//
 // -> 1B. Power Presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
@@ -104,10 +99,14 @@
 
 #include "ofxSurfingFxPro.h"
 
+// core stuff
+
 #include "ofxHapPlayer.h"
 #include "ofxInteractiveRect.h"
 #include "ofxSurfingImGui.h"
 #include "ofxSurfing_ImGui_WindowFbo.h"
+
+// optional stuff
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 #include "ofxSurfingPresets.h"
