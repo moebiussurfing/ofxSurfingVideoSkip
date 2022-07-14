@@ -671,7 +671,8 @@ void ofxSurfingVideoSkip::setup_ChannelFx()
 void ofxSurfingVideoSkip::update(ofEventArgs& args)
 {
 	//--
-
+    
+#ifdef USE_ofxSurfingFxPro
 	// Feed FxPro
 	{
 		fxPro.begin();
@@ -680,7 +681,8 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 		}
 		fxPro.end(false);
 	}
-
+#endif
+    
 	//--
 
 	// Feed Preview 
@@ -690,9 +692,15 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 		// unprocessed video
 		if (indexPreviewSource == 0) player.draw(0, 0);
 
-		// processed video 
-		else if (indexPreviewSource == 1) fxPro.draw();
-	}
+		// processed video
+#ifdef USE_ofxSurfingFxPro
+        else if (indexPreviewSource == 1) fxPro.draw();
+#endif
+        
+#ifndef USE_ofxSurfingFxPro
+        else if (indexPreviewSource == 1) draw_Video();
+#endif
+    }
 	surfingPreview.end();
 
 	//--
@@ -1327,8 +1335,10 @@ void ofxSurfingVideoSkip::mouseReleased(ofMouseEventArgs& eventArgs)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::windowResized(int _w, int _h)
 {
-	fxPro.windowResized(_w, _h);
-}
+#ifdef USE_ofxSurfingFxPro
+   fxPro.windowResized(_w, _h);
+#endif
+ }
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
@@ -1351,8 +1361,10 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 	}
 
 	//--
-
+    
+#ifdef USE_ofxSurfingFxPro
 	fxPro.keyPressed(key);
+#endif
 
 	//----
 
@@ -2040,8 +2052,10 @@ void ofxSurfingVideoSkip::Changed_Mood_PRESET_A(int& targetVal)
 void ofxSurfingVideoSkip::Changed_Mood_PRESET_B(int& i)
 {
 	ofLogNotice(__FUNCTION__) << i;
-
+    
+#ifdef USE_ofxSurfingFxPro
 	fxPro.presetsManager.load(i);
+#endif
 }
 
 //-------------------------------------------------
@@ -2093,10 +2107,10 @@ void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 	//--
 
 	// FxPro
-
+#ifdef USE_ofxSurfingFxPro
 	// We can choose the behavior.. 
 	if (surfingPreview.bGui_PreviewBig) fxPro.draw();
-
+#endif
 	//----
 
 	// Gui
@@ -2409,7 +2423,9 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	guiManager.addWindowSpecial(channelFx.bGui);
 #endif
 
+#ifdef USE_ofxSurfingFxPro
 	guiManager.addWindowSpecial(fxPro.bGui);
+#endif
 
 	//--
 
@@ -3051,7 +3067,9 @@ void ofxSurfingVideoSkip::draw_ImGui()
 #endif
 
 	// FxPro
+#ifdef USE_ofxSurfingFxPro
 	fxPro.drawGui();
+#endif
 }
 
 //--------------------------------------------------------------

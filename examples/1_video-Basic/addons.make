@@ -1,5 +1,6 @@
 ofxGui
 ofxHapPlayer
 ofxImGui
+ofxSurfingHelpers
 ofxSurfingImGui
 ofxSurfingVideoSkip

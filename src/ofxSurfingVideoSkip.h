@@ -61,7 +61,7 @@
 //
 //	OPTIONAL DEFINES
 
-//#define USE_MINIMAL_ofxSurfingVideoSkip
+#define USE_MINIMAL_ofxSurfingVideoSkip
 // -> Uncomment above line to 
 // Force disable ALL the optional add-ons below. To use only the minimal core add-on.
 
@@ -98,11 +98,15 @@
 // This add-on will server some parameters to allow remote control fast.
 // Will serve OSC/MIDI
 
-#endif
+//#define USE_ofxSurfingFxPro
+
+#endif // end of no minimal stuff
 
 //----------------------------------------------
 
+#ifdef USE_ofxSurfingFxPro
 #include "ofxSurfingFxPro.h"
+#endif
 
 #include "ofxHapPlayer.h"
 #include "ofxInteractiveRect.h"
@@ -192,8 +196,10 @@ private:
 	void keyPressed(ofKeyEventArgs& eventArgs);
 	void keyReleased(ofKeyEventArgs& eventArgs) {
 		const int& key = eventArgs.key;
-		fxPro.keyReleased(key);
-	};
+#ifdef USE_ofxSurfingFxPro
+    	fxPro.keyReleased(key);
+#endif
+    };
 	void addKeysListeners();
 	void removeKeysListeners();
 
@@ -227,8 +233,9 @@ public:
 	//--
 
 	// FX Processor
-
+#ifdef USE_ofxSurfingFxPro
 	ofxSurfingFxPro fxPro;
+#endif
 
 	//--
 
