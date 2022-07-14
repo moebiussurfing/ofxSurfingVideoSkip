@@ -98,7 +98,7 @@
 // This add-on will server some parameters to allow remote control fast.
 // Will serve OSC/MIDI
 
-//#define USE_ofxSurfingFxPro
+#define USE_ofxSurfingFxPro
 
 #endif // end of no minimal stuff
 
@@ -140,6 +140,7 @@
 #ifdef USE_ofxRemoteParameters
 #include "ofxRemoteParameters/Server.h"
 #endif
+
 
 #define SPEED_MIN 0.20f
 #define SPEED_MAX 50.0f
