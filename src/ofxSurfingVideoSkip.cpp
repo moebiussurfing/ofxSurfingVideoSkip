@@ -8,7 +8,7 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 	// Load settings
 
 #ifndef USE_ofxPresetsManager__VIDEO_SKIP
-	loadGroup(params_Preset, path_GLOBAL_Folder + "/" + path_Preset);
+	ofxSurfingHelpers::loadGroup(params_Preset, path_GLOBAL_Folder + "/" + path_Preset);
 
 	//#ifdef USE_ofxSurfingFxChannel
 	//		loadGroup(params_Preset, path_GLOBAL_Folder + "/" + path_fileName_ChannelFX);
@@ -60,7 +60,7 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 
 	// App Session Settings
 
-	loadGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
+	ofxSurfingHelpers::loadGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
 }
 
 //--------------------------------------------------------------
@@ -2234,7 +2234,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 					ofDrawLine(pStart, yy + padding, pStart, yy + BarHeight - 1);
 					ofDrawLine(pStart + pWidth, yy + padding, pStart + pWidth, yy + BarHeight - 1);
 
-					float a = getFadeBlink(0.40, 0.70, 0.3);
+					float a = ofxSurfingHelpers::getFadeBlink(0.40, 0.70, 0.3);
 					//float a = ofxSurfingHelpers::getFadeBlink(0.40, 0.70, 0.3);
 					ofSetColor(ofColor(ofColor::red, 255 * a));
 					ofFill();
@@ -2330,7 +2330,7 @@ ofRectangle ofxSurfingVideoSkip::getBarRectangle() const
 void ofxSurfingVideoSkip::exit()
 {
 	// Save app settings
-	saveGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
+	ofxSurfingHelpers::saveGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
 
 	// Channel fx
 #ifdef USE_ofxSurfingFxChannel
@@ -2457,7 +2457,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 	{
 		if (bGui_SurfingVideo) guiManager.setNextWindowAfterWindowNamed(bGui_SurfingVideo.getName());
 
-		if (guiManager.beginWindow(bGui_SkipTimers))
+		if (guiManager.BeginWindow(bGui_SkipTimers))
 		{
 			float ___w1 = ofxImGuiSurfing::getWidgetsWidth(1);
 			float ___w2 = ofxImGuiSurfing::getWidgetsWidth(2);
@@ -2586,7 +2586,7 @@ void ofxSurfingVideoSkip::draw_ImGuiSkipTimers()
 				guiManager.Add(bDoResetEngine, OFX_IM_BUTTON_SMALL);
 			}
 
-			guiManager.endWindow();
+			guiManager.EndWindow();
 		}
 	}
 }
@@ -2616,7 +2616,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 	{
 		IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
 
-		if (guiManager.beginWindow(bGui_SurfingVideo))
+		if (guiManager.BeginWindow(bGui_SurfingVideo))
 		{
 			float ___w1 = ofxImGuiSurfing::getWidgetsWidth(1);
 			float ___w2 = ofxImGuiSurfing::getWidgetsWidth(2);
@@ -2995,7 +2995,7 @@ void ofxSurfingVideoSkip::draw_ImGuiControls()
 			}
 			*/
 
-			guiManager.endWindow();
+			guiManager.EndWindow();
 		}
 	}
 }
@@ -3007,9 +3007,9 @@ void ofxSurfingVideoSkip::draw_ImGui()
 
 	//--
 
-	guiManager.begin();
+	guiManager.Begin();
 	{
-		guiManager.beginDocking();
+		guiManager.BeginDocking();
 		{
 			//dockingPopulate(); // -> initialize and "bypass" layout presets system if required
 
@@ -3025,7 +3025,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 
 			//if (guiManager.bGui_Menu) draw_ImGuiMenu();
 		}
-		guiManager.endDocking();
+		guiManager.EndDocking();
 
 		//----
 
@@ -3044,7 +3044,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 
 		//--
 	}
-	guiManager.end();
+	guiManager.End();
 
 	//--
 

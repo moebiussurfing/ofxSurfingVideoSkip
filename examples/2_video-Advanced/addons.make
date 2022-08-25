@@ -1,6 +1,8 @@
 ofxGui
 ofxHapPlayer
 ofxImGui
+ofxOsc
+ofxPubSubOsc
 ofxSurfingHelpers
 ofxSurfingImGui
 ofxSurfingPlayer

@@ -57,7 +57,7 @@
 //
 //	OPTIONAL DEFINES
 
-#define USE_MINIMAL_ofxSurfingVideoSkip
+//#define USE_MINIMAL_ofxSurfingVideoSkip
 // -> Uncomment above line to 
 // Force disable ALL the optional add-ons below. To use only the minimal core add-on.
 
@@ -76,10 +76,10 @@
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
 // -> 2. Mood Machine
-#define USE_ofxSurfingMoods 
+//#define USE_ofxSurfingMoods 
 
 // -> 3. Beat Clock
-#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
+//#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
 
 // -> 4. MIDI Input to control GUI and switch presets
 //#define USE_MIDI_PARAMS__VIDEO_SKIP 
@@ -93,7 +93,7 @@
 // This add-on will server some parameters to allow remote control fast.
 // Will serve OSC/MIDI
 
-#define USE_ofxSurfingFxPro
+//#define USE_ofxSurfingFxPro
 
 #endif // end of no minimal stuff
 
@@ -103,12 +103,14 @@
 #include "ofxSurfingFxPro.h"
 #endif
 
+#include "ofxOscSubscriber.h"
+
 // core stuff
 
 #include "ofxHapPlayer.h"
 #include "ofxInteractiveRect.h"
 #include "ofxSurfingImGui.h"
-#include "ofxSurfing_ImGui_WindowFbo.h"
+#include "WindowFbo.h"
 
 // optional stuff
 
@@ -275,7 +277,7 @@ public:
 
 	// GUI
 
-	ofxSurfing_ImGui_Manager guiManager;
+	ofxSurfingGui guiManager;
 
 	void setup_ImGui();
 
