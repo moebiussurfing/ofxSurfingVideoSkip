@@ -1,7 +1,7 @@
 {
     "Organizer": {
         "GuiToggles": {
-            "PRESETS": "1",
+            "OSC": "1",
             "VIDEO_SKIP": "1"
         },
         "Organizer_Settings": {
@@ -16,7 +16,7 @@
                 "ORGANIZER": "0",
                 "SPECIAL_WINDOWS": "0"
             },
-            "Position_Anchor": "10, 10",
+            "Position_Anchor": "371, 58",
             "ShapesX": "1",
             "ShapesY": "0"
         }

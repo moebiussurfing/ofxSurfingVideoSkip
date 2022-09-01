@@ -1,0 +1,6 @@
+{
+    "OSC_SETTINGS": {
+        "IN_ENABLE": "1",
+        "IN_PORT": "54321"
+    }
+}

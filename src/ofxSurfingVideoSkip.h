@@ -1,5 +1,5 @@
 //
-// Created by moebiusSurfing, 2019/2020/2021/2022.
+// Created by moebiusSurfing, 2019-2022.
 //
 
 #pragma once
@@ -58,8 +58,9 @@
 //	OPTIONAL DEFINES
 
 //#define USE_MINIMAL_ofxSurfingVideoSkip
-// -> Uncomment above line to 
-// Force disable ALL the optional add-ons below. To use only the minimal core add-on.
+// -> Uncomment this line below to 
+// force disable ALL the optional add-ons below. 
+// Ant the to use only the MINIMAL CORE add-on.
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
 
 //--
@@ -70,7 +71,7 @@
 // Two alternatives:
 //
 // -> 1A. Simple Presets
-//#define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for gui integration
+//#define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for GUI integration
 // -> 1B. Power Presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
@@ -92,9 +93,11 @@
 // This add-on will server some parameters to allow remote control fast.
 // Will serve OSC/MIDI
 
+// -> 7. Post FX
 //#define USE_ofxSurfingFxPro
 
-//#define USE_ofxSurfingOsc
+// -> 6. OSC Remote
+#define USE_ofxSurfingOsc
 
 #endif // end of no minimal stuff
 
@@ -102,14 +105,6 @@
 
 #ifdef USE_ofxSurfingFxPro
 #include "ofxSurfingFxPro.h"
-#endif
-
-#ifdef USE_ofxSurfingOsc
-#include "ofxOscSubscriber.h"
-//#include "ofxPubSubOsc.h"
-//#include "ofxOsc.h"
-//#define HOST "localhost"
-#define PORT 12345
 #endif
 
 // Core Stuff
@@ -149,6 +144,14 @@
 #include "ofxRemoteParameters/Server.h"
 #endif
 
+#ifdef USE_ofxSurfingOsc
+#include "ofxSurfingOsc.h"
+////#include "ofxPubSubOsc.h"
+////#include "ofxOsc.h"
+////#define HOST "localhost"
+//#define PORT 12345
+#endif
+
 //-
 
 #define SPEED_MIN 0.20f
@@ -181,6 +184,16 @@ public:
 
 		exit();
 	}
+	
+	//--
+	
+#ifdef USE_ofxSurfingOsc
+private:
+	ofxSurfingOsc oscHelper;
+	void setup_Osc();
+	ofParameter<bool> bBypass{ "ByPass", false };
+	void Changed_Targets(ofAbstractParameter& e);
+#endif
 
 	//--
 
@@ -203,6 +216,7 @@ private:
 private:
 
 	// Keys
+
 	void keyPressed(ofKeyEventArgs& eventArgs);
 	void keyReleased(ofKeyEventArgs& eventArgs) {
 		const int& key = eventArgs.key;
@@ -214,6 +228,7 @@ private:
 	void removeKeysListeners();
 
 	// Mouse
+
 	void mouseDragged(ofMouseEventArgs& eventArgs);
 	void mousePressed(ofMouseEventArgs& eventArgs);
 	void mouseReleased(ofMouseEventArgs& eventArgs);
@@ -290,7 +305,7 @@ public:
 	void setup_ImGui();
 
 	void draw_ImGui();
-	void draw_ImGui_SurfingVideo();
+	void draw_ImGui_Main();
 	void draw_ImGui_SkipTimers();
 	void draw_ImGui_Preview();
 	void draw_ImGui_Menu();
@@ -298,7 +313,7 @@ public:
 public:
 
 	ofParameter<bool> bGui; // independent to auto hide state
-	ofParameter<bool> bGui_VideoSkip;
+	ofParameter<bool> bGui_Main;
 	ofParameter<bool> bGui_SkipTimers;
 	ofParameter<bool> bGui_Previews;
 

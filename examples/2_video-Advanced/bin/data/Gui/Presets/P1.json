@@ -1,0 +1,13 @@
+{
+    "LayoutsPresets": {
+        "Extra_Params": {
+            "LINK": "0",
+            "Log": "0",
+            "Menu": "1"
+        },
+        "PanelsVisible": {
+            "OSC": "0",
+            "VIDEO_SKIP": "1"
+        }
+    }
+}

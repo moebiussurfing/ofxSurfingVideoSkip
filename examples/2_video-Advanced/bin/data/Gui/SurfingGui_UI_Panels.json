@@ -2,9 +2,9 @@
     "ofxSurfingGui": {
         "Engine_Windows": {
             "Rectangles_Windows": {
-                "rect_Manager": "1552, 30, 0, 200, 1",
-                "rect_Panels": "1091, 23, 0, 700, 150",
-                "rect_Presets": "10, 30, 0, 186, 483"
+                "rect_Manager": "957, 225, 0, 160, 205",
+                "rect_Panels": "1206, 32, 0, 700, 150",
+                "rect_Presets": "610, 75, 0, 186, 277"
             },
             "Window_Panels": {
                 "Auto_Resize": "1",
@@ -12,14 +12,14 @@
             },
             "Window_Presets": {
                 "Auto_Resize": "1",
-                "Minimize": "1",
+                "Minimize": "0",
                 "Reset": "0"
             }
         },
         "LayoutSettings": {
             "Auto_Save": "1",
             "Draw_View_1": "0",
-            "Layout_Preset": "2",
+            "Layout_Preset": "1",
             "Layouts": "0",
             "Panels": "1",
             "Solo": "0"
