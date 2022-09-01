@@ -1,24 +1,23 @@
 {
     "ofxSurfingPresets_AppSettings": {
-        "AUTOSAVE": "1",
-        "AutoSave_Timed": "0",
+        "CLICKER": {
+            "Auto_Resize_": "1",
+            "ButtsRow": "3",
+            "Minimize": "1",
+            "Responsive": "1"
+        },
         "CLICKER_SIMPLE": {
             "Amt_Buttons": "3",
             "Responsive": "1"
         },
         "Clicker_Simple": "0",
         "Cycled": "1",
+        "EDIT": "1",
         "EDITOR": "0",
-        "FLOAT_CLICKER": {
-            "Auto_Resize_": "1",
-            "Extra": "0",
-            "MaxBut": "3",
-            "Minimize": "1",
-            "Responsive": "1"
-        },
-        "Index": "4",
+        "Index": "0",
         "Keys": "1",
         "Minimize": "1",
-        "PARAMETERS": "0"
+        "PARAMETERS": "0",
+        "Target": "0"
     }
 }

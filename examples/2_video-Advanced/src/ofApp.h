@@ -36,5 +36,5 @@ public:
 
 	ofxSurfingVideoSkip player;
 
-	ofxWindowApp windowApp;
+	ofxWindowApp w;
 };

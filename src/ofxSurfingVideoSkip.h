@@ -60,7 +60,6 @@
 //#define USE_MINIMAL_ofxSurfingVideoSkip
 // -> Uncomment above line to 
 // Force disable ALL the optional add-ons below. To use only the minimal core add-on.
-
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
 
 //--
@@ -71,7 +70,7 @@
 // Two alternatives:
 //
 // -> 1A. Simple Presets
-#define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for gui integration
+//#define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for gui integration
 // -> 1B. Power Presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
@@ -95,6 +94,8 @@
 
 //#define USE_ofxSurfingFxPro
 
+//#define USE_ofxSurfingOsc
+
 #endif // end of no minimal stuff
 
 //----------------------------------------------
@@ -103,16 +104,22 @@
 #include "ofxSurfingFxPro.h"
 #endif
 
+#ifdef USE_ofxSurfingOsc
 #include "ofxOscSubscriber.h"
+//#include "ofxPubSubOsc.h"
+//#include "ofxOsc.h"
+//#define HOST "localhost"
+#define PORT 12345
+#endif
 
-// core stuff
+// Core Stuff
 
 #include "ofxHapPlayer.h"
 #include "ofxInteractiveRect.h"
 #include "ofxSurfingImGui.h"
 #include "WindowFbo.h"
 
-// optional stuff
+// Optional Stuff
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 #include "ofxSurfingPresets.h"
@@ -142,6 +149,7 @@
 #include "ofxRemoteParameters/Server.h"
 #endif
 
+//-
 
 #define SPEED_MIN 0.20f
 #define SPEED_MAX 50.0f
@@ -277,18 +285,20 @@ public:
 
 	// GUI
 
-	ofxSurfingGui guiManager;
+	ofxSurfingGui ui;
 
 	void setup_ImGui();
 
 	void draw_ImGui();
-	void draw_ImGuiControls();
-	void draw_ImGuiSkipTimers();
+	void draw_ImGui_SurfingVideo();
+	void draw_ImGui_SkipTimers();
+	void draw_ImGui_Preview();
+	void draw_ImGui_Menu();
 
 public:
 
 	ofParameter<bool> bGui; // independent to auto hide state
-	ofParameter<bool> bGui_SurfingVideo;
+	ofParameter<bool> bGui_VideoSkip;
 	ofParameter<bool> bGui_SkipTimers;
 	ofParameter<bool> bGui_Previews;
 
@@ -299,16 +309,15 @@ private:
 	// Preview Monitor
 	SurfingPreview surfingPreview;
 
+	#ifdef USE_ofxSurfingFxChannel && !USE_MINIMAL_ofxSurfingVideoSkip
 	std::vector<std::string> previewSources = { "Source", "Processed" };
+#else
+	std::vector<std::string> previewSources = { "Source"};
+#endif
+
 	ofParameter<int> indexPreviewSource;
 
 	//--
-
-public:
-
-	void draw_ImGuiPreview();
-
-	void draw_ImGuiMenu();
 
 private:
 
@@ -603,7 +612,7 @@ private:
 	ofParameterGroup _param_SkipEngine{ "TIMERS" };
 	ofParameterGroup _param_Clock{ "CLOCK" };
 
-	//-
+	//--
 
 	// Video file
 
@@ -616,7 +625,7 @@ private:
 
 	ofParameterGroup params_Preset; // -> the params to create presets
 	//ofParameterGroup params_Remote; // -> the params to control externally by user. 
-	// ie: to assign to OSC/midi control
+	// i.e: to assign to OSC/midi control
 
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	void setup_PresetsManager();
@@ -639,7 +648,7 @@ private:
 
 private:
 
-	ofEventListener listener_SHOW_gui;
+	ofEventListener listener_bGui;
 	void Changed_bGui();
 
 	//ofParameter<int> MODE_App;

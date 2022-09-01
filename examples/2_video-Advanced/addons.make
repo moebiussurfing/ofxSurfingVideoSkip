@@ -1,10 +1,13 @@
 ofxGui
 ofxHapPlayer
+ofxHistoryPlot
 ofxImGui
 ofxOsc
 ofxPubSubOsc
+ofxSurfingBox
 ofxSurfingHelpers
 ofxSurfingImGui
+ofxSurfingOsc
 ofxSurfingPlayer
 ofxSurfingPresets
 ofxSurfingVideoSkip

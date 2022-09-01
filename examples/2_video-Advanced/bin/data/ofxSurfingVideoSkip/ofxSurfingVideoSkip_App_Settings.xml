@@ -1,28 +1,11 @@
-<?xml version="1.0"?>
-<AppSettings>
-	<PLAY>1</PLAY>
-	<LOOP>1</LOOP>
-	<FILE>"NightmoVES4.mov"</FILE>
-	<videoFilePath>E:\_DATA\VIDEO\NightmoVES4.mov</videoFilePath>
-	<MODE_App>0</MODE_App>
-	<SHOW_PRESETS>1</SHOW_PRESETS>
-	<Keys>1</Keys>
-	<SKIP_TIMERS>1</SKIP_TIMERS>
-	<SURFING_VIDEO>1</SURFING_VIDEO>
-	<SKIP_PLAYER>0</SKIP_PLAYER>
-	<Gui_Panel_Position>500, 500</Gui_Panel_Position>
-	<Gui_Engine_Position>700, 500</Gui_Engine_Position>
-	<Auto_Resize>1</Auto_Resize>
-	<Debug>0</Debug>
-	<Extra>0</Extra>
-	<Show_Gui>1</Show_Gui>
-	<Organizer>1</Organizer>
-	<Autosave>1</Autosave>
-	<Minimize>1</Minimize>
-	<SHOW_CONTROL_PANEL>1</SHOW_CONTROL_PANEL>
-	<SHOW_HEADER>1</SHOW_HEADER>
-	<AutoHide_Bar>1</AutoHide_Bar>
-	<Preview>1</Preview>
-	<Big_Screen>1</Big_Screen>
-	<Control_Bar>0</Control_Bar>
-</AppSettings>
+{
+    "AppSettings": {
+        "AutoHide_Bar": "1",
+        "Control_Bar": "1",
+        "FILE": "\"NightmoVES4.mov\"",
+        "Keys": "1",
+        "PLAY": "1",
+        "SKIP_TIMERS": "1",
+        "videoFilePath": "Z:\\_DATA\\VIDEO\\NightmoVES4.mov"
+    }
+}

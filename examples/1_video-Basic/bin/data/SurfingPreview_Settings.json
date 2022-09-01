@@ -1,13 +1,14 @@
 {
     "SurfingPreview": {
-        "Auto_Resize": "1",
+        "Auto_Resize": "0",
         "Bg": "0, 0, 0, 255",
-        "Big_Screen": "1",
-        "Extra": "0",
-        "Full_Screen": "0",
-        "In_Docked": "1",
-        "Preview": "0",
-        "Scale_Mode": "0",
-        "recetParam": "0, 0, 0, 0, 0"
+        "Docked": "0",
+        "Edit_Viewport": "0",
+        "Full_Screen": "1",
+        "PREVIEW_BIG": "1",
+        "PREVIEW_EXTRA": "1",
+        "PREVIEW_MINI": "1",
+        "Scale_Mode": "1",
+        "recetParam": "298.778, 117, 0, 1884.44, 1060"
     }
 }

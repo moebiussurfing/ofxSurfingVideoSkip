@@ -4,11 +4,14 @@
 
 /*
 
-This example requires, to run out-of-the-box,
-to uncomment the line
-#define USE_MINIMAL_ofxSurfingVideoSkip
-in ofxSurfingVideoSkip.h
-That's to disable all the optional add-ons.
+	This example requires, to run out-of-the-box,
+	to uncomment the line
+	#define USE_MINIMAL_ofxSurfingVideoSkip
+	in ofxSurfingVideoSkip.h
+	That's to disable all the optional add-ons.
+	Like that:
+	//#define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for gui integration
+	..
 
 */
 

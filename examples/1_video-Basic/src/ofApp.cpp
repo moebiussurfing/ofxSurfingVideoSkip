@@ -1,8 +1,11 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-void ofApp::setup() 
+void ofApp::setup()
 {
+	ofSetWindowShape(1920, 1060);
+	ofSetWindowPosition(-1920, 25);
+
 	player.setup();
 }
 
