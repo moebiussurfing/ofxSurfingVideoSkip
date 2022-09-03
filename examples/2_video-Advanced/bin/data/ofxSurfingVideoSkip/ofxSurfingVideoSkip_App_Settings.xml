@@ -5,7 +5,7 @@
         "FILE": "\"NightmoVES4.mov\"",
         "Keys": "1",
         "PLAY": "1",
-        "SKIP_TIMERS": "0",
+        "SKIP_TIMERS": "1",
         "SurfingPreview": {
             "Auto_Resize": "0",
             "BIG": "0",
