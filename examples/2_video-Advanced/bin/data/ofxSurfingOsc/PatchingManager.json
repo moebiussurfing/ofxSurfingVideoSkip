@@ -1,0 +1,305 @@
+{
+    "PATCHING_MANAGER": {
+        "Gui_Position_Internal": "550, 10",
+        "Lock": "0",
+        "Preview": "1",
+        "TARGETS": {
+            "BANGS": {
+                "BANG_1": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "BANG_2": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "BANG_3": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "BANG_4": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "BANG_5": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "BANG_6": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "BANG_7": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "BANG_8": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                }
+            },
+            "NUMBERS": {
+                "NUMBER_1": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1000",
+                            "MAX_OUT": "1000",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "NUMBER_2": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1000",
+                            "MAX_OUT": "1000",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "NUMBER_3": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1000",
+                            "MAX_OUT": "1000",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "NUMBER_4": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1000",
+                            "MAX_OUT": "1000",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "NUMBER_5": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1000",
+                            "MAX_OUT": "1000",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "NUMBER_6": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1000",
+                            "MAX_OUT": "1000",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "NUMBER_7": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1000",
+                            "MAX_OUT": "1000",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "NUMBER_8": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1000",
+                            "MAX_OUT": "1000",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                }
+            },
+            "TOGGLES": {
+                "TOGGLE_1": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "TOGGLE_2": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "TOGGLE_3": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "TOGGLE_4": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "TOGGLE_5": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "TOGGLE_6": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "TOGGLE_7": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                },
+                "TOGGLE_8": {
+                    "ENABLE": "1",
+                    "SMOOTH_ENABLE": "0",
+                    "SMOOTH_POWER": "0.1"
+                }
+            },
+            "VALUES": {
+                "VALUE_1": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1",
+                            "MAX_OUT": "1",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "VALUE_2": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1",
+                            "MAX_OUT": "1",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "VALUE_3": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1",
+                            "MAX_OUT": "1",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "VALUE_4": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1",
+                            "MAX_OUT": "1",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "VALUE_5": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1",
+                            "MAX_OUT": "1",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "VALUE_6": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1",
+                            "MAX_OUT": "1",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "VALUE_7": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1",
+                            "MAX_OUT": "1",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "0"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                },
+                "VALUE_8": {
+                    "ENABLE": "1",
+                    "EXTRA": {
+                        "MAP": {
+                            "MAX_IN": "1",
+                            "MAX_OUT": "300",
+                            "MIN_IN": "0",
+                            "MIN_OUT": "40"
+                        },
+                        "SMOOTH": "0",
+                        "SMOOTH_POWER": "0.01"
+                    }
+                }
+            }
+        }
+    }
+}

@@ -1,12 +1,21 @@
 {
     "Osc_AppSettings": {
+        "ENABLERS": "1",
         "Extra": {
             "Debug": "0",
             "Help": "0",
-            "Internal": "0",
-            "Keys": "1"
+            "Keys": "1",
+            "Randomize": "0"
         },
-        "Gui_Position_Internal": "439, 58",
-        "Internal": "0"
+        "Gui_Position_Targets": "500, 10",
+        "Internal": "0",
+        "OSC_TARGETS": "1",
+        "PATCHING_MANAGER": "0",
+        "PLOTS_INPUT": {
+            "All": "0",
+            "Mini": "1",
+            "PLOTS": "0"
+        },
+        "UnknownName": "0, 0"
     }
 }

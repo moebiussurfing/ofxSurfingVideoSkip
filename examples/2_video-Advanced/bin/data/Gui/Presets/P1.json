@@ -2,11 +2,16 @@
     "LayoutsPresets": {
         "Extra_Params": {
             "LINK": "0",
-            "Log": "0",
-            "Menu": "1"
+            "LOG": "0",
+            "Manual_Slider": "1",
+            "Menu": "0",
+            "PLOTS": "1",
+            "Preview_Widget": "0"
         },
         "PanelsVisible": {
-            "OSC": "0",
+            "MOODS": "0",
+            "OSC": "1",
+            "PRESETS": "0",
             "VIDEO_SKIP": "1"
         }
     }

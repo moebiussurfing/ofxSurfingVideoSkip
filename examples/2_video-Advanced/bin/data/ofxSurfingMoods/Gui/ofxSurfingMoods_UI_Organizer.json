@@ -1,9 +1,9 @@
 {
     "Organizer": {
         "GuiToggles": {
-            "EDITOR": "0",
-            "PARAMETERS": "0",
-            "PRESETS": "1"
+            "ADVANCED": "0",
+            "MATRICES": "0",
+            "MOODS": "1"
         },
         "Organizer_Settings": {
             "Align_Shapes": "1",
@@ -13,11 +13,11 @@
             "Pad": "0",
             "Panels": {
                 "GLOBAL": "1",
-                "Presets_ALIGNERS": "0",
-                "Presets_ORGANIZER": "0",
-                "Presets_SPECIALW": "0"
+                "ofxSurfingMoods_ALIGNERS": "0",
+                "ofxSurfingMoods_ORGANIZER": "0",
+                "ofxSurfingMoods_SPECIALW": "0"
             },
-            "Position_Anchor": "127, 86",
+            "Position_Anchor": "1235, 294",
             "ShapesX": "1",
             "ShapesY": "0"
         }

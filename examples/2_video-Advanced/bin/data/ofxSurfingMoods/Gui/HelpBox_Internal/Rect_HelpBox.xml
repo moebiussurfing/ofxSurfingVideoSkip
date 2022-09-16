@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <interactiveRect>
-	<path>Presets/Gui/HelpBox_App//</path>
-	<x>1404</x>
-	<y>920</y>
+	<path>ofxSurfingMoods/Gui/HelpBox_Internal//</path>
+	<x>1212</x>
+	<y>629</y>
 	<width>400</width>
 	<height>400</height>
 	<name>_HelpBox</name>

@@ -20,15 +20,18 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 
 	// Customize before add the group! that will call setup()
-	presetsManager.setKeyFirstChar('a'); // customize keys to avoid collide when using multiple presets manager instances!
+	
+	presetsManager.setFliped(true); 
+	
+	presetsManager.setKeyFirstChar('0'); 
+	//presetsManager.setKeyFirstChar('a'); 
+	// customize keys to avoid collide when using multiple presets manager instances!
+	
 	//presetsManager.bGui.setName("SKIP PRESETS"); //-> Custom name
-	//presetsManager.setEnableHandleSettingsFile(false); // disable saving settings to avoid collide with Gui Manager
+	
 	presetsManager.setPathGlobal(path_GLOBAL_Folder); // custom path
 	presetsManager.setPathPresets(path_GLOBAL_Folder + "/" + "ofxSurfingVideoSkip" + "/" + "Presets");
-	//presetsManager.setAmountButtonsPerRowClickers(3);
 	presetsManager.setEnableKeySpace(false); // disable space key bc used by play toggle
-	//presetsManager.setEnableKeysArrows(false); // disable arrows browse keys
-	//presetsManager.bGui_InnerClicker = false;
 
 	//-
 
@@ -95,7 +98,7 @@ void ofxSurfingVideoSkip::setup_Preset()
 #else
 
 	//// Exclude
-	//params_Preset.add(bpmTimer);
+	//params_Preset.add(bpm);
 	//params_Preset.add(bpmDivider);
 
 	params_Preset.add(bMODE_SkipTime);
@@ -174,7 +177,7 @@ void ofxSurfingVideoSkip::setup_Remote()
 	params_Remote.add(bMODE_SkipPowered);
 	params_Remote.add(skipPower);
 
-	params_Remote.add(bpmTimer);
+	params_Remote.add(bpm);
 	params_Remote.add(bpmDivider);
 	params_Remote.add(bMODE_Edit);
 
@@ -205,42 +208,7 @@ void ofxSurfingVideoSkip::setup_Remote()
 	// OSC
 
 #ifdef USE_ofxSurfingOsc
-
 	setup_Osc();
-
-	/*
-	//ofxSubscribeOsc(PORT, "/bpm", bpmTimer);
-
-	ofxSubscribeOsc(PORT, "/bpm", [this](const float& val) {
-		ofLogNotice("ofxSurfingVideoSkip") << "bpm" << val;
-		bpmTimer.set(val);
-		presetsManager.playerSurfer.durationBpm.set(val);
-		});
-
-	//ofxSubscribeOsc(PORT, "/bpm", [this]() {
-	//	ofLogNotice("ofxSurfingVideoSkip") << "bpm" << ;
-	//	presetsManager.load(7);
-	//	});
-
-	ofxSubscribeOsc(PORT, "/beat", [this]() {
-		ofLogNotice("ofxSurfingVideoSkip") << "beat!";
-
-		presetsManager.doLoadNext();
-		});
-
-	//ofxSubscribeOsc(PORT, "/bang0", [this]() {
-	//	ofLogNotice("ofxSurfingVideoSkip") << "bang 0";
-
-	//	presetsManager.load(7);
-	//	});
-
-	ofxSubscribeOsc(PORT, "/bang1", [this]() {
-		ofLogNotice("ofxSurfingVideoSkip") << "bang 1";
-
-		presetsManager.load(8);
-		});
-	*/
-
 #endif
 }
 
@@ -348,7 +316,7 @@ void ofxSurfingVideoSkip::setup()
 
 	// These are global.
 	// will not be included into presets!
-	bpmTimer.set("BPM", 120.0f, 40.f, 400.0f);
+	bpm.set("BPM", 120.0f, 40.f, 400.0f);
 	bpmDivider.set("DIV", 2, 1, 8);
 
 	timer_SkipTime.set("_timer1_", 0, 0, 1);
@@ -469,7 +437,7 @@ void ofxSurfingVideoSkip::setup()
 	_param_SkipEngine.add(bDoResetAll);
 
 #ifdef USE_BPM_TIMER_MODE
-	_param_Clock.add(bpmTimer);
+	_param_Clock.add(bpm);
 	_param_Clock.add(bpmDivider);
 #endif
 	_param_Clock.add(bDoResetBpm);
@@ -545,18 +513,22 @@ void ofxSurfingVideoSkip::setup()
 
 #ifdef USE_ofxSurfingMoods
 
+	moods.bpmSpeed.makeReferenceTo(bpm);
+
 	// Link Mood BPM to BeatBlock instance:
+#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
 	moods.bpmSpeed.makeReferenceTo(beatClock.BPM_Global);
-	bpmTimer.makeReferenceTo(beatClock.BPM_Global);
+	bpm.makeReferenceTo(beatClock.BPM_Global);
 
 	// Link Mood PLAY to BeatBlock instance:
 	moods.bPLAY.makeReferenceTo(beatClock.bPlay);
+#endif
 
 	moods.setEnableExternalClock(true); // Forced. Is not mandatory, can be modified using the GUI.
 
 	moods.setup();
 
-	//moods.bGui_Main.setName("MOODS");
+	//moods.bGui.setName("MOODS");
 
 	moods.setKeySpace(false);
 
@@ -607,6 +579,12 @@ void ofxSurfingVideoSkip::setup()
 
 	//--
 
+	// Osc
+
+	setup_Remote();
+
+	//--
+
 	// Gui
 
 	setup_ImGui();
@@ -614,8 +592,6 @@ void ofxSurfingVideoSkip::setup()
 	//--
 
 	if (bKeys) addKeysListeners();
-
-	setup_Remote();
 
 	//----
 
@@ -628,28 +604,81 @@ void ofxSurfingVideoSkip::setup()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::setup_Osc()
 {
-	// to use local ui / imgui manager!
+	// To use as reference the local ui / imgui manager!
 	oscHelper.setUiPtr(&ui);
 
 	// An internal and hardcoded example 
 	// of a custom template with only some params enabled and customized.
-	//oscHelper.setCustomTemplate(true);
+	oscHelper.setCustomTemplate(true);
 
 	oscHelper.setup(ofxSurfingOsc::Slave);
 
-	oscHelper.bGui.setName("OSC");
+	//--
 
-	//TODO: Notice that not working bC its overwritten on startup by loading settings.
-	// Currently we need to use the GUI, that restart the app to update settings.
-	// PORT and IP can't be change during runtime!
-	//oscHelper.setInputPort(54321); 
+	// Link params
+	///*
+	{
+		/*
+		oscHelper.linkValue(bpm);
 
-	oscHelper.startup();
+		oscHelper.linkBang(bang1);
+		oscHelper.linkBang(bang2);
+		oscHelper.linkBang(bang3);
+		oscHelper.linkBang(bang4);
+		oscHelper.linkToggle(toggle1);
+		oscHelper.linkToggle(toggle2);
+		oscHelper.linkToggle(toggle3);
+		oscHelper.linkToggle(toggle4);
+		oscHelper.linkValue(value2);
+		oscHelper.linkValue(value3);
+		oscHelper.linkValue(value4);
+		oscHelper.linkNumber(number1);
+		oscHelper.linkNumber(number2);
+		oscHelper.linkNumber(number3);
+		oscHelper.linkNumber(number4);
+		*/
+	}
+	//*/
+
+	//--
+
+	/*
+	//ofxSubscribeOsc(PORT, "/bpm", bpm);
+
+	ofxSubscribeOsc(PORT, "/bpm", [this](const float& val) {
+		ofLogNotice("ofxSurfingVideoSkip") << "bpm" << val;
+		bpm.set(val);
+		presetsManager.playerSurfer.durationBpm.set(val);
+		});
+
+	//ofxSubscribeOsc(PORT, "/bpm", [this]() {
+	//	ofLogNotice("ofxSurfingVideoSkip") << "bpm" << ;
+	//	presetsManager.load(7);
+	//	});
+
+	ofxSubscribeOsc(PORT, "/beat", [this]() {
+		ofLogNotice("ofxSurfingVideoSkip") << "beat!";
+
+		presetsManager.doLoadNext();
+		});
+
+	//ofxSubscribeOsc(PORT, "/bang0", [this]() {
+	//	ofLogNotice("ofxSurfingVideoSkip") << "bang 0";
+
+	//	presetsManager.load(7);
+	//	});
+
+	ofxSubscribeOsc(PORT, "/bang1", [this]() {
+		ofLogNotice("ofxSurfingVideoSkip") << "bang 1";
+
+		presetsManager.load(8);
+		});
+	*/
 
 	//--
 
 	// Local callbacks for target changes
-	//ofAddListener(oscHelper.params_Targets.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Targets);
+	ofAddListener(oscHelper.params_Targets.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Targets);
 }
 #endif
 
@@ -1050,15 +1079,15 @@ void ofxSurfingVideoSkip::updateTimers()
 		int tDur;
 		if (beatRescale == 0)
 		{
-			tDur = ((int)((60000.f / (float)bpmTimer)) * beatDuration);//duration in ms. rescaled
+			tDur = ((int)((60000.f / (float)bpm)) * beatDuration);//duration in ms. rescaled
 		}
 		else if (beatRescale > 0) // multiply
 		{
-			tDur = beatRescale * ((int)((60000.f / (float)bpmTimer)) * beatDuration);//duration in ms. rescaled
+			tDur = beatRescale * ((int)((60000.f / (float)bpm)) * beatDuration);//duration in ms. rescaled
 		}
 		else // divide // < 0
 		{
-			tDur = (1.0f / abs(beatRescale)) * ((int)((60000.f / (float)bpmTimer)) * beatDuration);//duration in ms. rescaled
+			tDur = (1.0f / abs(beatRescale)) * ((int)((60000.f / (float)bpm)) * beatDuration);//duration in ms. rescaled
 		}
 
 		float tDurN = (float)tDur / (float)videoDur; // duration in normalized decimals 
@@ -1081,7 +1110,7 @@ void ofxSurfingVideoSkip::updateTimers()
 #ifndef USE_BPM_TIMER_MODE
 		tmax = timePeriod_skipper;
 #else
-		tmax = divBeatSkipper.get() * ((60000 / bpmDivider.get()) / (bpmTimer.get()));
+		tmax = divBeatSkipper.get() * ((60000 / bpmDivider.get()) / (bpm.get()));
 #endif
 		if (t >= tmax) // done timer 
 		{
@@ -1114,7 +1143,7 @@ void ofxSurfingVideoSkip::updateTimers()
 #ifndef USE_BPM_TIMER_MODE
 		tmax = timePeriod_reverser;
 #else
-		tmax = divBeatReverse.get() * ((60000 / bpmDivider.get()) / (bpmTimer.get()));
+		tmax = divBeatReverse.get() * ((60000 / bpmDivider.get()) / (bpm.get()));
 #endif
 		if (t >= tmax)
 		{
@@ -1916,7 +1945,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		{
 			bDoResetBpm = false;
 
-			bpmTimer = 120.f;
+			bpm = 120.f;
 			bpmDivider = 2;
 		}
 
@@ -2075,7 +2104,7 @@ void ofxSurfingVideoSkip::Changed_bGui()
 
 #ifdef USE_ofxSurfingMoods
 
-// moods
+// Moods
 // listeners for inside moods
 
 //-------------------------------------------------
@@ -2219,6 +2248,9 @@ void ofxSurfingVideoSkip::draw_Video()
 			{
 				r.scaleTo(ofGetWindowRect(), surfingPreview.scaleMode); // Full view
 			}
+
+			// Floating Preview
+
 			else
 			{
 				// A. Draggable view port
@@ -2456,60 +2488,101 @@ void ofxSurfingVideoSkip::exit()
 	//--
 
 #ifdef USE_ofxSurfingOsc 
-	//ofRemoveListener(oscHelper.params_Targets.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Targets);
-
-	//oscHelper.ui.exit();
+	ofRemoveListener(oscHelper.params_Targets.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Targets);
 #endif
+
 }
 
 #ifdef USE_ofxSurfingOsc 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 {
-	/*
-	if (bBypass) return;
+	///*
+
+	//if (oscHelper.bBypass) return;
 
 	string _name = e.getName();
 
-	ofLogNotice("ofApp") << _name << " : " << e;
+	if (0) ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << _name << " : " << e;
 
 	//--
 
-	// Bools
+	// BOOLS / BANGS 
 
 	if (e.type() == typeid(ofParameter<bool>).name())
 	{
-		ofParameter<bool> b = e.cast<bool>();
-		if (b)
+		ofParameter<bool> p = e.cast<bool>();
+		if (p.get())//get true only
 		{
-			if (_name == "bang_" + ofToString(1))
+			if (_name == "BANG_" + ofToString(0))
 			{
-				ofLogNotice("ofApp") << "AUBIO BEAT";
+				ofLogNotice("ofxSurfingVideoSkip") << "Bang 0 >";
+				//presetsManager.doLoadNext();
+#ifdef USE_ofxSurfingMoods
+				moods.doBeatTick();
+#endif
+				return;
 			}
 
-			if (_name == "bang_" + ofToString(2))
+			if (_name == "BANG_" + ofToString(1))
 			{
-				ofLogNotice("ofApp") << "AUBIO ON-SET";
+				ofLogNotice("ofxSurfingVideoSkip") << "Bang 1 > ";
+				//presetsManager.doLoadNext();
+				//presetsManager.load(7);
+#ifdef USE_ofxSurfingMoods
+				moods.doBeatTick();
+#endif
+				return;
+			}
+
+			if (_name == "BANG_" + ofToString(2))
+			{
+				ofLogNotice("ofxSurfingVideoSkip") << "Bang 2 > ";
+				//presetsManager.doLoadNext();
+				//presetsManager.load(7);
+#ifdef USE_ofxSurfingMoods
+				moods.doBeatTick();
+#endif
+				return;
 			}
 		}
 	}
 
 	//--
 
-	// Floats
+	// FLOATS
 
 	else if (e.type() == typeid(ofParameter<float>).name())
 	{
 		ofParameter<float> p = e.cast<float>();
 
-		ofLogNotice("ofApp") << ofToString(p, 2);
+		//ofLogNotice("ofxSurfingVideoSkip") << ofToString(p, 2);
 
-		if (_name == "values_" + ofToString(8)) // bpm
+		if (_name == "VALUE_" + ofToString(0))
 		{
-			ofLogNotice("ofApp") << "BPM " << ofToString(p, 2);
+			//ofLogNotice("ofxSurfingVideoSkip") << "Value 0 > " << ofToString(p, 2);
+			return;
+		}
+
+		if (_name == "VALUE_" + ofToString(1))
+		{
+			//ofLogNotice("ofxSurfingVideoSkip") << "Value 1 > " << ofToString(p, 2);
+#ifdef USE_ofxSurfingMoods
+			//moods.controlManual = 1 - p; // flip
+			moods.controlManual = p;
+#endif
+			return;
+		}
+
+		if (_name == "VALUE_" + ofToString(2)) // bpm
+		{
+			ofLogNotice("ofxSurfingVideoSkip") << "Value 2 > BPM " << ofToString(p, 2);
+			bpm.set(p);
+			return;
 		}
 	}
-	*/
+
+	//*/
 }
 #endif
 
@@ -2549,7 +2622,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 #endif
 
 #ifdef USE_ofxSurfingMoods 
-	ui.addWindowSpecial(moods.bGui_Main);
+	ui.addWindowSpecial(moods.bGui);
 #endif
 
 #ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
@@ -2566,6 +2639,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 
 #ifdef USE_ofxSurfingOsc
 	ui.addWindowSpecial(oscHelper.bGui);
+	//ui.addWindowSpecial(oscHelper.bGui_Targets);
 #endif
 
 	//ui.addWindowSpecial(surfingPreview.bGui_Extra);
@@ -2586,6 +2660,15 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	//ui.addExtraParamToLayoutPresets(bGui_SkipTimers);
 
 	////ui.addExtraParamToLayoutPresets(presetsManager.playerSurfer.bGui);
+	
+#ifdef USE_ofxSurfingOsc
+	ui.addExtraParamToLayoutPresets(oscHelper.bGui_Plots);
+#endif
+
+#ifdef USE_ofxSurfingMoods 
+	ui.addExtraParamToLayoutPresets(moods.bGui_PreviewWidget);
+	ui.addExtraParamToLayoutPresets(moods.bGui_ManualSlider);
+#endif
 
 	//--
 
@@ -2631,19 +2714,19 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 						//___w1 = ui.getWidgetsWidth(1);
 						//___w2 = ui.getWidgetsWidth(2);
 
-						ui.Add(bpmTimer, OFX_IM_DEFAULT);
+						ui.Add(bpm, OFX_IM_DEFAULT);
 						ui.Add(bpmDivider, OFX_IM_DEFAULT);
 
 						if (ui.AddButton("HALF", OFX_IM_BUTTON_SMALL, 2))
 						{
-							bpmTimer /= 2.0f;
+							bpm /= 2.0f;
 						}
 
 						ui.SameLine();
 
 						if (ui.AddButton("DOUBLE", OFX_IM_BUTTON_SMALL, 2))
 						{
-							bpmTimer *= 2.0f;
+							bpm *= 2.0f;
 						}
 
 						// Reset
@@ -3152,7 +3235,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 				if (bMODE_Loop)
 				{
 					ui.Add(bMODE_Beat, OFX_IM_TOGGLE_BORDER);
-					ui.AddSpacing();
+					//ui.AddSpacing();
 
 					if (bMODE_Beat)
 					{
@@ -3350,13 +3433,14 @@ void ofxSurfingVideoSkip::draw_ImGui()
 			// Controls
 			draw_ImGui_Main();
 
-			// Preview / Fbo image
-			draw_ImGui_Preview();
+			// Timers
+			if (bGui_SkipTimers) draw_ImGui_SkipTimers();
 		}
 
-		if (bGui_SkipTimers && bGui_Main) draw_ImGui_SkipTimers();
+		//--
 
-		//if (bGui_SkipTimers) draw_ImGui_SkipTimers();
+		// Floating Preview / Fbo image
+		draw_ImGui_Preview();
 
 		//--
 
@@ -3364,7 +3448,6 @@ void ofxSurfingVideoSkip::draw_ImGui()
 #ifdef USE_ofxSurfingOsc
 		oscHelper.drawImGui();
 #endif
-
 		//--
 	}
 	ui.End();
@@ -3443,7 +3526,7 @@ void ofxSurfingVideoSkip::Changed_BeatTick() // callback to receive BeatTicks
 //{
 //	ofLogNotice(__FUNCTION__) << "BPM " << beatClock.getBpm();
 //
-//	//bpmTimer.set(beatClock.getBpm());
+//	//bpm.set(beatClock.getBpm());
 //
 ////#ifdef USE_ofxSurfingMoods
 ////	moods.setBpm(beatClock.getBpm());

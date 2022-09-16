@@ -8,9 +8,26 @@
 
 /*
 
+	TODO:
+
+
+	OSC: 
+	bang next makes double jump!
+	fix targets draw for button testing
+	fix / add enablers
+		add all/none
+
+	MOOD: 
+	link manual slider to value_0
+	preview widget blink faster
+
+	PRESETS
+	preset is overwriting sometimes
+	edit mode not working when using inner presets panel
+
+
 	BUGS:
 
-	+ edit mode not working when using inner presets panel
 	+ zero time loop wrong back...
 	+ fine tunes: kicks working weird
 
@@ -71,12 +88,12 @@
 // Two alternatives:
 //
 // -> 1A. Simple Presets
-//#define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for GUI integration
+#define USE_ofxSurfingPresets__VIDEO_SKIP //-> Recommended! for GUI integration
 // -> 1B. Power Presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
 // -> 2. Mood Machine
-//#define USE_ofxSurfingMoods 
+#define USE_ofxSurfingMoods 
 
 // -> 3. Beat Clock
 //#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
@@ -146,10 +163,6 @@
 
 #ifdef USE_ofxSurfingOsc
 #include "ofxSurfingOsc.h"
-////#include "ofxPubSubOsc.h"
-////#include "ofxOsc.h"
-////#define HOST "localhost"
-//#define PORT 12345
 #endif
 
 //-
@@ -191,7 +204,7 @@ public:
 private:
 	ofxSurfingOsc oscHelper;
 	void setup_Osc();
-	ofParameter<bool> bBypass{ "ByPass", false };
+	//ofParameter<bool> bBypass{ "ByPass", false };
 	void Changed_Targets(ofAbstractParameter& e);
 #endif
 
@@ -596,7 +609,7 @@ private:
 	ofParameter<int> timePeriod_reverser;
 #else
 	// 60,000 ms (1 minute) / Tempo (BPM) = Delay Time in ms
-	ofParameter<float> bpmTimer;
+	ofParameter<float> bpm;
 	ofParameter<int> bpmDivider;
 	ofParameter<float> timer_SkipTime;
 	ofParameter<float> timer_SkipRev;

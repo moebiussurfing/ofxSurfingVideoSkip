@@ -7,6 +7,7 @@ ofxPubSubOsc
 ofxSurfingBox
 ofxSurfingHelpers
 ofxSurfingImGui
+ofxSurfingMoods
 ofxSurfingOsc
 ofxSurfingPlayer
 ofxSurfingPresets

@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path>ofxSurfingVideoSkipHelpBox_-1//</path>
-	<x>1574</x>
-	<y>568</y>
+	<x>1512</x>
+	<y>22</y>
 	<width>239</width>
 	<height>455</height>
 	<name>_HelpBox</name>
-	<isEditing>1</isEditing>
+	<isEditing>0</isEditing>
 </interactiveRect>

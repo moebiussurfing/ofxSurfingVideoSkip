@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path>ofxSurfingOsc/</path>
-	<x>611</x>
-	<y>209</y>
-	<width>155</width>
-	<height>138.2</height>
-	<name>_HelpBox</name>
+	<x>1673</x>
+	<y>238</y>
+	<width>200</width>
+	<height>622.11</height>
+	<name>Plots</name>
 	<isEditing>1</isEditing>
 </interactiveRect>
