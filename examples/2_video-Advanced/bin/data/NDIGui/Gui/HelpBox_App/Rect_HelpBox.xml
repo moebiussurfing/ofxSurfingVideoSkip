@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <interactiveRect>
-	<path>ofxSurfingMoods//</path>
-	<x>424</x>
-	<y>556</y>
+	<path>NDIGui/Gui/HelpBox_App//</path>
+	<x>-261</x>
+	<y>62</y>
 	<width>400</width>
 	<height>400</height>
 	<name>_HelpBox</name>

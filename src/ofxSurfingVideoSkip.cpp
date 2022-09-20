@@ -20,15 +20,15 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 
 	// Customize before add the group! that will call setup()
-	
-	presetsManager.setFliped(true); 
-	
-	presetsManager.setKeyFirstChar('0'); 
+
+	presetsManager.setFliped(true);
+
+	presetsManager.setKeyFirstChar('0');
 	//presetsManager.setKeyFirstChar('a'); 
 	// customize keys to avoid collide when using multiple presets manager instances!
-	
+
 	//presetsManager.bGui.setName("SKIP PRESETS"); //-> Custom name
-	
+
 	presetsManager.setPathGlobal(path_GLOBAL_Folder); // custom path
 	presetsManager.setPathPresets(path_GLOBAL_Folder + "/" + "ofxSurfingVideoSkip" + "/" + "Presets");
 	presetsManager.setEnableKeySpace(false); // disable space key bc used by play toggle
@@ -585,6 +585,17 @@ void ofxSurfingVideoSkip::setup()
 
 	//--
 
+#ifdef USE_ofxNDI
+
+	ndi.setup();
+	ndi.setMode_ImGui();
+
+	//ndi.setGuiInternalVisible(true);//debug
+
+#endif
+
+	//--
+
 	// Gui
 
 	setup_ImGui();
@@ -776,8 +787,9 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 {
 	//--
 
-#ifdef USE_ofxSurfingFxPro
 	// Feed FxPro
+
+#ifdef USE_ofxSurfingFxPro
 	{
 		fxPro.begin();
 		{
@@ -831,6 +843,35 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 			player.setPosition(position);
 		}
 	}
+
+#endif
+
+	//--
+
+	// NDI
+#ifdef USE_ofxNDI
+
+	ndi.begin_NDI_OUT();
+	{
+		//drawBg();
+
+		//--
+
+		// FxPro
+
+		// We can choose the behavior.. 
+#ifdef USE_ofxSurfingFxPro
+		//if (surfingPreview.bGui_PreviewBig) fxPro.draw();
+		fxPro.draw();
+#else
+		//if (surfingPreview.bGui_PreviewBig) draw_Video();
+		draw_Video();
+#endif
+		//--
+
+		ndi.drawSignals();
+	}
+	ndi.end_NDI_OUT();
 
 #endif
 
@@ -1440,6 +1481,12 @@ void ofxSurfingVideoSkip::windowResized(int _w, int _h)
 #ifdef USE_ofxSurfingFxPro
 	fxPro.windowResized(_w, _h);
 #endif
+
+#ifdef USE_ofxNDI
+
+	ndi.windowResized(_w, _h);
+
+#endif
 }
 
 //--------------------------------------------------------------
@@ -1599,9 +1646,9 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 			//		}
 		}
 
-		//-
+		//--
 	}
-}
+	}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::dragEvent(ofDragInfo dragInfo) // drag video to load another one
@@ -1657,7 +1704,7 @@ void ofxSurfingVideoSkip::Changed_DONE_load(bool& DONE_load)
 
 		//// workflow
 		//if (!bMODE_Loop) bMODE_Loop = true;
-	}
+}
 }
 #endif
 
@@ -1793,7 +1840,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
 			}
-		}
+			}
 
 		//// loop
 		//else if (name == bMODE_Loop.getName())
@@ -2081,8 +2128,8 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		bSyncRemote = true;
 		//remoteServer.syncParameters();//hangs
 #endif
+		}
 	}
-}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_bGui()
@@ -2207,12 +2254,12 @@ void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 	//--
 
 	// FxPro
+
 #ifdef USE_ofxSurfingFxPro
 	// We can choose the behavior.. 
 	if (surfingPreview.bGui_PreviewBig) fxPro.draw();
 #else
 	if (surfingPreview.bGui_PreviewBig) draw_Video();
-
 #endif
 
 	//----
@@ -2223,6 +2270,24 @@ void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 	{
 		draw_Gui();
 	}
+
+	//--
+
+	// NDI
+
+#ifdef USE_ofxNDI
+
+	ndi.draw();
+
+#endif
+
+	// NDI
+
+#ifdef USE_ofxNDI
+
+	ndi.drawGui();
+
+#endif
 }
 
 //--------------------------------------------------------------
@@ -2642,6 +2707,10 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	//ui.addWindowSpecial(oscHelper.bGui_Targets);
 #endif
 
+#ifdef USE_ofxNDI
+	ui.addWindowSpecial(ndi.bGui);
+#endif
+
 	//ui.addWindowSpecial(surfingPreview.bGui_Extra);
 
 	//--
@@ -2660,7 +2729,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	//ui.addExtraParamToLayoutPresets(bGui_SkipTimers);
 
 	////ui.addExtraParamToLayoutPresets(presetsManager.playerSurfer.bGui);
-	
+
 #ifdef USE_ofxSurfingOsc
 	ui.addExtraParamToLayoutPresets(oscHelper.bGui_Plots);
 #endif

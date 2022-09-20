@@ -3,7 +3,7 @@
         "GuiToggles": {
             "ADVANCED": "0",
             "MATRICES": "0",
-            "MOODS": "1"
+            "MOODS": "0"
         },
         "Organizer_Settings": {
             "Align_Shapes": "1",
@@ -17,7 +17,7 @@
                 "ofxSurfingMoods_ORGANIZER": "0",
                 "ofxSurfingMoods_SPECIALW": "0"
             },
-            "Position_Anchor": "1235, 294",
+            "Position_Anchor": "997, 416",
             "ShapesX": "1",
             "ShapesY": "0"
         }

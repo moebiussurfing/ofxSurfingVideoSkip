@@ -113,12 +113,20 @@
 // -> 7. Post FX
 //#define USE_ofxSurfingFxPro
 
-// -> 6. OSC Remote
+// -> 8. OSC Remote
 #define USE_ofxSurfingOsc
+
+// -> 9. NDI 
+#define USE_ofxNDI
 
 #endif // end of no minimal stuff
 
 //----------------------------------------------
+
+
+#ifdef USE_ofxNDI
+#include "SurfingNDIManager.h"
+#endif
 
 #ifdef USE_ofxSurfingFxPro
 #include "ofxSurfingFxPro.h"
@@ -206,6 +214,12 @@ private:
 	void setup_Osc();
 	//ofParameter<bool> bBypass{ "ByPass", false };
 	void Changed_Targets(ofAbstractParameter& e);
+#endif
+
+	//--
+	 
+ #ifdef USE_ofxNDI
+	SurfingNDIManager ndi;
 #endif
 
 	//--

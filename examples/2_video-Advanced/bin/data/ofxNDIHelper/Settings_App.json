@@ -1,0 +1,30 @@
+{
+    "NDI_Helper": {
+        "INTERNAL": {
+            "AUTO_SAVE": "0",
+            "GUI_POSITION": "5, 5",
+            "ofxGui": "0"
+        },
+        "NDI_OUTPUT": {
+            "DRAW": "1",
+            "ENABLE": "1",
+            "Edit_Box": "0",
+            "MINI": "1",
+            "NAME": "oF"
+        },
+        "PANELS": {
+            "IN_1": "0",
+            "IN_2": "0",
+            "OUT": "1",
+            "WEBCAM": "0"
+        },
+        "WEBCAM": {
+            "DRAW": "1",
+            "ENABLE": "0",
+            "Edit_Box": "1",
+            "LOCK_ASPECT": "1",
+            "MINI": "1",
+            "SCALE_MODE": "0"
+        }
+    }
+}

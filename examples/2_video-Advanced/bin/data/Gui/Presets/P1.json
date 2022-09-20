@@ -10,6 +10,7 @@
         },
         "PanelsVisible": {
             "MOODS": "0",
+            "NDI_HELPER": "0",
             "OSC": "1",
             "PRESETS": "0",
             "VIDEO_SKIP": "1"

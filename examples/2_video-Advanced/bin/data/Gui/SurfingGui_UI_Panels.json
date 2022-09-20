@@ -4,7 +4,7 @@
             "Rectangles_Windows": {
                 "rect_Manager": "512, 503, 0, 160, 265",
                 "rect_Panels": "574, 85, 0, 700, 150",
-                "rect_Presets": "326, 503, 0, 186, 214"
+                "rect_Presets": "529, 717, 0, 186, 214"
             },
             "Window_Panels": {
                 "Auto_Resize": "1",
@@ -19,7 +19,7 @@
         "LayoutSettings": {
             "Auto_Save": "1",
             "Draw_View_1": "0",
-            "Layout_Preset": "1",
+            "Layout_Preset": "3",
             "Layouts": "1",
             "Panels": "1",
             "Solo": "0"
