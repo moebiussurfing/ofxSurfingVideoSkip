@@ -3,7 +3,7 @@
         "GuiToggles": {
             "EDITOR": "0",
             "PARAMETERS": "0",
-            "PRESETS": "0"
+            "PRESETS": "1"
         },
         "Organizer_Settings": {
             "Align_Shapes": "1",
@@ -17,7 +17,7 @@
                 "Presets_ORGANIZER": "0",
                 "Presets_SPECIALW": "0"
             },
-            "Position_Anchor": "127, 86",
+            "Position_Anchor": "429, 239",
             "ShapesX": "1",
             "ShapesY": "0"
         }

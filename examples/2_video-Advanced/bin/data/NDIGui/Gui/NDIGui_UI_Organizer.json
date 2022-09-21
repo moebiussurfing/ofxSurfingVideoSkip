@@ -3,7 +3,7 @@
         "GuiToggles": {
             "IN_1": "0",
             "IN_2": "0",
-            "NDI_HELPER": "1",
+            "NDI_HELPER": "0",
             "OUT": "1",
             "WEBCAM": "0"
         },
@@ -19,7 +19,7 @@
                 "NDIGui_ORGANIZER": "0",
                 "NDIGui_SPECIALW": "0"
             },
-            "Position_Anchor": "62, 48",
+            "Position_Anchor": "160, 237",
             "ShapesX": "1",
             "ShapesY": "0"
         }

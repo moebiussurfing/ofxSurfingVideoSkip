@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path>ofxNDIHelper/NDI_Input2//</path>
-	<x>793</x>
-	<y>615</y>
-	<width>320</width>
-	<height>180</height>
+	<x>812.745</x>
+	<y>152.481</y>
+	<width>460.511</width>
+	<height>548.037</height>
 	<name>NDI_IN_2_Mini</name>
-	<isEditing>0</isEditing>
+	<isEditing>1</isEditing>
 </interactiveRect>
