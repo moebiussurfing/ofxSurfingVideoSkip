@@ -11,13 +11,13 @@
 	TODO:
 
 
-	OSC: 
+	OSC:
 	bang next makes double jump!
 	fix targets draw for button testing
 	fix / add enablers
 		add all/none
 
-	MOOD: 
+	MOOD:
 	link manual slider to value_0
 	preview widget blink faster
 
@@ -173,7 +173,8 @@
 #include "ofxSurfingOsc.h"
 #endif
 
-//-
+//----
+
 
 #define SPEED_MIN 0.20f
 #define SPEED_MAX 50.0f
@@ -205,9 +206,9 @@ public:
 
 		exit();
 	}
-	
+
 	//--
-	
+
 #ifdef USE_ofxSurfingOsc
 private:
 	ofxSurfingOsc oscHelper;
@@ -217,8 +218,8 @@ private:
 #endif
 
 	//--
-	 
- #ifdef USE_ofxNDI
+
+#ifdef USE_ofxNDI
 	SurfingNDIManager ndi;
 #endif
 
@@ -248,9 +249,9 @@ private:
 	void keyReleased(ofKeyEventArgs& eventArgs) {
 		const int& key = eventArgs.key;
 #ifdef USE_ofxSurfingFxPro
-    	fxPro.keyReleased(key);
+		fxPro.keyReleased(key);
 #endif
-    };
+	};
 	void addKeysListeners();
 	void removeKeysListeners();
 
@@ -351,10 +352,10 @@ private:
 	// Preview Monitor
 	SurfingPreview surfingPreview;
 
-	#ifdef USE_ofxSurfingFxChannel && !USE_MINIMAL_ofxSurfingVideoSkip
+#ifdef USE_ofxSurfingFxChannel && !USE_MINIMAL_ofxSurfingVideoSkip
 	std::vector<std::string> previewSources = { "Source", "Processed" };
 #else
-	std::vector<std::string> previewSources = { "Source"};
+	std::vector<std::string> previewSources = { "Source" };
 #endif
 
 	ofParameter<int> indexPreviewSource;

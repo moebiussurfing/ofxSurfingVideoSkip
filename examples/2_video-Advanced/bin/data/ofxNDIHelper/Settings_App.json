@@ -8,7 +8,7 @@
         "NDI_OUTPUT": {
             "DRAW": "1",
             "ENABLE": "1",
-            "Edit_Box": "0",
+            "Edit_Box": "1",
             "MINI": "1",
             "NAME": "oF"
         },

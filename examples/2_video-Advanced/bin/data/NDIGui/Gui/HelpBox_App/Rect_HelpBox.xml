@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <interactiveRect>
 	<path>NDIGui/Gui/HelpBox_App//</path>
-	<x>-261</x>
-	<y>62</y>
+	<x>-262</x>
+	<y>63</y>
 	<width>400</width>
 	<height>400</height>
 	<name>_HelpBox</name>

@@ -1,3 +1,4 @@
+ofxChildFrame
 ofxGui
 ofxHapPlayer
 ofxHistoryPlot
