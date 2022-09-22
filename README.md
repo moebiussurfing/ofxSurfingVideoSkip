@@ -2,6 +2,9 @@
 
 ### **WIP**
 
+## Screenshot
+![](readme_images/Capture.PNG)
+
 ## Overview
 A custom, experimental and personal **Video Loops Player Engine**.  
 
@@ -21,9 +24,6 @@ A custom, experimental and personal **Video Loops Player Engine**.
 - Post Fx shaders using **ofxSurfingFxPro**.
 - NDI sender using **ofxNDI**.
 
-## Screenshot
-![](readme_images/Capture.PNG)
-
 ## Dependencies
 - ofxGui / oF core
 - [ofxHapPlayer](https://github.com/bangnoise/ofxHapPlayer)
@@ -36,4 +36,7 @@ A custom, experimental and personal **Video Loops Player Engine**.
 Can be disabled / enabled using directives.  
 - [ofxSurfingPresets](https://github.com/moebiussurfing/ofxSurfingPresets)
 - [ofxSurfingMoods](https://github.com/moebiussurfing/ofxSurfingMoods)
+- [ofxNDIHelper](https://github.com/moebiussurfing/ofxNDIHelper)
+- [ofxSurfingOsc](https://github.com/moebiussurfing/ofxSurfingOsc)
+- [ofxSurfingFxPro](https://github.com/moebiussurfing/ofxSurfingFxPro)
 - [ofxBeatClock](https://github.com/moebiussurfing/ofxBeatClock)
