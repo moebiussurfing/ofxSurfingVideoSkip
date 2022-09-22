@@ -10,6 +10,8 @@
 
 	TODO:
 
+	UI:
+	fix custom range big slider, un exact position
 
 	OSC:
 	bang next makes double jump!
@@ -21,51 +23,32 @@
 	link manual slider to value_0
 	preview widget blink faster
 
-	PRESETS
+	PRESETS:
 	preset is overwriting sometimes
 	edit mode not working when using inner presets panel
 
-
 	BUGS:
-
 	+ zero time loop wrong back...
 	+ fine tunes: kicks working weird
 
-
-	TODO:
-
-	+ fix imgui layout presets
-
-	+ add OSC control or control add-on mixing midi+osc
-
+	ENGINE:
 	+ should be oriented more to start point vs end/duration..
-
 	+ improve Edit mode and lock
 		+ when edit mode, and dragging start/end, move position
-
 	+ add shift loop
 		+ add control to move the loop clip with same duration?
 		+ lock start/end then move "centered" on edit
-
-	+ fix route paths for Windows/macOS
-
-	+ full screen/dual window. external output.
-
-	+ add tap tempo or surfingPlayer add-on
-
 	+ add slow skip timers
+	+ add new fx skip-engine jump bpm timed shutter
+	+ zoom on loop zone. maybe with stills
+	+ mark start points on bar. add one/first still for each clip
 
+	APP:
+	+ full screen/dual window. external output.
 	+ populate midi notes for available presets
 		or make an engine to centralize all midi stuff for different modules.
-
 	+ fix docking for all panels. Should split main 3 panels too..
 		+ preview window and central docking layouting
-
-	+ add new fx skip-engine jump bpm timed shutter
-
-	+ zoom on loop zone. maybe with stills
-
-	+ mark start points on bar
 
 */
 
@@ -74,7 +57,8 @@
 //
 //	OPTIONAL DEFINES
 
-//#define USE_MINIMAL_ofxSurfingVideoSkip
+#define USE_MINIMAL_ofxSurfingVideoSkip
+
 // -> Uncomment this line below to 
 // force disable ALL the optional add-ons below. 
 // Ant the to use only the MINIMAL CORE add-on.
@@ -371,6 +355,8 @@ private:
 #else
 	std::vector<std::string> previewSources = { "Source" };
 #endif
+//#else
+//	std::vector<std::string> previewSources = { "Source" };
 #endif
 
 	ofParameter<int> indexPreviewSource; // selector

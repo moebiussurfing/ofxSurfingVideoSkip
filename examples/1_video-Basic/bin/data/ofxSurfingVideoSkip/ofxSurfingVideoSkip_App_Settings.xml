@@ -1,24 +1,24 @@
 {
     "AppSettings": {
         "AutoHide_Bar": "1",
-        "Control_Bar": "0",
-        "FILE": "\"NightmoVES4.mov\"",
+        "Control_Bar": "1",
+        "FILE": "\"LETPOLICE_NOAUDIO.mov\"",
         "Keys": "1",
         "PLAY": "1",
-        "SKIP_TIMERS": "1",
+        "SKIP_TIMERS": "0",
         "SurfingPreview": {
             "Auto_Resize": "0",
-            "BIG": "1",
+            "BIG": "0",
             "Bg": "0, 0, 0, 255",
             "Docked": "0",
-            "Edit_Viewport": "1",
-            "Full_Screen": "0",
+            "Edit_Viewport": "0",
+            "Full_Screen": "1",
             "MINI_PREVIEW": "1",
             "PREVIEW_EXTRA": "0",
             "Scale_Mode": "1",
-            "recetParam": "799.15, 17.114, 0, 209.702, 115.773"
+            "recetParam": "0, 0, 0, 0, 0"
         },
         "VIDEO_SKIP": "1",
-        "videoFilePath": "Z:\\_DATA\\VIDEO\\NightmoVES4.mov"
+        "videoFilePath": "Z:\\_DATA\\VIDEO\\LETPOLICE\\LETPOLICE_NOAUDIO.mov"
     }
 }
