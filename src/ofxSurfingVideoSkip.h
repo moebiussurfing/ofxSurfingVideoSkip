@@ -57,11 +57,13 @@
 //
 //	OPTIONAL DEFINES
 
-#define USE_MINIMAL_ofxSurfingVideoSkip
+// MAIN
+// 
+//#define USE_MINIMAL_ofxSurfingVideoSkip
+ // -> Uncomment this above line to: 
+// Force and disable ALL the below optional add-ons / compatible modules. 
+// Then allows only the use of the MINIMAL CORE stuff of the add-on.
 
-// -> Uncomment this line below to 
-// force disable ALL the optional add-ons below. 
-// Ant the to use only the MINIMAL CORE add-on.
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
 
 //--
@@ -89,9 +91,9 @@
 // -> 5. FX Channel
 //#define USE_ofxSurfingFxChannel 
 
+//TODO:
 // -> 6. Remote Parameters
 //#define USE_ofxRemoteParameters 
-//TODO:
 // This add-on will server some parameters to allow remote control fast.
 // Will serve OSC/MIDI
 

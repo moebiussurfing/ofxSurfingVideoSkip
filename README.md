@@ -3,7 +3,7 @@
 ### **WIP**
 
 ## Overview
-A custom tweakable loops video player.  
+A custom, experimental and personal **Video Loops Player Engine**.  
 
 - Hap codec player / fast scrub
 - In / Out marks
@@ -13,11 +13,13 @@ A custom tweakable loops video player.
 - Reverse Timer
 - Beat / BPM mode and absolute Duration mode for the Timers  
 
-### Optional
+### Optional Modules
 - Presets management using **ofxSurfingPresets**.
-  - 9 Presets + Player Randomizer
 - External clock using **ofxBeatClock**.
-- Randomizer / MOOD Machine using **ofxSurfingMoods**.
+- Mood Machine / Randomizer using **ofxSurfingMoods**.
+- OSC receiver to change presets using **ofxSurfingOsc**.
+- Post Fx shaders using **ofxSurfingFxPro**.
+- NDI sender using **ofxNDI**.
 
 ## Screenshot
 ![](readme_images/Capture.PNG)
