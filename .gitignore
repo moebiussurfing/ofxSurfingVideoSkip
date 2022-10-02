@@ -638,3 +638,5 @@ examples/3_example-AdvancedFull/bin/data/ofxSurfingVideoSkipofxSurfingPresets_Se
 *.ini
 *.wav
 *.mp3
+examples/1_video-Basic/enc_temp_folder/a9c174cae5928ca91539ab62e61f784/ofxSurfingVideoSkip.cpp
+examples/1_video-Basic/bin/imgui.ini

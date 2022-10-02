@@ -2968,7 +2968,6 @@ void ofxSurfingVideoSkip::draw_ImGui_Preview()
 
 		//TODO:
 		// https://github.com/ocornut/imgui/issues/5627#event-7303371114
-		// 
 		//float aspect_ratio = 1;
 		//float aspect_ratio = surfingPreview.fboPreview.getWidth() / surfingPreview.fboPreview.getHeight();
 		//float aspect_ratio = 16.0f / 9.0f;
@@ -3196,12 +3195,12 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 					ui.EndBlinkFrame(bBlink);
 
 					//TODO: WIP
-					///*
+					/*
 					if (ui.AddButton("Generate Thumbs", st))
 					{
 						doGenerateThumbnails();
 					}
-					//*/
+					*/
 
 					ui.AddSpacing();
 
