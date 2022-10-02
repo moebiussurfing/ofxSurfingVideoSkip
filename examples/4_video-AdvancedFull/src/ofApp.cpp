@@ -2,6 +2,8 @@
 
 //--------------------------------------------------------------
 void ofApp::setup() {
+	ofSetWindowTitle("4_video-AdvancedFull");
+
 	player.setup();
 }
 

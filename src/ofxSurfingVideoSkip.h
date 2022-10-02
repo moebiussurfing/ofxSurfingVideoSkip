@@ -59,7 +59,7 @@
 
 // MAIN
 // 
-//#define USE_MINIMAL_ofxSurfingVideoSkip
+#define USE_MINIMAL_ofxSurfingVideoSkip
  // -> Uncomment this above line to: 
 // Force and disable ALL the below optional add-ons / compatible modules. 
 // Then allows only the use of the MINIMAL CORE stuff of the add-on.
@@ -98,18 +98,19 @@
 // Will serve OSC/MIDI
 
 // -> 7. FX Pro
-#define USE_ofxSurfingFxPro
+//#define USE_ofxSurfingFxPro
 
 // -> 8. OSC Remote
-#define USE_ofxSurfingOsc
+//#define USE_ofxSurfingOsc
 
 // -> 9. NDI 
-#define USE_ofxNDI
+//#define USE_ofxNDI
 
 #endif // end of no minimal stuff
 
 //----------------------------------------------
 
+//#include "ofApp.h"
 
 // Core Stuff
 
@@ -118,7 +119,16 @@
 #include "ofxSurfingImGui.h"
 #include "WindowFbo.h"
 
-//-
+/*
+//#include "ofxSurfingHelpers.h"
+#define FONT_FILES_PATH "assets/fonts/"
+#define FONT_FILE_BIG "JetBrainsMonoNL-ExtraBold.ttf"
+#define FONT_FILE_SMALL "JetBrainsMono-Bold.ttf"
+#define FONT_SIZE_BIG 16
+#define FONT_SIZE_SMALL 10
+*/
+
+//--
 
 // Optional Stuff
 
@@ -175,6 +185,15 @@ class ofxSurfingVideoSkip
 	//--
 
 public:
+	
+	//TODO:
+	// https://github.com/ocornut/imgui/issues/5627#event-7303371114
+	static void AspectRatio(ImGuiSizeCallbackData* data) { 
+		float aspect_ratio = *(float*)data->UserData; 
+		data->DesiredSize.x = IM_MAX(data->CurrentSize.x, data->CurrentSize.y); 
+		data->DesiredSize.y = (float)(int)(data->DesiredSize.x / aspect_ratio);
+	}
+
 
 	//--------------------------------------------------------------
 	ofxSurfingVideoSkip()
@@ -380,8 +399,12 @@ public:
 	}
 
 	void doOpenDialogToSetPath();
+	void doGenerateThumbnails();
 
 private:
+	
+	ofTrueTypeFont font;
+	int fontSize = 30;//big
 
 	void setPath_GlobalFolder(std::string folder);//path for root container folder
 	std::string path_GLOBAL_Folder;//main folder where nested folder goes inside
@@ -527,8 +550,11 @@ private:
 private:
 
 	// video control bar size and margins
-	int BarInset = 10;
-	int BarHeight = 30;
+	int BarInset = 15;
+	int BarHeight = 25;
+	int BarAlpha = 128;
+	float BarRounded = 3.0f;
+
 
 public:
 

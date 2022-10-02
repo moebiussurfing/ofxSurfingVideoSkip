@@ -14,11 +14,8 @@
 	Then uncomment only these lines to enable the optional add-ons like i.e.:
 	#define USE_ofxSurfingPresets__VIDEO_SKIP
 	#define USE_ofxSurfingMoods
-	#define USE_ofxNDI
-	#define USE_ofxSurfingOsc
-	..
 
-	Let the other commented.
+	Let the other Optional Modules commented/disabled!
 
 	Anyway you can/should modify the addons.make and use the PROJECT GENERATOR
 	to enable the selected optional add-ons from the list.

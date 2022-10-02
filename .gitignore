@@ -634,3 +634,7 @@ examples/3_example-AdvancedFull/bin/data/ofxSurfingVideoSkip/ofxChannelFx/Preset
 examples/3_example-AdvancedFull/bin/data/ofxSurfingVideoSkipofxSurfingPresets_Settings.xml
 *.xml
 *.json
+*.jpg
+*.ini
+*.wav
+*.mp3
