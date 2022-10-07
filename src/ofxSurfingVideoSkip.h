@@ -175,9 +175,11 @@
 //----
 
 
+#define BAR_INSET 15
+#define BAR_HEIGHT 50
+
 #define SPEED_MIN 0.20f
 #define SPEED_MAX 50.0f
-
 
 //--------------------------------------------------------------
 class ofxSurfingVideoSkip
@@ -185,12 +187,15 @@ class ofxSurfingVideoSkip
 	//--
 
 public:
-	
+	ofDirectory dirThumbs;
+	vector<ofImage> imgThumbs;
+	void loadThumbs();
+
 	//TODO:
 	// https://github.com/ocornut/imgui/issues/5627#event-7303371114
-	static void AspectRatio(ImGuiSizeCallbackData* data) { 
-		float aspect_ratio = *(float*)data->UserData; 
-		data->DesiredSize.x = IM_MAX(data->CurrentSize.x, data->CurrentSize.y); 
+	static void AspectRatio(ImGuiSizeCallbackData* data) {
+		float aspect_ratio = *(float*)data->UserData;
+		data->DesiredSize.x = IM_MAX(data->CurrentSize.x, data->CurrentSize.y);
 		data->DesiredSize.y = (float)(int)(data->DesiredSize.x / aspect_ratio);
 	}
 
@@ -376,8 +381,8 @@ private:
 #else
 	std::vector<std::string> previewSources = { "Source" };
 #endif
-//#else
-//	std::vector<std::string> previewSources = { "Source" };
+	//#else
+	//	std::vector<std::string> previewSources = { "Source" };
 #endif
 
 	ofParameter<int> indexPreviewSource; // selector
@@ -402,7 +407,7 @@ public:
 	void doGenerateThumbnails();
 
 private:
-	
+
 	ofTrueTypeFont font;
 	int fontSize = 30;//big
 
@@ -550,8 +555,10 @@ private:
 private:
 
 	// video control bar size and margins
-	int BarInset = 15;
-	int BarHeight = 25;
+	//int BarInset = 15;
+	//int BarHeight = 25;
+	int BarHeight = BAR_HEIGHT;
+	int BarInset = BAR_INSET;
 	int BarAlpha = 128;
 	float BarRounded = 3.0f;
 
