@@ -2377,105 +2377,147 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 		{
 			ofPushStyle();
 
-			//-
-
-			// 5. draw thumbs
-			//TODO: make a cached fbo
-			if (imgThumbs.size() > 0)
-			{
-				float w = imgThumbs[0].getWidth();
-				float h = imgThumbs[0].getHeight();
-				float x = getBarRectangle().getTopLeft().x;
-				float y = getBarRectangle().getTopLeft().y;
-				for (int i = 0; i < (int)dirThumbs.size(); i++)
-				{
-					//border
-					ofNoFill();
-					ofSetLineWidth(5);
-					ofSetColor(ofColor::black, 128);
-					ofRectangle r(x, y, w, h);
-					ofDrawRectangle(r);
-					//ofDrawRectRounded(r, 2);
-
-					//thumb
-					ofFill();
-					ofSetColor(ofColor::white, 255);
-					imgThumbs[i].draw(x, y);
-					x += w;
-				}
-			}
-
-			//-
+			int yy = ofGetWindowHeight() - BarInset - BarHeight;
 
 			ofRectangle barFull = getBarRectangle();
 
-			ofRectangle barCurTime = getBarRectangle();
-			barCurTime.width = barFull.width * player.getPosition();
+			ofRectangle barLoopPre = getBarRectangle();
+			barLoopPre.width = barFull.width * position_In;
+
+			ofRectangle barLoopPost = getBarRectangle();
+			barLoopPost.translateX(barLoopPre.width + barFull.width * (position_Out - position_In));
+			barLoopPost.width = barFull.width * (1 - position_Out);
 
 			//// 2. Filled rectangle from time 0 to current time position
-			////ofDrawRectangle(barCurTime);
-			//ofDrawRectRounded(barCurTime, BarRounded);
+			////ofDrawRectangle(barLoopPre);
+			//ofDrawRectRounded(barLoopPre, BarRounded);
 
-			int yy = ofGetWindowHeight() - BarInset - BarHeight;
+			//--
+
+			// 5. draw thumbs
+			//TODO: make a cached fbo
+			static ofFbo fbo;
+			static bool bFboReady = false;
+			if (!bFboReady && imgThumbs.size() > 0) {
+				bFboReady = true;
+				fbo.allocate(barFull.getWidth(), barFull.getHeight());
+				fbo.begin();
+				ofClear(0, 255);
+
+				//if (imgThumbs.size() > 0)
+				{
+					float w = imgThumbs[0].getWidth();
+					float h = imgThumbs[0].getHeight();
+					float x = 0;
+					float y = 0;
+					//float x = getBarRectangle().getTopLeft().x;
+					//float y = getBarRectangle().getTopLeft().y;
+
+					for (int i = 0; i < (int)dirThumbs.size(); i++)
+					{
+						//border
+						ofSetLineWidth(6);//thumbs separator
+						ofSetColor(ofColor::black, 200);
+						ofNoFill();
+						ofRectangle r(x, y, w, h);
+						ofDrawRectangle(r);
+						//ofDrawRectRounded(r, 2);
+
+						//thumb
+						ofSetColor(ofColor::white, 255);
+						ofFill();
+						imgThumbs[i].draw(x, y);
+						x += w;
+					}
+				}
+				fbo.end();
+			}
+			if (bFboReady && imgThumbs.size() > 0)
+			{
+				float x = getBarRectangle().getTopLeft().x;
+				float y = getBarRectangle().getTopLeft().y;
+				fbo.draw(x, y);
+			}
+
+			//--
 
 			// 3. Loop clip
 			// Don't draw loop bar if loop not enable
 			if (bMODE_Loop)
 			{
 				//TODO; make inverted
-				// 3. Markers loop rectangle: from start to end
-				int padding = 2;
+
+				// 3. Markers loop rectangle: 
+				// from loop start to loop end
+				int padding = 0;
 				int pStart, pWidth;
 				pStart = BarInset + barFull.width * position_In;
 				pWidth = (BarInset + barFull.width * position_Out) - pStart;
-
-				ofFill();
-
-				// Mode zone
 				ofRectangle barLoop = ofRectangle(pStart, yy + padding, pWidth, BarHeight - padding * 2);
+
 				/*
-			ofSetColor(ofColor::white, BarAlpha);
+				ofFill();
+				// Mode zone
+				*/
+
+				/*
+				ofSetColor(ofColor::white, BarAlpha);
 				ofSetColor(ofColor(255), 192); // lighter grey
 				//ofSetColor(ofColor(64), 192); // darker grey
 				ofDrawRectangle(barLoop);
 				*/
 
 				// Mode inverted
+				/*
 				ofRectangle barNoLoopPre = ofRectangle(barFull.getTopLeft().x, yy + padding,
 					pStart, BarHeight - padding * 2);
 
 				ofRectangle barNoLoopPost = ofRectangle(barFull.getTopLeft().x + pWidth, yy + padding,
 					pStart, BarHeight - padding * 2);
+				*/
 
-				ofSetColor(ofColor(0), 128); // lighter dark
-				ofDrawRectangle(barNoLoopPre);
-				ofDrawRectangle(barNoLoopPost);
+				ofSetColor(ofColor(0), 164); // lighter dark
+				ofDrawRectangle(barLoopPre);
+				ofDrawRectangle(barLoopPost);
 
+				//--
 
 				// 3.2 Red line marks to start/end loop
+
 				if (bMODE_Edit)
 				{
+					///*
+					//if (bMODE_Edit)
+					{
+						//filled
+						float a = ofxSurfingHelpers::getFadeBlink(0.02, 0.20, 0.3);
+						//float a = ofxSurfingHelpers::getFadeBlink(0.40, 0.70, 0.3);
+						ofSetColor(ofColor(ofColor::red, 255 * a));
+						ofFill();
+						ofDrawRectangle(barLoop);
+					}
+					//*/
+
+					//border lines
 					ofNoFill();
 					ofSetLineWidth(2.0);
 					ofSetColor(ofColor::red);
 					ofDrawLine(pStart, yy + padding, pStart, yy + BarHeight - 1);
 					ofDrawLine(pStart + pWidth, yy + padding, pStart + pWidth, yy + BarHeight - 1);
-
-					float a = ofxSurfingHelpers::getFadeBlink(0.40, 0.70, 0.3);
-					//float a = ofxSurfingHelpers::getFadeBlink(0.40, 0.70, 0.3);
-					ofSetColor(ofColor(ofColor::red, 255 * a));
-					ofFill();
-					ofDrawRectangle(barLoop);
 				}
 			}
 
 			//-
 
+			///*
 			// 1. Border rect only. full video timeline
 			ofNoFill();
-			ofSetColor(ofColor::white, BarAlpha);
-			//ofDrawRectangle(barFull);
-			ofDrawRectRounded(barFull, BarRounded);
+			ofSetLineWidth(4.0);
+			ofSetColor(ofColor::black, 255);
+			//ofSetColor(ofColor::white, BarAlpha);
+			ofDrawRectangle(barFull);
+			//ofDrawRectRounded(barFull, BarRounded);
+			//*/
 
 			//-
 
@@ -2483,8 +2525,9 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 			ofNoFill();
 			ofSetColor(ofColor::red);
 			ofSetLineWidth(4.0);
-			float posTime = barCurTime.width + BarInset;
-			int padding = 4;
+			//float posTime = barLoopPre.width + BarInset;
+			float posTime = BarInset + barFull.width * player.getPosition();
+			int padding = 0;
 			ofDrawLine(posTime, yy - padding, posTime, yy + BarHeight + padding);
 
 			ofPopStyle();
@@ -2741,7 +2784,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 			moods.controlManual = p;
 #endif
 			return;
-		}
+}
 
 		if (_name == "VALUE_" + ofToString(2)) // bpm
 		{
@@ -2980,21 +3023,21 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 
 								// draw progress bar
 								ui.Add(timer_SkipRev, OFX_IM_PROGRESS_BAR_NO_TEXT);
-						}
+							}
 
 							ui.EndTree();
-					}
+						}
 						ui.refreshLayout();
-			}
+					}
 
 				ui.AddSpacingSeparated();
 
 				ui.Add(bDoResetEngine, OFX_IM_BUTTON_SMALL);
-		}
+			}
 
 			ui.EndWindow();
+		}
 	}
-}
 }
 
 //--------------------------------------------------------------
@@ -3318,9 +3361,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 #endif
 #endif
-					}
+		}
 					ui.Unindent();
-				}
+	}
 
 			// expanded
 			if (!ui.bMinimize)
@@ -3359,10 +3402,10 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						ui.Indent();
 						ui.Add(surfingPreview.bGui_Extra, OFX_IM_TOGGLE_BUTTON_ROUNDED_MINI);
 						ui.Unindent();
-					}
+						}
 					ui.Unindent();
+					}
 				}
-			}
 
 			//--
 
@@ -3589,7 +3632,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 					}
 				}
-				}
+			}
 
 			//--
 
@@ -3646,9 +3689,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			*/
 
 			ui.EndWindow();
-					}
-				}
-				}
+			}
+}
+		}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui()
@@ -3732,7 +3775,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 #ifdef USE_ofxSurfingFxPro
 	fxPro.drawGui();
 #endif
-}
+	}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::doOpenDialogToSetPath()
@@ -3800,9 +3843,9 @@ void ofxSurfingVideoSkip::doGenerateThumbnails()
 	int h = BarHeight;
 	int w = BarHeight * _ratio;
 
-	//to fill bar
+	// amount of thumbs to fill the bar
 	float wf = getBarRectangle().getWidth();
-	int amount = wf / w;
+	int _amount = wf / w;
 
 	someCmd.clear();
 	someCmd << "ffmpeg -i ";
@@ -3815,12 +3858,13 @@ void ofxSurfingVideoSkip::doGenerateThumbnails()
 	someCmd << "-vf ";
 	someCmd << "\"select='not(mod(n,";
 
-	int _fps = player.getTotalNumFrames() / player.getDuration();
-	int _amtmod = amount * (player.getTotalNumFrames() / _fps);
+	//int _fps = player.getTotalNumFrames() / player.getDuration();
+	int _amountMod = player.getTotalNumFrames() / _amount;
 
 	//one still per second
 	//someCmd << "30";
-	someCmd << ofToString(_fps / 2);
+	someCmd << ofToString(_amountMod);
+	//someCmd << ofToString(_fps);
 
 	someCmd << "))',setpts='N/(30*TB)'\" ";
 	someCmd << "-f image2 ";
