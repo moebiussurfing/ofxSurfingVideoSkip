@@ -2397,37 +2397,59 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 			// 5. draw thumbs
 			//TODO: make a cached fbo
 			static ofFbo fbo;
-			static bool bFboReady = false;
-			if (!bFboReady && imgThumbs.size() > 0) {
+			//static bool bFboReady = false;
+			if (!bFboReady && imgThumbs.size() > 0)
+			{
 				bFboReady = true;
 				fbo.allocate(barFull.getWidth(), barFull.getHeight());
 				fbo.begin();
 				ofClear(0, 255);
 
-				//if (imgThumbs.size() > 0)
 				{
 					float w = imgThumbs[0].getWidth();
 					float h = imgThumbs[0].getHeight();
 					float x = 0;
 					float y = 0;
-					//float x = getBarRectangle().getTopLeft().x;
-					//float y = getBarRectangle().getTopLeft().y;
 
-					for (int i = 0; i < (int)dirThumbs.size(); i++)
+					int _amount = getBarRectangle().getWidth() / w;
+					float wEmpty = getBarRectangle().getWidth() - (_amount * w);
+					float thumbGap = wEmpty / _amount;
+
+					//for (int i = 0; i < (int)dirThumbs.size(); i++)
+					for (int i = 0; i < (int)dirThumbs.size() - 1; i++)//TODO: workaround fix to ignore last extra thumb!
 					{
-						//border
+						/*
+						// border
 						ofSetLineWidth(6);//thumbs separator
 						ofSetColor(ofColor::black, 200);
 						ofNoFill();
 						ofRectangle r(x, y, w, h);
 						ofDrawRectangle(r);
 						//ofDrawRectRounded(r, 2);
+						*/
 
-						//thumb
+						// thumb
 						ofSetColor(ofColor::white, 255);
 						ofFill();
 						imgThumbs[i].draw(x, y);
 						x += w;
+
+						if (bFit)
+						{
+							if (i == (int)dirThumbs.size() - 2) break;//last
+
+							// video aspect ratio
+							float _w = player.getWidth();
+							float _h = player.getHeight();
+							float _ratio = _w / _h;
+
+							// thumb size
+							float h = BarHeight;
+							float w = BarHeight * _ratio;
+
+							//x += 10;
+							x += thumbGap;
+						}
 					}
 				}
 				fbo.end();
@@ -2486,22 +2508,25 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 
 				if (bMODE_Edit)
 				{
-					///*
-					//if (bMODE_Edit)
-					{
-						//filled
-						float a = ofxSurfingHelpers::getFadeBlink(0.02, 0.20, 0.3);
-						//float a = ofxSurfingHelpers::getFadeBlink(0.40, 0.70, 0.3);
-						ofSetColor(ofColor(ofColor::red, 255 * a));
-						ofFill();
-						ofDrawRectangle(barLoop);
-					}
-					//*/
+					ofColor c;
 
-					//border lines
+					// filled 
+					float a2 = ofMap(player.getPosition(), position_In, position_Out, 1.00, 0.00, true);
+					//float a = ofMap(player.getPosition(), position_In, position_Out, 0.40, 0.00, true);
+					float a = ofxSurfingHelpers::getFadeBlink(0.02, 0.40, 0.5);
+					//float a = ofxSurfingHelpers::getFadeBlink(0.40, 0.70, 0.3);
+					//a *= a2;
+					c = ofColor(ofColor::red, 255 * a * a2);
+					ofSetColor(c);
+					ofFill();
+					ofDrawRectangle(barLoop);
+
+					// in/out border lines
 					ofNoFill();
 					ofSetLineWidth(2.0);
-					ofSetColor(ofColor::red);
+					c = ofColor(ofColor::red, 255 * ofMap(a * a2, 0.2, 0.4, 0.4, 0.8, true));
+					ofSetColor(c);
+					//ofSetColor(ofColor::red);
 					ofDrawLine(pStart, yy + padding, pStart, yy + BarHeight - 1);
 					ofDrawLine(pStart + pWidth, yy + padding, pStart + pWidth, yy + BarHeight - 1);
 				}
@@ -2510,9 +2535,10 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 			//-
 
 			///*
-			// 1. Border rect only. full video timeline
+			// 1. Border rect only.
+			// full video timeline
 			ofNoFill();
-			ofSetLineWidth(4.0);
+			ofSetLineWidth(3.0f);
 			ofSetColor(ofColor::black, 255);
 			//ofSetColor(ofColor::white, BarAlpha);
 			ofDrawRectangle(barFull);
@@ -2527,7 +2553,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 			ofSetLineWidth(4.0);
 			//float posTime = barLoopPre.width + BarInset;
 			float posTime = BarInset + barFull.width * player.getPosition();
-			int padding = 0;
+			int padding = 1;
 			ofDrawLine(posTime, yy - padding, posTime, yy + BarHeight + padding);
 
 			ofPopStyle();
@@ -2614,7 +2640,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 		if (ss.size() > 0) _path = ss[0];
 		ofStringReplace(_path, "\"", "");
 		presetsManager.setPathPresets(_path);
-	}
+}
 #endif
 
 	if (!bLoaded)
@@ -2784,7 +2810,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 			moods.controlManual = p;
 #endif
 			return;
-}
+		}
 
 		if (_name == "VALUE_" + ofToString(2)) // bpm
 		{
@@ -3306,13 +3332,10 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 					}
 					ui.EndBlinkFrame(bBlink);
 
-					//TODO: WIP
-					///*
 					if (ui.AddButton("Generate Thumbs", st))
 					{
 						doGenerateThumbnails();
 					}
-					//*/
 
 					ui.AddSpacing();
 
@@ -3361,9 +3384,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 #endif
 #endif
-		}
+					}
 					ui.Unindent();
-	}
+				}
 
 			// expanded
 			if (!ui.bMinimize)
@@ -3402,10 +3425,10 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						ui.Indent();
 						ui.Add(surfingPreview.bGui_Extra, OFX_IM_TOGGLE_BUTTON_ROUNDED_MINI);
 						ui.Unindent();
-						}
-					ui.Unindent();
 					}
+					ui.Unindent();
 				}
+			}
 
 			//--
 
@@ -3426,6 +3449,12 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 				___w2 = ui.getWidgetsWidth(2);
 
 				ofxImGuiSurfing::AddBigToggleNamed(bPlay, ___w1, 3.0f * ___h, "PLAYING", "PLAY", true);
+
+				if (!ui.bMinimize)
+				{
+					ui.AddSpacing();
+					ui.Add(bMODE_Edit, OFX_IM_TOGGLE_MEDIUM_BORDER);
+				}
 
 				ui.AddSpacingSeparated();
 
@@ -3449,7 +3478,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 					presetsManager.draw_ImGui_ClickerSimple(bHeader, bMinimal, bShowMinimize, bNoExtras);
 
 					ui.AddSpacingSeparated();
-				}
+			}
 #endif
 				//--
 
@@ -3501,20 +3530,34 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 				{
 					// In / Out 
 
-					ui.AddLabelBig("IN > OUT", false, true);
+					string s;
+					if (!bMODE_Beat)s = "IN > OUT";
+					else s = "IN > DURATION";
+					ui.AddLabelBig(s, false, true);
+
 					ui.Add(position_In, OFX_IM_HSLIDER_MINI_NO_LABELS);
+					s = "Mark In";
+					ui.AddTooltip(s);
 
 					if (!bMODE_Beat)
 					{
 						ui.Add(position_Out, OFX_IM_HSLIDER_MINI_NO_LABELS);
+						s = "Mark Out";
+						ui.AddTooltip(s);
 
 						//ui.Add(position_Out);
 					}
 					else
 					{
+						/*
 						ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 						ui.Add(position_Out, OFX_IM_HSLIDER_MINI_NO_LABELS);
 						ImGui::PopItemFlag();
+						*/
+
+						ui.Add(beatDuration, OFX_IM_HSLIDER_MINI_NO_NAME);
+						s = "Beats Duration";
+						ui.AddTooltip(s);
 
 						//ui.Add(position_Out, OFX_IM_INACTIVE);
 					}
@@ -3529,14 +3572,19 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 				if (bMODE_Loop)
 				{
 					ui.Add(bMODE_Beat, OFX_IM_TOGGLE_MEDIUM);
-					string s = bMODE_Beat ? "Out Mark is settled \nas beat duration" : "Out Mark can be \nmanually settled";
+					string s = bMODE_Beat ?
+						"Out Mark is settled \nby Beats Duration" : "Out Mark can be \nmanually settled";
 					ui.AddTooltip(s);
 					//ui.AddSpacing();
 
 					if (bMODE_Beat)
 					{
-						ui.Add(beatDuration, OFX_IM_SLIDER);
-						if (!ui.bMinimize) ui.Add(beatRescale, OFX_IM_STEPPER);
+						//ui.Add(beatDuration, OFX_IM_SLIDER);
+						if (!ui.bMinimize) {
+							ui.Add(beatRescale, OFX_IM_STEPPER);
+							s = "Beat Scale";
+							ui.AddTooltip(s);
+						}
 					}
 
 					ui.AddSpacingSeparated();
@@ -3547,7 +3595,11 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 				// Loop / Reverse
 
 				ui.Add(bMODE_LoopedBack, OFX_IM_TOGGLE_MEDIUM, 2, true);
+				s = "Alternate Direction";
+				ui.AddTooltip(s);
 				ui.Add(bMODE_Reversed, OFX_IM_TOGGLE_MEDIUM, 2);
+				s = "Direction";
+				ui.AddTooltip(s);
 				ui.AddSpacingSeparated();
 
 				//--
@@ -3632,19 +3684,13 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 					}
 				}
-			}
+		}
 
 			//--
 
 			if (bMODE_Loop)
 			{
 				ui.AddSpacingSeparated();
-
-				if (!ui.bMinimize)
-				{
-					ui.Add(bMODE_Edit, OFX_IM_TOGGLE_BIG_BORDER_BLINK);
-					ui.AddSpacing();
-				}
 
 				ui.Add(bDoResetAll, OFX_IM_BUTTON_SMALL);
 			}
@@ -3689,9 +3735,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			*/
 
 			ui.EndWindow();
-			}
+	}
 }
-		}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui()
@@ -3775,7 +3821,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 #ifdef USE_ofxSurfingFxPro
 	fxPro.drawGui();
 #endif
-	}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::doOpenDialogToSetPath()
@@ -3810,72 +3856,89 @@ void ofxSurfingVideoSkip::doGenerateThumbnails()
 {
 	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__);
 
-
-	//string path = videoName.get() + "_thumbs/+" + videoName.get() + ".jpg";
-	string s = videoName.get();
-	auto ss = ofSplitString(s, "\"", true, true);
-	string ss1 = ss[0];
-	auto ss2 = ofSplitString(ss1, ".mov", true, true);
-	string _name = ss2[0];
-	string _root = _name + "_thumbs/";
+	bFboReady = false;
 
 	//--
 
 	// A. FFMPEG script
 	// https://ottverse.com/thumbnails-screenshots-using-ffmpeg/
 	// create the command
-	//std::ostringstream someCmd;
-	std::stringstream someCmd;
+	std::string someCmd;
 
-	/*
-	someCmd.clear();
-	someCmd << "mkdir thumbs";
-	cout << ofSystem(someCmd.str().c_str()) << endl;
+	// OF_APP/bin/data/thumbs
 
-	someCmd.clear();
-	someCmd << "cd thumbs";
-	cout << ofSystem(someCmd.str().c_str()) << endl;
-	*/
+	// remove if exists
+	auto pathData = ofToDataPath("thumbs/", true);
+	someCmd = "rmdir /s /q " + pathData;
+	doRunCommand(someCmd);
 
+	// create dir
+	someCmd = "mkdir data\\thumbs";
+	doRunCommand(someCmd);
+
+	//--
+
+	// video aspect ratio
 	float _w = player.getWidth();
 	float _h = player.getHeight();
 	float _ratio = _w / _h;
-	int h = BarHeight;
-	int w = BarHeight * _ratio;
+
+	// thumb size
+	float h = BarHeight;
+	float w = BarHeight * _ratio;
 
 	// amount of thumbs to fill the bar
-	float wf = getBarRectangle().getWidth();
-	int _amount = wf / w;
+	int _amount = getBarRectangle().getWidth() / w;
+	//_amount -= 1;
+	cout << "amount of thumbs: " << _amount << endl << endl;
 
-	someCmd.clear();
-	someCmd << "ffmpeg -i ";
-	someCmd << videoFilePath.get() << " ";
+	//--
 
-	//size
-	//someCmd << "-s 320x240 ";
-	someCmd << "-s " << ofToString(w) << "x" << ofToString(h) << " ";
+	// build the command
+	someCmd = "ffmpeg -i ";
+	someCmd += videoFilePath.get() + " ";//source video
 
-	someCmd << "-vf ";
-	someCmd << "\"select='not(mod(n,";
+	// size
+	//someCmd += "-s 320x240 ";
+	someCmd += "-s " + ofToString(int(w)) + "x" + ofToString(int(h)) + " ";
 
-	//int _fps = player.getTotalNumFrames() / player.getDuration();
-	int _amountMod = player.getTotalNumFrames() / _amount;
+	someCmd += "-vf ";
+	someCmd += "\"select='not(mod(n,";
 
-	//one still per second
+	// Amount of thumbs
+
+	// A
+	// one still per second at 30 fps
 	//someCmd << "30";
-	someCmd << ofToString(_amountMod);
+	//int _fps = player.getTotalNumFrames() / player.getDuration();
 	//someCmd << ofToString(_fps);
 
-	someCmd << "))',setpts='N/(30*TB)'\" ";
-	someCmd << "-f image2 ";
-	//someCmd << "\\data\\thumbs\\";//folder fail
-	someCmd << "thumb_%02d.jpg";//files
+	// B
+	int _amountMod = player.getTotalNumFrames() / _amount;
+	//int _amountMod = (player.getTotalNumFrames()) / (_amount+1);
+	//int _amountMod = (player.getTotalNumFrames()) / (_amount-1);
 
-	// Log
-	cout << endl << someCmd << endl << endl;
+	//if(!bFit) _amountMod -= 1;
+	_amountMod -= 1;
+	//_amountMod += 1;
 
-	// Run!
-	cout << ofSystem(someCmd.str().c_str()) << endl;
+	//if (bFit) {
+	//	float widthExpect = getBarRectangle().getWidth() - (_amount * w);
+	//	thumbGap = widthExpect / _amount;
+	//}
+
+	cout << "num frames: " << player.getTotalNumFrames() << endl << endl;
+	cout << "amount mod: " << _amountMod << endl << endl;
+
+	someCmd += ofToString(_amountMod);
+	someCmd += "))',setpts='N/(30*TB)'\" ";
+	someCmd += "-f image2 ";
+	someCmd += pathData + "thumb_%02d.jpg";//files
+
+	// Log & Run!
+	doRunCommand(someCmd);
+
+	//--
 
 	/*
 #ifdef TARGET_WIN32
@@ -3893,6 +3956,7 @@ void ofxSurfingVideoSkip::doGenerateThumbnails()
 	//--
 
 	// B. Internal
+	// extracting thumbs using ofxHapPlayer API
 	/*
 	//player.stop();
 	player.play();
@@ -3950,7 +4014,7 @@ void ofxSurfingVideoSkip::doGenerateThumbnails()
 
 	//--
 
-	// Load thumbs
+	// Load thumbs to images
 	loadThumbs();
 }
 

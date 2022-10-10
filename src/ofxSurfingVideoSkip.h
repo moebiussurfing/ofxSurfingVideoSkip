@@ -190,6 +190,8 @@ public:
 	ofDirectory dirThumbs;
 	vector<ofImage> imgThumbs;
 	void loadThumbs();
+	//float thumbGap=0;
+	bool bFit = true;
 
 	//TODO:
 	// https://github.com/ocornut/imgui/issues/5627#event-7303371114
@@ -405,6 +407,11 @@ public:
 
 	void doOpenDialogToSetPath();
 	void doGenerateThumbnails();
+	void doRunCommand(string s) {
+		cout << (s) << endl<< endl;
+		cout << ofSystem(s) << endl;
+	};
+	bool bFboReady = false;
 
 private:
 
