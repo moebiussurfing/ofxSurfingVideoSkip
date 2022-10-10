@@ -262,14 +262,12 @@ private:
 private:
 
 	// Keys
+	bool mod_CONTROL;
+	bool mod_ALT;
 
 	void keyPressed(ofKeyEventArgs& eventArgs);
-	void keyReleased(ofKeyEventArgs& eventArgs) {
-		const int& key = eventArgs.key;
-#ifdef USE_ofxSurfingFxPro
-		fxPro.keyReleased(key);
-#endif
-	};
+	void keyReleased(ofKeyEventArgs& eventArgs);
+
 	void addKeysListeners();
 	void removeKeysListeners();
 

@@ -355,8 +355,8 @@ void ofxSurfingVideoSkip::setup()
 	last_TRIG_reverse = 0;
 
 	// Exclude
-	bMODE_Loop.setSerializable(false);
-	bMODE_Edit.setSerializable(false);
+	bMODE_Loop.setSerializable(false);//forced true
+	//bMODE_Edit.setSerializable(false);
 	speed.setSerializable(false);
 	timer_SkipTime.setSerializable(false);
 	timer_SkipRev.setSerializable(false);
@@ -930,21 +930,30 @@ void ofxSurfingVideoSkip::updateConstraints()
 	{
 		// maintain start must be before finish
 
-		// set a minim loop duration
-		if (position_In == position_Out) {
-			position_Out += kickSizeFrame;
-		}
+		//// set a minim loop duration
+		//if (position_In == position_Out)
+		//{
+		//	position_Out += kickSizeFrame;
+		//}
 
 		// flip if inverted
-		// if (position_In > position_Out) {
+		// if (position_In > position_Out) 
+		// {
 		//	float temp = position_Out;
 		//	position_In = position_Out;
 		//	position_Out = temp;
 		//}
 
+		//// force if inverted
+		//if (position_In > position_Out) 
+		//{
+		//	position_In = position_Out;
+		//}
+
 		// force if inverted
-		if (position_In > position_Out) {
-			position_In = position_Out;
+		if (position_In >= position_Out)
+		{
+			position_In = position_Out - kickSizeFrame;
 		}
 	}
 }
@@ -1397,26 +1406,45 @@ void ofxSurfingVideoSkip::mouseRefreshPressed(int button, float position)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::mouseScrolled(ofMouseEventArgs& eventArgs)
 {
-	if (bActive)
+	if (bActive && bGui_VideoBarControl)
 	{
 		const int& x = eventArgs.x;
 		const int& y = eventArgs.y;
 		const int& sy = eventArgs.scrollY;
 
 		ofRectangle bar = getBarRectangle();
+
 		if (!bar.inside(x, y)) return;
+
 		cout << "scroll: " << sy << endl;
 
 		if (bMODE_Edit)
 		{
-			if (bMODE_Beat) {
+			if (!mod_CONTROL)
+			{
+				if (bMODE_Beat)
+				{
+					if (sy < 0) {
+						beatDuration--;
+						beatDuration = ofClamp(beatDuration, beatDuration.getMin(), beatDuration.getMax());
+					}
+					else if (sy > 0) {
+						beatDuration++;
+						beatDuration = ofClamp(beatDuration, beatDuration.getMin(), beatDuration.getMax());
+					}
+				}
+			}
+			else
+			{
+				float step = mod_ALT ? 0.001f : 0.020f;
+
 				if (sy < 0) {
-					beatDuration--;
-					beatDuration = ofClamp(beatDuration, beatDuration.getMin(), beatDuration.getMax());
+					position_In -= step;
+					position_Out -= step;
 				}
 				else if (sy > 0) {
-					beatDuration++;
-					beatDuration = ofClamp(beatDuration, beatDuration.getMin(), beatDuration.getMax());
+					position_In += step;
+					position_Out += step;
 				}
 			}
 		}
@@ -1426,7 +1454,7 @@ void ofxSurfingVideoSkip::mouseScrolled(ofMouseEventArgs& eventArgs)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::mouseDragged(ofMouseEventArgs& eventArgs)
 {
-	if (bActive)
+	if (bActive && bGui_VideoBarControl)
 	{
 		const int& x = eventArgs.x;
 		const int& y = eventArgs.y;
@@ -1510,7 +1538,7 @@ void ofxSurfingVideoSkip::mouseDragged(ofMouseEventArgs& eventArgs)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::mousePressed(ofMouseEventArgs& eventArgs)
 {
-	if (bActive)
+	if (bActive && bGui_VideoBarControl)
 	{
 		const int& x = eventArgs.x;
 		const int& y = eventArgs.y;
@@ -1580,7 +1608,7 @@ void ofxSurfingVideoSkip::mousePressed(ofMouseEventArgs& eventArgs)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::mouseReleased(ofMouseEventArgs& eventArgs)
 {
-	if (bActive)
+	if (bActive && bGui_VideoBarControl)
 	{
 		const int& x = eventArgs.x;
 		const int& y = eventArgs.y;
@@ -1657,9 +1685,9 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "'" << (char)key << "' \t\t[" << key << "]";
 
 	// Modifiers
+	mod_CONTROL = eventArgs.hasModifier(OF_KEY_CONTROL);
+	mod_ALT = eventArgs.hasModifier(OF_KEY_ALT);
 	bool mod_COMMAND = eventArgs.hasModifier(OF_KEY_COMMAND);
-	bool mod_CONTROL = eventArgs.hasModifier(OF_KEY_CONTROL);
-	bool mod_ALT = eventArgs.hasModifier(OF_KEY_ALT);
 	bool mod_SHIFT = eventArgs.hasModifier(OF_KEY_SHIFT);
 
 	if (false)
@@ -1668,7 +1696,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "mod_CONTROL: " << (mod_CONTROL ? "ON" : "OFF");
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "mod_ALT: " << (mod_ALT ? "ON" : "OFF");
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "mod_SHIFT: " << (mod_SHIFT ? "ON" : "OFF");
-	}
+}
 
 	//--
 
@@ -1691,7 +1719,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 		if (key == ' ')
 		{
 			setPlay(!bPlay);
-		}
+	}
 
 #ifdef USE_ofxSurfingMoods
 		else if (key == OF_KEY_RETURN)
@@ -1816,7 +1844,24 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 		}
 
 		//--
-	}
+}
+}
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::keyReleased(ofKeyEventArgs& eventArgs)
+{
+	const int& key = eventArgs.key;
+	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "'" << (char)key << "' \t\t[" << key << "]";
+
+	// Modifiers
+	mod_CONTROL = eventArgs.hasModifier(OF_KEY_CONTROL);
+	mod_ALT = eventArgs.hasModifier(OF_KEY_ALT);
+	bool mod_COMMAND = eventArgs.hasModifier(OF_KEY_COMMAND);
+	bool mod_SHIFT = eventArgs.hasModifier(OF_KEY_SHIFT);
+
+#ifdef USE_ofxSurfingFxPro
+	fxPro.keyReleased(key);
+#endif
 }
 
 //--------------------------------------------------------------
@@ -1873,7 +1918,7 @@ void ofxSurfingVideoSkip::Changed_DONE_load(bool& DONE_load)
 
 		//// workflow
 		//if (!bMODE_Loop) bMODE_Loop = true;
-	}
+}
 }
 #endif
 
@@ -1935,16 +1980,20 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			{
 				position = position_In;
 			}
+
+			/*
 			if (!bPlay && !bMODE_Edit)
 			{
 				//bMODE_Edit = true;
 			}
+			*/
 		}
 
 		else if (name == position_Out.getName())
 		{
 			// constraint
-			if (position_In > position_Out) {
+			if (position_In > position_Out)
+			{
 				position_In = position_Out;
 			}
 
@@ -2009,7 +2058,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
 			}
-		}
+	}
 
 		//// loop
 		//else if (name == bMODE_Loop.getName())
@@ -2284,7 +2333,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		else if (name == bMODE_SkipLooped.getName())
 		{
 			bMODE_SkipPowered = !bMODE_SkipLooped.get();
-		}
+}
 		else if (name == bMODE_SkipPowered.getName())
 		{
 			bMODE_SkipLooped = !bMODE_SkipPowered.get();
@@ -2828,7 +2877,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 	if (bLoaded) {
 		doGenerateThumbs();
 	}
-}
+	}
 
 //--------------------------------------------------------------
 ofRectangle ofxSurfingVideoSkip::getBarRectangle() const
@@ -2980,7 +3029,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 			moods.controlManual = p;
 #endif
 			return;
-		}
+}
 
 		if (_name == "VALUE_" + ofToString(2)) // bpm
 		{
@@ -2988,7 +3037,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 			bpm.set(p);
 			return;
 		}
-	}
+}
 
 	//*/
 }
@@ -3234,7 +3283,7 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 			ui.EndWindow();
 		}
 	}
-}
+		}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui_Preview()
@@ -3554,9 +3603,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 #endif
 #endif
-					}
+		}
 					ui.Unindent();
-				}
+	}
 
 			// expanded
 			if (!ui.bMinimize)
@@ -3580,7 +3629,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 							if (bGui_VideoBarControl) ui.Add(bAutoHideVideoBar, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 
 							ui.Unindent();
-						}
+					}
 
 						// Source Selector
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
@@ -3595,10 +3644,10 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						ui.Indent();
 						ui.Add(surfingPreview.bGui_Extra, OFX_IM_TOGGLE_BUTTON_ROUNDED_MINI);
 						ui.Unindent();
-					}
-					ui.Unindent();
 				}
+					ui.Unindent();
 			}
+}
 
 			//--
 
@@ -3934,8 +3983,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			*/
 
 			ui.EndWindow();
-		}
 	}
+}
 }
 
 //--------------------------------------------------------------
@@ -4368,10 +4417,12 @@ void ofxSurfingVideoSkip::removeMouseListeners()
 void ofxSurfingVideoSkip::addKeysListeners()
 {
 	ofAddListener(ofEvents().keyPressed, this, &ofxSurfingVideoSkip::keyPressed);
+	ofAddListener(ofEvents().keyReleased, this, &ofxSurfingVideoSkip::keyReleased);
 }
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::removeKeysListeners()
 {
 	ofRemoveListener(ofEvents().keyPressed, this, &ofxSurfingVideoSkip::keyPressed);
+	ofRemoveListener(ofEvents().keyReleased, this, &ofxSurfingVideoSkip::keyReleased);
 }
