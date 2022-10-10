@@ -926,15 +926,33 @@ void ofxSurfingVideoSkip::calculateKick()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::updateConstraints()
 {
+	//return;
+
 	//if (!bMODE_Edit)
 	{
 		// maintain start must be before finish
+
+		// flip if inverted
+		if (position_In > position_Out)
+		{
+			float preIn = position_In;
+			position_In.setWithoutEventNotifications(position_Out);
+			position_Out.setWithoutEventNotifications(preIn);
+		}
 
 		//// set a minim loop duration
 		//if (position_In == position_Out)
 		//{
 		//	position_Out += kickSizeFrame;
 		//}
+
+		/*
+		// set a minim loop duration
+		if (position_In == position_Out)
+		{
+			position_Out += kickSizeFrame;
+		}
+		*/
 
 		// flip if inverted
 		// if (position_In > position_Out) 
@@ -949,12 +967,6 @@ void ofxSurfingVideoSkip::updateConstraints()
 		//{
 		//	position_In = position_Out;
 		//}
-
-		// force if inverted
-		if (position_In >= position_Out)
-		{
-			position_In = position_Out - kickSizeFrame;
-		}
 	}
 }
 
@@ -1027,6 +1039,9 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 	if (isPlaying)
 	{
 		//TODO: 
+		// WIP
+		// fix
+		
 		// Loop Engine
 		// workflow: added !bMODE_Edit to allow playing out of range loop
 		// but requires to improve workflow when playing preset with EDIT MODE enabled
@@ -1968,18 +1983,22 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 
 		else if (name == position_In.getName())
 		{
+			/*
 			// constraint
 			if (position_In > position_Out)
 			{
 				position_Out = position_In;
 			}
+			*/
 
+			/*
 			// workflow
-			//if (!bPlay /*&& bMODE_Edit*/)
+			//if (!bPlay)
 			if (bMODE_Edit)
 			{
 				position = position_In;
 			}
+			*/
 
 			/*
 			if (!bPlay && !bMODE_Edit)
@@ -2007,10 +2026,13 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 				player.setPosition(position);
 				bDISABLECALLBACKS = false;
 			}
+			
+			/*
 			if (!bPlay && !bMODE_Edit)
 			{
 				//bMODE_Edit = true;
 			}
+			*/
 		}
 
 		//--
