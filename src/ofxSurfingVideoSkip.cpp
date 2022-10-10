@@ -224,6 +224,7 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	params_AppSettings.add(bAutoHideVideoBar);
 	params_AppSettings.add(surfingPreview.params);
 	params_AppSettings.add(bGui_Main);
+	params_AppSettings.add(bMODE_Edit);
 }
 
 //--------------------------------------------------------------
@@ -799,6 +800,11 @@ void ofxSurfingVideoSkip::setup_ChannelFx()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::update(ofEventArgs& args)
 {
+	//TODO:
+	if (bError && ofGetFrameNum() == 60 * 4) {
+		doOpenDialogToSetPath();
+	}
+
 	//--
 
 	// Feed FxPro
@@ -810,7 +816,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 			draw_Video();
 		}
 		fxPro.end(false);
-	}
+}
 #endif
 
 	//--
@@ -1138,11 +1144,11 @@ void ofxSurfingVideoSkip::updateTimers()
 		}
 		else if (beatRescale > 0) // multiply
 		{
-			tDur = beatRescale * ((int)((60000.f / (float)bpm)) * beatDuration);//duration in ms. rescaled
+			tDur = (beatRescale + 1) * ((int)((60000.f / (float)bpm)) * beatDuration);//duration in ms. rescaled
 		}
 		else // divide // < 0
 		{
-			tDur = (1.0f / abs(beatRescale)) * ((int)((60000.f / (float)bpm)) * beatDuration);//duration in ms. rescaled
+			tDur = (1.0f / abs(beatRescale - 1)) * ((int)((60000.f / (float)bpm)) * beatDuration);//duration in ms. rescaled
 		}
 
 		float tDurN = (float)tDur / (float)videoDur; // duration in normalized decimals 
@@ -1183,7 +1189,7 @@ void ofxSurfingVideoSkip::updateTimers()
 		}
 
 		timer_SkipTime = MAX(0, t / (float)tmax);
-	}
+}
 
 	//--
 
@@ -1341,11 +1347,11 @@ void ofxSurfingVideoSkip::mouseMoved(ofMouseEventArgs& eventArgs)
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::mouseRefresh(int button, float position)
+void ofxSurfingVideoSkip::mouseRefreshPressed(int button, float position)
 {
 	if (bMODE_Edit)
 	{
-		if (button == 0)
+		if (button == 0)//left
 		{
 			// workflow A
 			position_In = position;
@@ -1361,17 +1367,59 @@ void ofxSurfingVideoSkip::mouseRefresh(int button, float position)
 			//	position_In = POSITION_Start_PRE;
 			//}
 		}
-		else if (button == 2)
+		else if (button == 1)//center
 		{
-			position_Out = position;
+		}
+		else if (button == 2)//right
+		{
+			if (!bMODE_Beat)
+			{
+				position_Out = position;
 
-			if (position_Out < position_In) position_In = position_Out;
+				if (position_Out < position_In) position_In = position_Out;
+			}
+			/*
+			else
+			{
+				scrubDragStart = position;
+				cout << "scrubDragStart:" << scrubDragStart << endl;
 
+			}
+			*/
 		}
 	}
 	else
 	{
 		position = position;
+	}
+}
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::mouseScrolled(ofMouseEventArgs& eventArgs)
+{
+	if (bActive)
+	{
+		const int& x = eventArgs.x;
+		const int& y = eventArgs.y;
+		const int& sy = eventArgs.scrollY;
+
+		ofRectangle bar = getBarRectangle();
+		if (!bar.inside(x, y)) return;
+		cout << "scroll: " << sy << endl;
+
+		if (bMODE_Edit)
+		{
+			if (bMODE_Beat) {
+				if (sy < 0) {
+					beatDuration--;
+					beatDuration = ofClamp(beatDuration, beatDuration.getMin(), beatDuration.getMax());
+				}
+				else if (sy > 0) {
+					beatDuration++;
+					beatDuration = ofClamp(beatDuration, beatDuration.getMin(), beatDuration.getMax());
+				}
+			}
+		}
 	}
 }
 
@@ -1401,7 +1449,7 @@ void ofxSurfingVideoSkip::mouseDragged(ofMouseEventArgs& eventArgs)
 
 			//--
 
-			mouseRefresh(button, _position);
+			mouseRefreshPressed(button, _position);
 
 			//--
 
@@ -1411,6 +1459,50 @@ void ofxSurfingVideoSkip::mouseDragged(ofMouseEventArgs& eventArgs)
 			//{
 			//	if (bMODE_Loop && !bMODE_Edit) bMODE_Loop = false;
 			//}
+
+			//--
+
+			//TODO: requires more work..
+			//we use mouse scroll by now.
+			/*
+			ofRectangle bar = getBarRectangle();
+
+			if (bar.inside(x, y))
+			{
+				if (bMODE_Edit)
+				{
+					if (button == 2)//right
+					{
+						if (bMODE_Beat)
+						{
+							// calculate
+							float _position = (x - BarInset) / getBarRectangle().width;
+							_position = ofClamp(_position, 0, 1);
+
+							scrubDragDelta = _position - scrubDragStart;
+							cout << "out           :" << _position << endl;
+							cout << "scrubDragDelta:" << scrubDragDelta << endl;
+							cout << endl;
+
+							float amnt = abs(scrubDragDelta);
+							float thresh = 0.1;
+
+							if (amnt > thresh)
+							{
+								if (scrubDragDelta < 0) {
+									beatDuration--;
+									beatDuration = ofClamp(beatDuration, beatDuration.getMin(), beatDuration.getMax());
+								}
+								else if (scrubDragDelta > 0) {
+									beatDuration++;
+									beatDuration = ofClamp(beatDuration, beatDuration.getMin(), beatDuration.getMax());
+								}
+							}
+						}
+					}
+				}
+			}
+			*/
 		}
 	}
 }
@@ -1425,6 +1517,7 @@ void ofxSurfingVideoSkip::mousePressed(ofMouseEventArgs& eventArgs)
 		const int& button = eventArgs.button;
 
 		ofRectangle bar = getBarRectangle();
+
 		if (bar.inside(x, y))
 		{
 			bool wasPlaying = bPlay;
@@ -1447,17 +1540,29 @@ void ofxSurfingVideoSkip::mousePressed(ofMouseEventArgs& eventArgs)
 			//--
 
 			// calculate
-			float _position = static_cast<float>(x - BarInset) / getBarRectangle().width;
-
-			// clamp
-			//_position = std::max(0.0f, std::min(_position, 1.0f));
+			//float _position = static_cast<float>(x - BarInset) / getBarRectangle().width;
+			float _position = (x - BarInset) / getBarRectangle().width;
 			_position = ofClamp(_position, 0, 1);
 
 			player.setPosition(_position);
 
 			//--
 
-			mouseRefresh(button, _position);
+			mouseRefreshPressed(button, _position);
+
+			//--
+
+			if (button == 2)//right
+			{
+				if (!bMODE_Beat)
+				{
+				}
+				else
+				{
+					scrubDragStart = _position;
+					cout << "scrubDragStart in  :" << scrubDragStart << endl;
+				}
+			}
 
 			//--
 
@@ -1489,6 +1594,44 @@ void ofxSurfingVideoSkip::mouseReleased(ofMouseEventArgs& eventArgs)
 			//player.setPaused(true);
 			//bPlay = false;
 			//player.setPaused(wasPaused);
+
+			/*
+			ofRectangle bar = getBarRectangle();
+
+			if (bar.inside(x, y))
+			{
+				if (bMODE_Edit)
+				{
+					if (button == 2)//right
+					{
+						if (!bMODE_Beat)
+						{
+
+						}
+						else
+						{
+							// calculate
+							float _position = (x - BarInset) / getBarRectangle().width;
+							_position = ofClamp(_position, 0, 1);
+
+							scrubDragDelta = _position - scrubDragStart;
+							cout << "out           :" << _position << endl;
+							cout << "scrubDragDelta:" << scrubDragDelta << endl;
+							cout << endl;
+
+							if (scrubDragDelta < 0) {
+								beatDuration--;
+								beatDuration = ofClamp(beatDuration, beatDuration.getMin(), beatDuration.getMax());
+							}
+							else if (scrubDragDelta > 0) {
+								beatDuration++;
+								beatDuration = ofClamp(beatDuration, beatDuration.getMin(), beatDuration.getMax());
+							}
+							}
+						}
+				}
+			}
+			*/
 		}
 	}
 }
@@ -1550,21 +1693,29 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 			setPlay(!bPlay);
 		}
 
+#ifdef USE_ofxSurfingMoods
 		else if (key == OF_KEY_RETURN)
 		{
-#ifdef USE_ofxSurfingMoods
 			bool b = !moods.isPlaying();
 			setPlay_MoodMachine(b);
 			setPlay(b);
-#endif
 		}
+#endif
 
 		//--
 
 		// Edit mode
-		else if (key == 'E')
+		else if (key == 'E' || key == 'e')
 		{
 			bMODE_Edit = !bMODE_Edit;
+		}
+
+		//--
+
+		// Beat mode
+		else if (key == 'B' || key == 'b')
+		{
+			bMODE_Beat = !bMODE_Beat;
 		}
 
 		//--
@@ -1666,7 +1817,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 
 		//--
 	}
-}
+	}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::dragEvent(ofDragInfo dragInfo) // drag video to load another one
@@ -1722,7 +1873,7 @@ void ofxSurfingVideoSkip::Changed_DONE_load(bool& DONE_load)
 
 		//// workflow
 		//if (!bMODE_Loop) bMODE_Loop = true;
-	}
+}
 }
 #endif
 
@@ -1851,14 +2002,14 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 				presetsManager.setEnableKeysArrowBrowse(false);
 #endif
-			}
+		}
 			else
 			{
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
 			}
-		}
+	}
 
 		//// loop
 		//else if (name == bMODE_Loop.getName())
@@ -2072,7 +2223,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			if (ss.size() > 0) _path = ss[0];
 			ofStringReplace(_path, "\"", "");
 			presetsManager.setPathPresets(_path);
-		}
+}
 #endif
 
 		//--
@@ -2146,7 +2297,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		bSyncRemote = true;
 		//remoteServer.syncParameters();//hangs
 #endif
-	}
+		}
 }
 
 //--------------------------------------------------------------
@@ -2388,6 +2539,10 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 			barLoopPost.translateX(barLoopPre.width + barFull.width * (position_Out - position_In));
 			barLoopPost.width = barFull.width * (1 - position_Out);
 
+			//clamp
+			barLoopPost.x = ofClamp(barLoopPost.x, BarInset, BarInset + barFull.width);
+			barLoopPost.width = ofClamp(barLoopPost.width, 0, barLoopPost.x + barFull.width);
+
 			//// 2. Filled rectangle from time 0 to current time position
 			////ofDrawRectangle(barLoopPre);
 			//ofDrawRectRounded(barLoopPre, BarRounded);
@@ -2461,20 +2616,40 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 				fbo.draw(x, y);
 			}
 
+			//-
+
+			///*
+			// 1. Border rect only.
+			// full video timeline
+			ofNoFill();
+			ofSetLineWidth(3.0f);
+			ofSetColor(ofColor::black, 255);
+			//ofSetColor(ofColor::white, BarAlpha);
+			ofDrawRectangle(barFull);
+			//ofDrawRectRounded(barFull, BarRounded);
+			//*/
+
 			//--
 
 			// 3. Loop clip
+			// 
 			// Don't draw loop bar if loop not enable
 			if (bMODE_Loop)
 			{
 				//TODO; make inverted
 
 				// 3. Markers loop rectangle: 
+				// 
 				// from loop start to loop end
 				int padding = 0;
 				int pStart, pWidth;
+
 				pStart = BarInset + barFull.width * position_In;
 				pWidth = (BarInset + barFull.width * position_Out) - pStart;
+
+				pStart = ofClamp(pStart, BarInset, BarInset + barFull.width);
+				pWidth = ofClamp(pWidth, 0, (BarInset + barFull.width) - pStart);
+
 				ofRectangle barLoop = ofRectangle(pStart, yy + padding, pWidth, BarHeight - padding * 2);
 
 				/*
@@ -2498,7 +2673,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 					pStart, BarHeight - padding * 2);
 				*/
 
-				ofSetColor(ofColor(0), 164); // lighter dark
+				ofSetColor(ofColor(0), 200); // dark
 				ofDrawRectangle(barLoopPre);
 				ofDrawRectangle(barLoopPost);
 
@@ -2524,7 +2699,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 					// in/out border lines
 					ofNoFill();
 					ofSetLineWidth(2.0);
-					c = ofColor(ofColor::red, 255 * ofMap(a * a2, 0.2, 0.4, 0.4, 0.8, true));
+					c = ofColor(ofColor::red, 255 * ofMap(a * a2, 0., 1., 0.5, 1.0, true));
 					ofSetColor(c);
 					//ofSetColor(ofColor::red);
 					ofDrawLine(pStart, yy + padding, pStart, yy + BarHeight - 1);
@@ -2534,25 +2709,13 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 
 			//-
 
-			///*
-			// 1. Border rect only.
-			// full video timeline
-			ofNoFill();
-			ofSetLineWidth(3.0f);
-			ofSetColor(ofColor::black, 255);
-			//ofSetColor(ofColor::white, BarAlpha);
-			ofDrawRectangle(barFull);
-			//ofDrawRectRounded(barFull, BarRounded);
-			//*/
-
-			//-
-
 			// 4. Red line for current video player time
 			ofNoFill();
 			ofSetColor(ofColor::red);
 			ofSetLineWidth(4.0);
 			//float posTime = barLoopPre.width + BarInset;
 			float posTime = BarInset + barFull.width * player.getPosition();
+			posTime = ofClamp(posTime, BarInset, BarInset + barFull.width);
 			int padding = 1;
 			ofDrawLine(posTime, yy - padding, posTime, yy + BarHeight + padding);
 
@@ -2574,11 +2737,13 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 
 		if (player.getError().length())
 		{
+			bError = true;
 			ofxSurfingHelpers::drawTextBoxed(font, "MUST PICK A VIDEO FILE!", 20, 40, c);
 			//ofDrawBitmapStringHighlight(player.getError(), 20, 20);
 		}
 		else
 		{
+			bError = false;
 			ofxSurfingHelpers::drawTextBoxed(font, "LOADING VIDEO FILE...", 20, 40, c);
 			//ofDrawBitmapStringHighlight("MOVIE IS LOADING...", 20, 20);
 		}
@@ -2640,7 +2805,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 		if (ss.size() > 0) _path = ss[0];
 		ofStringReplace(_path, "\"", "");
 		presetsManager.setPathPresets(_path);
-}
+	}
 #endif
 
 	if (!bLoaded)
@@ -2658,7 +2823,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 
 	//TODO; 
 	if (bLoaded) loadThumbs();
-	}
+}
 
 //--------------------------------------------------------------
 ofRectangle ofxSurfingVideoSkip::getBarRectangle() const
@@ -2817,8 +2982,8 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 			ofLogNotice("ofxSurfingVideoSkip") << "Value 2 > BPM " << ofToString(p, 2);
 			bpm.set(p);
 			return;
-		}
 }
+	}
 
 	//*/
 }
@@ -3425,10 +3590,10 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						ui.Indent();
 						ui.Add(surfingPreview.bGui_Extra, OFX_IM_TOGGLE_BUTTON_ROUNDED_MINI);
 						ui.Unindent();
-					}
+						}
 					ui.Unindent();
+					}
 				}
-			}
 
 			//--
 
@@ -3684,7 +3849,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 					}
 				}
-		}
+			}
 
 			//--
 
@@ -3735,8 +3900,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			*/
 
 			ui.EndWindow();
+		}
 	}
-}
 }
 
 //--------------------------------------------------------------
@@ -3821,7 +3986,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 #ifdef USE_ofxSurfingFxPro
 	fxPro.drawGui();
 #endif
-}
+	}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::doOpenDialogToSetPath()
@@ -3829,7 +3994,7 @@ void ofxSurfingVideoSkip::doOpenDialogToSetPath()
 	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "Set presets path";
 
 	// Open the Open File Dialog
-	std::string str = "Select vdieo file. Must be enconded in HAP codec!\n";
+	std::string str = "Select video file. Must be enconded in HAP codec! Example: myVideo.mov\n";
 	ofFileDialogResult openFileResult = ofSystemLoadDialog(str, false);
 
 	// Check if the user opened a file
@@ -4152,6 +4317,7 @@ void ofxSurfingVideoSkip::addMouseListeners()
 	ofAddListener(ofEvents().mouseDragged, this, &ofxSurfingVideoSkip::mouseDragged);
 	ofAddListener(ofEvents().mousePressed, this, &ofxSurfingVideoSkip::mousePressed);
 	ofAddListener(ofEvents().mouseReleased, this, &ofxSurfingVideoSkip::mouseReleased);
+	ofAddListener(ofEvents().mouseScrolled, this, &ofxSurfingVideoSkip::mouseScrolled);
 }
 
 //--------------------------------------------------------------
@@ -4161,6 +4327,7 @@ void ofxSurfingVideoSkip::removeMouseListeners()
 	ofRemoveListener(ofEvents().mouseDragged, this, &ofxSurfingVideoSkip::mouseDragged);
 	ofRemoveListener(ofEvents().mousePressed, this, &ofxSurfingVideoSkip::mousePressed);
 	ofRemoveListener(ofEvents().mouseReleased, this, &ofxSurfingVideoSkip::mouseReleased);
+	ofRemoveListener(ofEvents().mouseScrolled, this, &ofxSurfingVideoSkip::mouseScrolled);
 }
 
 //--------------------------------------------------------------

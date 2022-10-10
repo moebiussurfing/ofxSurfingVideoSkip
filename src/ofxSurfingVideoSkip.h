@@ -176,7 +176,8 @@
 
 
 #define BAR_INSET 15
-#define BAR_HEIGHT 50
+#define BAR_HEIGHT 40
+//#define BAR_HEIGHT 50
 
 #define SPEED_MIN 0.20f
 #define SPEED_MAX 50.0f
@@ -192,6 +193,8 @@ public:
 	void loadThumbs();
 	//float thumbGap=0;
 	bool bFit = true;
+
+	bool bError = false;
 
 	//TODO:
 	// https://github.com/ocornut/imgui/issues/5627#event-7303371114
@@ -276,7 +279,8 @@ private:
 	void mousePressed(ofMouseEventArgs& eventArgs);
 	void mouseReleased(ofMouseEventArgs& eventArgs);
 	void mouseMoved(ofMouseEventArgs& eventArgs);
-	void mouseRefresh(int button, float position);
+	void mouseScrolled(ofMouseEventArgs& eventArgs);
+	void mouseRefreshPressed(int button, float position);
 	void addMouseListeners();
 	void removeMouseListeners();
 
@@ -556,6 +560,8 @@ private:
 	int time_autoHide = 2500;
 	bool inScrub;
 	bool ENABLE_AutoHide_external = false;
+	float scrubDragStart;
+	float scrubDragDelta;
 
 	//--
 
