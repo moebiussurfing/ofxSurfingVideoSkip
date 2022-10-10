@@ -410,7 +410,7 @@ public:
 	}
 
 	void doOpenDialogToSetPath();
-	void doGenerateThumbnails();
+	void doGenerateThumbs();
 	void doRunCommand(string s) {
 		cout << (s) << endl<< endl;
 		cout << ofSystem(s) << endl;
