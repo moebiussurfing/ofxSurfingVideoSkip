@@ -1,6 +1,6 @@
 <h1 align="center">
   <br>
-  **ofxSurfingVideoSkip**
+  ofxSurfingVideoSkip
   <br>
 </h1>
 
