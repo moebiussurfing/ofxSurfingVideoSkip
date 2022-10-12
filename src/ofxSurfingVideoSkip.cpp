@@ -2763,7 +2763,14 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 					float a = ofxSurfingHelpers::getFadeBlink(0.02, 0.40, 0.5);
 					//float a = ofxSurfingHelpers::getFadeBlink(0.40, 0.70, 0.3);
 					//a *= a2;
+					//if (!bPlay) a = a2 = 1;
+					
+					/*
+					if (!bPlay) c = ofColor(ofColor::red, 255 * a * a2);
+					else c = ofColor(ofColor::red, 255 * 0.02 * a2);
+					*/
 					c = ofColor(ofColor::red, 255 * a * a2);
+
 					ofSetColor(c);
 					ofFill();
 					ofDrawRectangle(barLoop);
@@ -2771,7 +2778,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 					// in/out border lines
 					ofNoFill();
 					ofSetLineWidth(2.0);
-					c = ofColor(ofColor::red, 255 * ofMap(a * a2, 0., 1., 0.5, 1.0, true));
+					c = ofColor(ofColor::red, 255 * ofMap(a * a2, 0., 1., 0.4, 1.0, true));
 					ofSetColor(c);
 					//ofSetColor(ofColor::red);
 					ofDrawLine(pStart, yy + padding, pStart, yy + BarHeight - 1);

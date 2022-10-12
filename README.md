@@ -1,5 +1,14 @@
 # ofxSurfingVideoSkip
 
+<h4 align="center">A custom, experimental and personal **Video Loops Player Engine**.</h4>
+<h5 align="center">A custom, experimental and personal **Video Loops Player Engine**.</h5>
+
+<p align="center">
+  <a href="#Overview">Overview</a> •
+  <a href="#Core-Features">Core Features</a> •
+  <a href="#Optional-Modules">Optional Modules</a>
+</p>
+
 ### **WIP**
 
 ## Overview
