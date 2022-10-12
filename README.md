@@ -1,7 +1,11 @@
-# ofxSurfingVideoSkip
+<h1 align="center">
+  <br>
+  **ofxSurfingVideoSkip**
+  <br>
+</h1>
 
 <h4 align="center">A custom, experimental and personal **Video Loops Player Engine**.</h4>
-<h5 align="center">A custom, experimental and personal **Video Loops Player Engine**.</h5>
+<h5 align="center">Hap codec player for fast scrub.</h5>
 
 <p align="center">
   <a href="#Overview">Overview</a> •
