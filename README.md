@@ -4,12 +4,15 @@
   <br>
 </h1>
 
-<h4 align="center">A custom, experimental and personal **Video Loops Player Engine**.</h4>
-<h5 align="center">Hap codec player for fast scrub.</h5>
+<h4 align="center">Video Loops Player Engine</h4>
+<h5 align="center">Custom, experimental and personal</h5>
+<h6 align="center">Hap codec player for Fast Scrub and Skip Timers.</h6>
 
 <p align="center">
-  <a href="#Overview">Overview</a> •
-  <a href="#Core-Features">Core Features</a> •
+  <a href="#Overview">Overview</a> • 
+  <a href="#Core-Features">Core Features</a> • 
+  <a href="#Screenshot">Screenshot</a> • 
+  <a href="#Dependencies">Dependencies</a> • 
   <a href="#Optional-Modules">Optional Modules</a>
 </p>
 
@@ -31,14 +34,6 @@ A custom, experimental and personal **Video Loops Player Engine**.
 ## Screenshot
 ![](readme_images/Capture.PNG)
 
-### Optional Modules
-- Presets management using **ofxSurfingPresets**.
-- Mood Machine / Randomizer using **ofxSurfingMoods**.
-- OSC receiver to change presets using **ofxSurfingOsc**.
-- NDI sender using **ofxNDI**.
-- Post Fx shaders using **ofxSurfingFxPro**.
-- External clock using **ofxBeatClock**.
-
 ## Dependencies
 - [ofxHapPlayer](https://github.com/bangnoise/ofxHapPlayer)
 - [ofxSurfingImGui](https://github.com/moebiussurfing/ofxSurfingImGui)
@@ -46,6 +41,14 @@ A custom, experimental and personal **Video Loops Player Engine**.
 - [ofxSurfingBox](https://github.com/moebiussurfing/ofxSurfingBox)
 - [ofxSurfingHelpers](https://github.com/moebiussurfing/ofxSurfingHelpers)
 - ofxGui / oF core
+
+### Optional Modules
+- Presets management using **ofxSurfingPresets**.
+- Mood Machine / Randomizer using **ofxSurfingMoods**.
+- OSC receiver to change presets using **ofxSurfingOsc**.
+- NDI sender using **ofxNDI**.
+- Post Fx shaders using **ofxSurfingFxPro**.
+- External clock using **ofxBeatClock**.
 
 #### Optional Add-ons / Compatible Modules:
 Can be disabled / enabled using directives.  
