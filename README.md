@@ -1,3 +1,5 @@
+# **WIP**
+
 <h1 align="center">
   <br>
   ofxSurfingVideoSkip
@@ -15,8 +17,6 @@
   <a href="#Dependencies">Dependencies</a> • 
   <a href="#Optional-Modules">Optional Modules</a>
 </p>
-
-### **WIP**
 
 ## Overview
 A custom, experimental and personal **Video Loops Player Engine**.  
