@@ -765,6 +765,18 @@ void ofxSurfingVideoSkip::startup()
 
 	//--
 
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+
+	pathSubs = "subs/Huxley.srt";
+	//pathSubs = "subs/Alphaville.srt";
+	//pathSubs = "subs/spanish.srt";
+
+	subs.setDisableGuiInternal(true);
+	subs.setup(pathSubs);
+#endif
+
+	//--
+
 	position = position_In;
 }
 
@@ -826,8 +838,16 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 	surfingPreview.begin();
 	{
 		// unprocessed video
-		if (indexPreviewSource == 0) player.draw(0, 0);
+		if (indexPreviewSource == 0)
+		{
+			player.draw(0, 0);
 
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+			subs.drawRaw();
+#endif
+		}
+
+		//--
 #ifdef USE_ofxSurfingFxPro
 		// processed video
 		else if (indexPreviewSource == 1) fxPro.draw();
@@ -842,6 +862,10 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 	// Player
 
 	updateVideoPlayer();
+
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+	subs.update();
+#endif
 
 	//--
 
@@ -1041,7 +1065,7 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 		//TODO: 
 		// WIP
 		// fix
-		
+
 		// Loop Engine
 		// workflow: added !bMODE_Edit to allow playing out of range loop
 		// but requires to improve workflow when playing preset with EDIT MODE enabled
@@ -1319,6 +1343,12 @@ void ofxSurfingVideoSkip::draw_Gui()
 
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
 	mMidiParams.draw();
+#endif
+
+	//--
+
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+	subs.drawGui();
 #endif
 
 	//--
@@ -1711,7 +1741,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "mod_CONTROL: " << (mod_CONTROL ? "ON" : "OFF");
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "mod_ALT: " << (mod_ALT ? "ON" : "OFF");
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "mod_SHIFT: " << (mod_SHIFT ? "ON" : "OFF");
-}
+	}
 
 	//--
 
@@ -1734,7 +1764,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 		if (key == ' ')
 		{
 			setPlay(!bPlay);
-	}
+		}
 
 #ifdef USE_ofxSurfingMoods
 		else if (key == OF_KEY_RETURN)
@@ -1859,7 +1889,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 		}
 
 		//--
-}
+	}
 }
 
 //--------------------------------------------------------------
@@ -1933,7 +1963,7 @@ void ofxSurfingVideoSkip::Changed_DONE_load(bool& DONE_load)
 
 		//// workflow
 		//if (!bMODE_Loop) bMODE_Loop = true;
-}
+	}
 }
 #endif
 
@@ -2026,7 +2056,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 				player.setPosition(position);
 				bDISABLECALLBACKS = false;
 			}
-			
+
 			/*
 			if (!bPlay && !bMODE_Edit)
 			{
@@ -2080,7 +2110,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
 			}
-	}
+		}
 
 		//// loop
 		//else if (name == bMODE_Loop.getName())
@@ -2355,7 +2385,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		else if (name == bMODE_SkipLooped.getName())
 		{
 			bMODE_SkipPowered = !bMODE_SkipLooped.get();
-}
+		}
 		else if (name == bMODE_SkipPowered.getName())
 		{
 			bMODE_SkipLooped = !bMODE_SkipPowered.get();
@@ -2584,6 +2614,12 @@ void ofxSurfingVideoSkip::draw_Video()
 				ofSetColor(255, 255, 255, 255);
 				player.draw(r.x, r.y, r.width, r.height);
 			}
+
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+			subs.draw(r);
+#endif
+
+			//--
 		}
 		ofPopStyle();
 	}
@@ -2764,7 +2800,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 					//float a = ofxSurfingHelpers::getFadeBlink(0.40, 0.70, 0.3);
 					//a *= a2;
 					//if (!bPlay) a = a2 = 1;
-					
+
 					/*
 					if (!bPlay) c = ofColor(ofColor::red, 255 * a * a2);
 					else c = ofColor(ofColor::red, 255 * 0.02 * a2);
@@ -2906,7 +2942,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 	if (bLoaded) {
 		doGenerateThumbs();
 	}
-	}
+}
 
 //--------------------------------------------------------------
 ofRectangle ofxSurfingVideoSkip::getBarRectangle() const
@@ -3058,7 +3094,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 			moods.controlManual = p;
 #endif
 			return;
-}
+		}
 
 		if (_name == "VALUE_" + ofToString(2)) // bpm
 		{
@@ -3066,7 +3102,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 			bpm.set(p);
 			return;
 		}
-}
+	}
 
 	//*/
 }
@@ -3132,24 +3168,28 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	ui.addWindowSpecial(ndi.bGui);
 #endif
 
-	//ui.addWindowSpecial(surfingPreview.bGui_Extra);
+	//#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+	//	ui.addWindowSpecial(subs.bGui);
+	//#endif
 
-	//--
+		//ui.addWindowSpecial(surfingPreview.bGui_Extra);
 
-	// -> 2. Extra Params to include into Layout Presets
+		//--
 
-	//// Preview
-	////ui.addExtraParamToLayoutPresets(surfingPreview.getParameters());//group
-	//ui.addExtraParamToLayoutPresets(surfingPreview.bGui);
-	//ui.addExtraParamToLayoutPresets(surfingPreview.bGui_PreviewBig);
-	////ui.addExtraParamToLayoutPresets(surfingPreview.bFullScreen);
-	//ui.addExtraParamToLayoutPresets(bGui_VideoBarControl);
+		// -> 2. Extra Params to include into Layout Presets
 
-	//// Other
-	//ui.addExtraParamToLayoutPresets(ui.bMinimize);
-	//ui.addExtraParamToLayoutPresets(bGui_SkipTimers);
+		//// Preview
+		////ui.addExtraParamToLayoutPresets(surfingPreview.getParameters());//group
+		//ui.addExtraParamToLayoutPresets(surfingPreview.bGui);
+		//ui.addExtraParamToLayoutPresets(surfingPreview.bGui_PreviewBig);
+		////ui.addExtraParamToLayoutPresets(surfingPreview.bFullScreen);
+		//ui.addExtraParamToLayoutPresets(bGui_VideoBarControl);
 
-	////ui.addExtraParamToLayoutPresets(presetsManager.playerSurfer.bGui);
+		//// Other
+		//ui.addExtraParamToLayoutPresets(ui.bMinimize);
+		//ui.addExtraParamToLayoutPresets(bGui_SkipTimers);
+
+		////ui.addExtraParamToLayoutPresets(presetsManager.playerSurfer.bGui);
 
 #ifdef USE_ofxSurfingOsc
 	ui.addExtraParamToLayoutPresets(oscHelper.bGui_Plots);
@@ -3312,7 +3352,7 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 			ui.EndWindow();
 		}
 	}
-		}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui_Preview()
@@ -3593,6 +3633,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 					}
 					ui.EndBlinkText(bBlink);
 
+					//--
+
 					ui.EndTree();
 				}
 
@@ -3610,7 +3652,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			};
 
 			// minimized
-			if (ui.bMinimize)
+			if (ui.bMinimize) {
 				if (bGui_Previews)
 				{
 					ui.AddSpacing();
@@ -3632,13 +3674,14 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 #endif
 #endif
-		}
+					}
 					ui.Unindent();
-	}
+				}
+			}
 
 			// expanded
-			if (!ui.bMinimize)
-			{
+			//if (!ui.bMinimize)
+			else {
 				if (bGui_Previews)
 				{
 					ui.Indent();
@@ -3658,7 +3701,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 							if (bGui_VideoBarControl) ui.Add(bAutoHideVideoBar, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 
 							ui.Unindent();
-					}
+						}
 
 						// Source Selector
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
@@ -3673,10 +3716,17 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						ui.Indent();
 						ui.Add(surfingPreview.bGui_Extra, OFX_IM_TOGGLE_BUTTON_ROUNDED_MINI);
 						ui.Unindent();
-				}
+					}
 					ui.Unindent();
+				}
 			}
-}
+
+			//--
+
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+			ui.AddSpacingSeparated();
+			ui.Add(subs.bGui, OFX_IM_TOGGLE_BUTTON_ROUNDED);
+#endif
 
 			//--
 
@@ -4012,8 +4062,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			*/
 
 			ui.EndWindow();
+		}
 	}
-}
 }
 
 //--------------------------------------------------------------
@@ -4056,6 +4106,33 @@ void ofxSurfingVideoSkip::draw_ImGui()
 			// Timers
 			if (bGui_SkipTimers) draw_ImGui_SkipTimers();
 		}
+
+		//--
+
+		// Subtitles
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+		if (subs.bGui)
+		{
+			//IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
+			if (ui.BeginWindow(subs.bGui))
+			{
+				//ui.AddGroup(subs.params);
+
+				if (!ui.bMinimize) {
+					ui.Add(subs.bDraw, OFX_IM_TOGGLE_ROUNDED_SMALL);
+					ui.Add(subs.bPlay, OFX_IM_TOGGLE);
+					ui.Add(subs.bAuto, OFX_IM_TOGGLE);
+					if (subs.bAuto) {
+						ui.Add(subs.speedAuto);
+					}
+					ui.Add(subs.bDebug, OFX_IM_TOGGLE_ROUNDED_MINI);
+				}
+				ui.AddGroup(subs.params_Style);
+
+				ui.EndWindow();
+			}
+		}
+#endif
 
 		//--
 

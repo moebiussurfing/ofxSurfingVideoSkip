@@ -57,6 +57,8 @@
 //
 //	OPTIONAL DEFINES
 
+#define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+
 // MAIN
 // 
 #define USE_MINIMAL_ofxSurfingVideoSkip
@@ -172,6 +174,10 @@
 #include "ofxSurfingOsc.h"
 #endif
 
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+#include "ofxSurfingTextSubtitle.h"
+#endif
+
 //----
 
 
@@ -186,6 +192,12 @@
 class ofxSurfingVideoSkip
 {
 	//--
+
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+public:
+	ofxSurfingTextSubtitle subs;
+	string pathSubs;
+#endif
 
 public:
 	ofDirectory dirThumbs;
