@@ -773,6 +773,7 @@ void ofxSurfingVideoSkip::startup()
 
 	subs.setDisableGuiInternal(true);
 	subs.setup(pathSubs);
+	subs.setUiPtr(&ui);
 #endif
 
 	//--
@@ -1348,9 +1349,9 @@ void ofxSurfingVideoSkip::draw_Gui()
 
 	//--
 
-#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
-	subs.drawGui();
-#endif
+//#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+//	subs.drawGui();
+//#endif
 
 	//--
 
@@ -3173,24 +3174,24 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	//	ui.addWindowSpecial(subs.bGui);
 	//#endif
 
-		//ui.addWindowSpecial(surfingPreview.bGui_Extra);
+	//ui.addWindowSpecial(surfingPreview.bGui_Extra);
 
-		//--
+	//--
 
-		// -> 2. Extra Params to include into Layout Presets
+	// -> 2. Extra Params to include into Layout Presets
 
-		//// Preview
-		////ui.addExtraParamToLayoutPresets(surfingPreview.getParameters());//group
-		//ui.addExtraParamToLayoutPresets(surfingPreview.bGui);
-		//ui.addExtraParamToLayoutPresets(surfingPreview.bGui_PreviewBig);
-		////ui.addExtraParamToLayoutPresets(surfingPreview.bFullScreen);
-		//ui.addExtraParamToLayoutPresets(bGui_VideoBarControl);
+	//// Preview
+	////ui.addExtraParamToLayoutPresets(surfingPreview.getParameters());//group
+	//ui.addExtraParamToLayoutPresets(surfingPreview.bGui);
+	//ui.addExtraParamToLayoutPresets(surfingPreview.bGui_PreviewBig);
+	////ui.addExtraParamToLayoutPresets(surfingPreview.bFullScreen);
+	//ui.addExtraParamToLayoutPresets(bGui_VideoBarControl);
 
-		//// Other
-		//ui.addExtraParamToLayoutPresets(ui.bMinimize);
-		//ui.addExtraParamToLayoutPresets(bGui_SkipTimers);
+	//// Other
+	//ui.addExtraParamToLayoutPresets(ui.bMinimize);
+	//ui.addExtraParamToLayoutPresets(bGui_SkipTimers);
 
-		////ui.addExtraParamToLayoutPresets(presetsManager.playerSurfer.bGui);
+	////ui.addExtraParamToLayoutPresets(presetsManager.playerSurfer.bGui);
 
 #ifdef USE_ofxSurfingOsc
 	ui.addExtraParamToLayoutPresets(oscHelper.bGui_Plots);
@@ -3580,7 +3581,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 	if (bGui_Main)
 	{
-		IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
+		//IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
+		ofxImGuiSurfing::SetWindowContraintsWidth(200);
 
 		if (ui.BeginWindow(bGui_Main))
 		{
@@ -4110,30 +4112,9 @@ void ofxSurfingVideoSkip::draw_ImGui()
 
 		//--
 
-//		// Subtitles
+		// Subtitles
 #ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
 		subs.drawImGui();
-//		if (subs.bGui)
-//		{
-//			//IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
-//			if (ui.BeginWindow(subs.bGui))
-//			{
-//				//ui.AddGroup(subs.params);
-//
-//				if (!ui.bMinimize) {
-//					ui.Add(subs.bDraw, OFX_IM_TOGGLE_ROUNDED_SMALL);
-//					ui.Add(subs.bPlay, OFX_IM_TOGGLE);
-//					ui.Add(subs.bAuto, OFX_IM_TOGGLE);
-//					if (subs.bAuto) {
-//						ui.Add(subs.speedAuto);
-//					}
-//					ui.Add(subs.bDebug, OFX_IM_TOGGLE_ROUNDED_MINI);
-//				}
-//				ui.AddGroup(subs.params_Style);
-//
-//				ui.EndWindow();
-//			}
-//		}
 #endif
 
 		//--

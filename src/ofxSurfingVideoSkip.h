@@ -59,7 +59,7 @@
 
 // MAIN
 // 
-//#define USE_MINIMAL_ofxSurfingVideoSkip
+#define USE_MINIMAL_ofxSurfingVideoSkip
  // -> Uncomment this above line to: 
 // Force and disable ALL the below optional add-ons / compatible modules. 
 // Then allows only the use of the MINIMAL CORE stuff of the add-on.
@@ -108,6 +108,8 @@
 
 // -> 10. Subtitler
 #define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+
+//--
 
 #endif // end of no minimal stuff
 
