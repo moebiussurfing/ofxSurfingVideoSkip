@@ -344,9 +344,9 @@ void ofxSurfingVideoSkip::setup()
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
 #if defined(USE_ofxSurfingFxChannel) || defined(USE_ofxSurfingFxPro) 
 	indexPreviewSource.set("Source Preview", 0, 0, previewSources.size() - 1);
-#endif
 #else
 	indexPreviewSource.set("Source Preview", 0, 0, 0);
+#endif
 #endif
 
 	//-
@@ -848,6 +848,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 		}
 
 		//--
+
 #ifdef USE_ofxSurfingFxPro
 		// processed video
 		else if (indexPreviewSource == 1) fxPro.draw();
@@ -4109,29 +4110,30 @@ void ofxSurfingVideoSkip::draw_ImGui()
 
 		//--
 
-		// Subtitles
+//		// Subtitles
 #ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
-		if (subs.bGui)
-		{
-			//IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
-			if (ui.BeginWindow(subs.bGui))
-			{
-				//ui.AddGroup(subs.params);
-
-				if (!ui.bMinimize) {
-					ui.Add(subs.bDraw, OFX_IM_TOGGLE_ROUNDED_SMALL);
-					ui.Add(subs.bPlay, OFX_IM_TOGGLE);
-					ui.Add(subs.bAuto, OFX_IM_TOGGLE);
-					if (subs.bAuto) {
-						ui.Add(subs.speedAuto);
-					}
-					ui.Add(subs.bDebug, OFX_IM_TOGGLE_ROUNDED_MINI);
-				}
-				ui.AddGroup(subs.params_Style);
-
-				ui.EndWindow();
-			}
-		}
+		subs.drawImGui();
+//		if (subs.bGui)
+//		{
+//			//IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
+//			if (ui.BeginWindow(subs.bGui))
+//			{
+//				//ui.AddGroup(subs.params);
+//
+//				if (!ui.bMinimize) {
+//					ui.Add(subs.bDraw, OFX_IM_TOGGLE_ROUNDED_SMALL);
+//					ui.Add(subs.bPlay, OFX_IM_TOGGLE);
+//					ui.Add(subs.bAuto, OFX_IM_TOGGLE);
+//					if (subs.bAuto) {
+//						ui.Add(subs.speedAuto);
+//					}
+//					ui.Add(subs.bDebug, OFX_IM_TOGGLE_ROUNDED_MINI);
+//				}
+//				ui.AddGroup(subs.params_Style);
+//
+//				ui.EndWindow();
+//			}
+//		}
 #endif
 
 		//--

@@ -57,11 +57,9 @@
 //
 //	OPTIONAL DEFINES
 
-#define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
-
 // MAIN
 // 
-#define USE_MINIMAL_ofxSurfingVideoSkip
+//#define USE_MINIMAL_ofxSurfingVideoSkip
  // -> Uncomment this above line to: 
 // Force and disable ALL the below optional add-ons / compatible modules. 
 // Then allows only the use of the MINIMAL CORE stuff of the add-on.
@@ -77,12 +75,12 @@
 //
 // -> 1A. Simple Presets
 // -> Recommended! for GUI integration
-#define USE_ofxSurfingPresets__VIDEO_SKIP 
+//#define USE_ofxSurfingPresets__VIDEO_SKIP 
 // -> 1B. Power Presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
 // -> 2. Mood Machine
-#define USE_ofxSurfingMoods 
+//#define USE_ofxSurfingMoods 
 
 // -> 3. Beat Clock
 //#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
@@ -107,6 +105,9 @@
 
 // -> 9. NDI 
 //#define USE_ofxNDI
+
+// -> 10. Subtitler
+#define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
 
 #endif // end of no minimal stuff
 
