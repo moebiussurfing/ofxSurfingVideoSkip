@@ -468,6 +468,13 @@ void ofxSurfingVideoSkip::setup()
 
 	//--
 
+	params_Audio.add(volumeAudio);
+	params_Audio.add(positionAudio);
+	params_Audio.add(path_Audio);
+	playerAudio.setVolume(volumeAudio);
+
+	//--
+
 	// Presets Manager 
 
 	setup_Preset();
@@ -758,7 +765,6 @@ void ofxSurfingVideoSkip::startup()
 
 	player.setLoopState(OF_LOOP_NORMAL);
 	player.setVolume(0.0f);
-
 	// Workflow
 	// Skip black intro
 	//player.setPosition(0.05);
@@ -817,6 +823,8 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 	if (bError && ofGetFrameNum() == 60 * 4) {
 		doOpenDialogToSetPath();
 	}
+
+	ofSoundUpdate();
 
 	//--
 
@@ -2941,9 +2949,12 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 	//--
 
 	//TODO; 
-	if (bLoaded) {
+#ifdef AUTO_GENERATE_THUMBS_ON_LOADING
+	if (bLoaded)
+	{
 		doGenerateThumbs();
 	}
+#endif
 }
 
 //--------------------------------------------------------------

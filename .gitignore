@@ -700,3 +700,4 @@ examples/addons/ofxGui/src/ofxBaseGui.nativecodeanalysis.sarif
 examples/addons/ofxFontStash/src/ofxFontStash.nativecodeanalysis.sarif
 examples/addons/ofxFontStash/libs/fontstash/src/stb_truetype.nativecodeanalysis.sarif
 examples/addons/ofxFontStash/libs/fontstash/src/fontstash.nativecodeanalysis.sarif
+examples/1_video-Basic/bin/imgui.ini

@@ -59,7 +59,7 @@
 
 // MAIN
 // 
-#define USE_MINIMAL_ofxSurfingVideoSkip
+//#define USE_MINIMAL_ofxSurfingVideoSkip
  // -> Uncomment this above line to: 
 // Force and disable ALL the below optional add-ons / compatible modules. 
 // Then allows only the use of the MINIMAL CORE stuff of the add-on.
@@ -106,9 +106,11 @@
 // -> 9. NDI 
 //#define USE_ofxNDI
 
-// -> 10. Subtitler
+// -> 10. SRT subtitler
 #define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
-
+// Requires to un comment on ofxSurfingTextSubtitle.h:
+//#define USE_IM_GUI__SUBTITLES 
+ 
 //--
 
 #endif // end of no minimal stuff
@@ -123,6 +125,8 @@
 #include "ofxInteractiveRect.h"
 #include "ofxSurfingImGui.h"
 #include "WindowFbo.h"
+
+//#define AUTO_GENERATE_THUMBS_ON_LOADING
 
 /*
 //#include "ofxSurfingHelpers.h"
@@ -562,6 +566,16 @@ private:
 	ofxHapPlayer player;
 	uint64_t lastMovement;
 	bool wasPaused;
+
+	//--
+
+	// Audio
+	ofSoundPlayer  playerAudio;
+	void loadAudio(std::string movie);
+	ofParameterGroup params_Audio{ "AUDIO" };
+	ofParameter<float> volumeAudio{ "Volume", 0.5, 0, 1 };
+	ofParameter<float> positionAudio{ "Position", 0, 0, 1 };
+	ofParameter <string> path_Audio{ "Path", "" };
 
 	//--
 
