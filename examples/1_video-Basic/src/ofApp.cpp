@@ -10,6 +10,13 @@ void ofApp::setup()
 }
 
 //--------------------------------------------------------------
+void ofApp::update()
+{
+	string s = ofToString(ofGetFrameRate(), 0) + " Fps";
+	ofSetWindowTitle(s);
+}
+
+//--------------------------------------------------------------
 void ofApp::windowResized(int w, int h) {
 	player.windowResized(w, h);
 }

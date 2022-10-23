@@ -8,6 +8,10 @@
 
 /*
 
+	IDEAS:
+	mark some word with another color
+ 
+
 	TODO:
 
 	UI:
@@ -108,8 +112,9 @@
 
 // -> 10. SRT subtitler
 #define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
-// Requires to un comment on ofxSurfingTextSubtitle.h:
-//#define USE_IM_GUI__SUBTITLES 
+// Requires to un comment on ofxSurfingTextSubtitle.h: #define USE_IM_GUI__SUBTITLES 
+ 
+//#define USE_SOUND_PLAYER_STAND_ALONE
  
 //--
 
@@ -127,15 +132,6 @@
 #include "WindowFbo.h"
 
 //#define AUTO_GENERATE_THUMBS_ON_LOADING
-
-/*
-//#include "ofxSurfingHelpers.h"
-#define FONT_FILES_PATH "assets/fonts/"
-#define FONT_FILE_BIG "JetBrainsMonoNL-ExtraBold.ttf"
-#define FONT_FILE_SMALL "JetBrainsMono-Bold.ttf"
-#define FONT_SIZE_BIG 16
-#define FONT_SIZE_SMALL 10
-*/
 
 //--
 
@@ -198,13 +194,30 @@
 //--------------------------------------------------------------
 class ofxSurfingVideoSkip
 {
+
+private:
+	ofSoundStreamSettings outSettings;
+	ofSoundStream outStream;
+	std::vector<ofSoundDevice> outDevices;
+	void setup_Audio();
+
 	//--
 
 #ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
 public:
 	ofxSurfingTextSubtitle subs;
 	string pathSubs;
+	//--------------------------------------------------------------
+	void refreshTimerPlayForced() 
+	{
+		//TODO: pass time to subtitler
+		auto t = ((60000 / bpmDivider.get()) / (bpm.get()));
+		//auto t  = divBeatSkipper.get() * ((60000 / bpmDivider.get()) / (bpm.get()));
+		subs.durationPlayForced = t;
+	}
 #endif
+
+	//--
 
 public:
 	ofDirectory dirThumbs;
@@ -457,6 +470,7 @@ private:
 #endif
 
 	//----
+	ofParameter<bool>bTheme{"Theme", false};
 
 public:
 
@@ -569,13 +583,17 @@ private:
 
 	//--
 
+	ofParameter<float> volumeVideo{ "Volume", 0.5, 0, 1 };
+
 	// Audio
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
 	ofSoundPlayer  playerAudio;
 	void loadAudio(std::string movie);
 	ofParameterGroup params_Audio{ "AUDIO" };
 	ofParameter<float> volumeAudio{ "Volume", 0.5, 0, 1 };
 	ofParameter<float> positionAudio{ "Position", 0, 0, 1 };
 	ofParameter <string> path_Audio{ "Path", "" };
+#endif
 
 	//--
 

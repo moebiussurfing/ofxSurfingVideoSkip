@@ -222,15 +222,44 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	params_AppSettings.add(bKeys);
 	params_AppSettings.add(bGui_VideoBarControl);
 	params_AppSettings.add(bAutoHideVideoBar);
+	params_AppSettings.add(bTheme);
 	params_AppSettings.add(surfingPreview.params);
 	params_AppSettings.add(bGui_Main);
 	params_AppSettings.add(bMODE_Edit);
 }
 
 //--------------------------------------------------------------
+void ofxSurfingVideoSkip::setup_Audio()
+{
+	int deviceOut_Port = 2;
+
+	outDevices.clear();
+	outDevices = outStream.getDeviceList(ofSoundDevice::Api::MS_DS);
+	cout << outDevices << endl;
+
+	size_t sampleRate = 48000;
+	size_t bufferSize = 256;
+	size_t numBuffers = 4;
+	size_t numInputChannels = 0;
+	size_t numOutputChannels = 2;
+
+	outSettings.bufferSize = bufferSize;
+	outSettings.numBuffers = numBuffers;
+	outSettings.sampleRate = sampleRate;
+	outSettings.numInputChannels = numInputChannels;
+	outSettings.numOutputChannels = numOutputChannels;
+	outSettings.setOutListener(ofGetAppPtr());
+	outSettings.setOutDevice(outDevices[deviceOut_Port]);
+
+	outStream.setup(outSettings);
+}
+
+//--------------------------------------------------------------
 void ofxSurfingVideoSkip::setup()
 {
 	bDISABLECALLBACKS = true;
+
+	//--
 
 	// Settings folder
 	setPath_GlobalFolder("ofxSurfingVideoSkip");
@@ -261,7 +290,8 @@ void ofxSurfingVideoSkip::setup()
 	bGui.set("SURFING VIDEO", true);
 	bGui_Main.set("VIDEO SKIP", true);
 	bGui_SkipTimers.set("SKIP TIMERS", false);
-	bGui_Previews.set("PREVIEWS", false);
+	bGui_Previews.set("MONITOR", false);
+	//bGui_Previews.set("PREVIEWS", false);
 
 	//--
 
@@ -349,7 +379,7 @@ void ofxSurfingVideoSkip::setup()
 #endif
 #endif
 
-	//-
+	//--
 
 	last_TRIG_time = 0;
 	last_TRIG_reverse = 0;
@@ -383,6 +413,7 @@ void ofxSurfingVideoSkip::setup()
 	params_Engine.add(bMODE_Edit);
 	params_Engine.add(videoName); // NOTE: a longer string will resize the GUI panel width!
 	params_Engine.add(position);
+	params_Engine.add(volumeVideo);
 	params_Engine.add(videoTIME);
 
 	//--
@@ -435,7 +466,7 @@ void ofxSurfingVideoSkip::setup()
 	_param_SkipEngine.add(bMODE_SkipPowered);
 	_param_SkipEngine.add(skipPower);
 
-	//-
+	//--
 
 	// Reverse
 
@@ -460,7 +491,7 @@ void ofxSurfingVideoSkip::setup()
 
 	params_Engine.add(_param_SkipEngine);
 
-	//-
+	//--
 
 	ofAddListener(params_Engine.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Params);
 	ofAddListener(params_Control.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Params);
@@ -468,10 +499,12 @@ void ofxSurfingVideoSkip::setup()
 
 	//--
 
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
 	params_Audio.add(volumeAudio);
 	params_Audio.add(positionAudio);
 	params_Audio.add(path_Audio);
 	playerAudio.setVolume(volumeAudio);
+#endif
 
 	//--
 
@@ -522,6 +555,8 @@ void ofxSurfingVideoSkip::setup()
 
 	//params_Control.add(bAutoHideVideoBar);//?
 	//params_Control.add(videoName);
+
+	params_Control.add(bTheme);
 
 	//--
 
@@ -598,6 +633,12 @@ void ofxSurfingVideoSkip::setup()
 	// for video mark/loops engine
 	setup_PresetsManager();
 #endif
+
+	//--
+
+	// Audio
+
+	setup_Audio();
 
 	//--
 
@@ -764,7 +805,8 @@ void ofxSurfingVideoSkip::startup()
 	//loadMovie("/Volumes/xTOSHIBA/VIDEO/NightmoVES4.mov");
 
 	player.setLoopState(OF_LOOP_NORMAL);
-	player.setVolume(0.0f);
+	player.setVolume(volumeVideo);
+	//player.setVolume(0.0f);
 	// Workflow
 	// Skip black intro
 	//player.setPosition(0.05);
@@ -777,6 +819,7 @@ void ofxSurfingVideoSkip::startup()
 	//pathSubs = "subs/Alphaville.srt";
 	//pathSubs = "subs/spanish.srt";
 
+	subs.setDuration(player.getDuration());//link durations
 	subs.setDisableGuiInternal(true);
 	subs.setup(pathSubs);
 	subs.setUiPtr(&ui);
@@ -824,11 +867,13 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 		doOpenDialogToSetPath();
 	}
 
+	//#ifdef USE_SOUND_PLAYER_STAND_ALONE
 	ofSoundUpdate();
+	//#endif
 
-	//--
+		//--
 
-	// Feed FxPro
+		// Feed FxPro
 
 #ifdef USE_ofxSurfingFxPro
 	{
@@ -874,7 +919,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 	updateVideoPlayer();
 
 #ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
-	subs.update();
+	subs.updatePos(player.getPosition());
 #endif
 
 	//--
@@ -1872,11 +1917,11 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 
 		else if (key == OF_KEY_UP)
 		{
-			player.setVolume(player.getVolume() + 0.1);
+			volumeVideo = MIN(volumeVideo + 0.1, 1);
 		}
 		else if (key == OF_KEY_DOWN)
 		{
-			player.setVolume(player.getVolume() - 0.1);
+			volumeVideo = MAX(volumeVideo - 0.1, 0);
 		}
 
 		//--
@@ -2098,6 +2143,13 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			}
 		}
 
+		// volume
+		else if (name == volumeVideo.getName())
+		{
+			volumeVideo.setWithoutEventNotifications(ofClamp(volumeVideo, 0, 1));
+			player.setVolume(volumeVideo.get());
+		}
+
 		//--
 
 		// edit
@@ -2276,6 +2328,17 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			bpmDivider = 2;
 		}
 
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+		else if (name == bpm.getName())
+		{
+			refreshTimerPlayForced();
+		}
+		else if (name == bpmDivider.getName())
+		{
+			refreshTimerPlayForced();
+		}
+#endif
+
 		else if (name == bMODE_Reversed.getName())
 		{
 			player.setSpeed((bMODE_Reversed ? (-1.0f) : (1.0f)) * speed);
@@ -2399,6 +2462,11 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		else if (name == bMODE_SkipPowered.getName())
 		{
 			bMODE_SkipLooped = !bMODE_SkipPowered.get();
+		}
+
+		else if (name == bTheme.getName())
+		{
+			bFboReady = false;
 		}
 
 		//--
@@ -2644,206 +2712,224 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 		if (bGui_VideoBarControl)
 		{
 			ofPushStyle();
-
-			int yy = ofGetWindowHeight() - BarInset - BarHeight;
-
-			ofRectangle barFull = getBarRectangle();
-
-			ofRectangle barLoopPre = getBarRectangle();
-			barLoopPre.width = barFull.width * position_In;
-
-			ofRectangle barLoopPost = getBarRectangle();
-			barLoopPost.translateX(barLoopPre.width + barFull.width * (position_Out - position_In));
-			barLoopPost.width = barFull.width * (1 - position_Out);
-
-			//clamp
-			barLoopPost.x = ofClamp(barLoopPost.x, BarInset, BarInset + barFull.width);
-			barLoopPost.width = ofClamp(barLoopPost.width, 0, barLoopPost.x + barFull.width);
-
-			//// 2. Filled rectangle from time 0 to current time position
-			////ofDrawRectangle(barLoopPre);
-			//ofDrawRectRounded(barLoopPre, BarRounded);
-
-			//--
-
-			// 5. draw thumbs
-			//TODO: make a cached fbo
-			static ofFbo fbo;
-			//static bool bFboReady = false;
-			if (!bFboReady && imgThumbs.size() > 0)
 			{
-				bFboReady = true;
-				fbo.allocate(barFull.getWidth(), barFull.getHeight());
-				fbo.begin();
-				ofClear(0, 255);
+				int yy = ofGetWindowHeight() - BarInset - BarHeight;
 
-				{
-					float w = imgThumbs[0].getWidth();
-					float h = imgThumbs[0].getHeight();
-					float x = 0;
-					float y = 0;
+				ofRectangle barFull = getBarRectangle();
 
-					int _amount = getBarRectangle().getWidth() / w;
-					float wEmpty = getBarRectangle().getWidth() - (_amount * w);
-					float thumbGap = wEmpty / _amount;
+				ofRectangle barLoopPre = getBarRectangle();
+				barLoopPre.width = barFull.width * position_In;
 
-					//for (int i = 0; i < (int)dirThumbs.size(); i++)
-					for (int i = 0; i < (int)dirThumbs.size() - 1; i++)//TODO: workaround fix to ignore last extra thumb!
-					{
-						/*
-						// border
-						ofSetLineWidth(6);//thumbs separator
-						ofSetColor(ofColor::black, 200);
-						ofNoFill();
-						ofRectangle r(x, y, w, h);
-						ofDrawRectangle(r);
-						//ofDrawRectRounded(r, 2);
-						*/
+				ofRectangle barLoopPost = getBarRectangle();
+				barLoopPost.translateX(barLoopPre.width + barFull.width * (position_Out - position_In));
+				barLoopPost.width = barFull.width * (1 - position_Out);
 
-						// thumb
-						ofSetColor(ofColor::white, 255);
-						ofFill();
-						imgThumbs[i].draw(x, y);
-						x += w;
+				//clamp
+				barLoopPost.x = ofClamp(barLoopPost.x, BarInset, BarInset + barFull.width);
+				barLoopPost.width = ofClamp(barLoopPost.width, 0, barLoopPost.x + barFull.width);
 
-						if (bFit)
-						{
-							if (i == (int)dirThumbs.size() - 2) break;//last
-
-							// video aspect ratio
-							float _w = player.getWidth();
-							float _h = player.getHeight();
-							float _ratio = _w / _h;
-
-							// thumb size
-							float h = BarHeight;
-							float w = BarHeight * _ratio;
-
-							//x += 10;
-							x += thumbGap;
-						}
-					}
-				}
-				fbo.end();
-			}
-			if (bFboReady && imgThumbs.size() > 0)
-			{
-				float x = getBarRectangle().getTopLeft().x;
-				float y = getBarRectangle().getTopLeft().y;
-				fbo.draw(x, y);
-			}
-
-			//-
-
-			///*
-			// 1. Border rect only.
-			// full video timeline
-			ofNoFill();
-			ofSetLineWidth(3.0f);
-			ofSetColor(ofColor::black, 255);
-			//ofSetColor(ofColor::white, BarAlpha);
-			ofDrawRectangle(barFull);
-			//ofDrawRectRounded(barFull, BarRounded);
-			//*/
-
-			//--
-
-			// 3. Loop clip
-			// 
-			// Don't draw loop bar if loop not enable
-			if (bMODE_Loop)
-			{
-				//TODO; make inverted
-
-				// 3. Markers loop rectangle: 
-				// 
-				// from loop start to loop end
-				int padding = 0;
-				int pStart, pWidth;
-
-				pStart = BarInset + barFull.width * position_In;
-				pWidth = (BarInset + barFull.width * position_Out) - pStart;
-
-				pStart = ofClamp(pStart, BarInset, BarInset + barFull.width);
-				pWidth = ofClamp(pWidth, 0, (BarInset + barFull.width) - pStart);
-
-				ofRectangle barLoop = ofRectangle(pStart, yy + padding, pWidth, BarHeight - padding * 2);
-
-				/*
-				ofFill();
-				// Mode zone
-				*/
-
-				/*
-				ofSetColor(ofColor::white, BarAlpha);
-				ofSetColor(ofColor(255), 192); // lighter grey
-				//ofSetColor(ofColor(64), 192); // darker grey
-				ofDrawRectangle(barLoop);
-				*/
-
-				// Mode inverted
-				/*
-				ofRectangle barNoLoopPre = ofRectangle(barFull.getTopLeft().x, yy + padding,
-					pStart, BarHeight - padding * 2);
-
-				ofRectangle barNoLoopPost = ofRectangle(barFull.getTopLeft().x + pWidth, yy + padding,
-					pStart, BarHeight - padding * 2);
-				*/
-
-				ofFill();
-				ofSetColor(ofColor(0), 150); // dark
-				ofDrawRectangle(barLoopPre);
-				ofDrawRectangle(barLoopPost);
+				//// 2. Filled rectangle from time 0 to current time position
+				////ofDrawRectangle(barLoopPre);
+				//ofDrawRectRounded(barLoopPre, BarRounded);
 
 				//--
 
-				// 3.2 Red line marks to start/end loop
-
-				if (bMODE_Edit)
+				// 5. Draw thumbs
+				//TODO: make a cached fbo
+				static ofFbo fbo;
+				//static bool bFboReady = false;
+				if (!bFboReady && imgThumbs.size() > 0)
 				{
-					ofColor c;
+					bFboReady = true;
+					fbo.allocate(barFull.getWidth(), barFull.getHeight());
+					fbo.begin();
+					ofClear(0, 255);
 
-					// filled 
-					float a2 = ofMap(player.getPosition(), position_In, position_Out, 1.00, 0.00, true);
-					//float a = ofMap(player.getPosition(), position_In, position_Out, 0.40, 0.00, true);
-					float a = ofxSurfingHelpers::getFadeBlink(0.02, 0.40, 0.5);
-					//float a = ofxSurfingHelpers::getFadeBlink(0.40, 0.70, 0.3);
-					//a *= a2;
-					//if (!bPlay) a = a2 = 1;
+					{
+						float w = imgThumbs[0].getWidth();
+						float h = imgThumbs[0].getHeight();
+						float x = 0;
+						float y = 0;
+
+						int _amount = getBarRectangle().getWidth() / w;
+						float wEmpty = getBarRectangle().getWidth() - (_amount * w);
+						float thumbGap = wEmpty / _amount;
+
+						//for (int i = 0; i < (int)dirThumbs.size(); i++)
+						for (int i = 0; i < (int)dirThumbs.size() - 1; i++)//TODO: workaround fix to ignore last extra thumb!
+						{
+							// frames border
+							if (1)
+							{
+								ofSetLineWidth(6);//thumbs separator
+								if (bTheme) ofSetColor(ofColor::white, 48); // light
+								else ofSetColor(ofColor::black, 200); // dark
+								ofNoFill();
+								ofRectangle r(x, y, w, h);
+								ofDrawRectangle(r);
+								//ofDrawRectRounded(r, 2);
+							}
+
+							// thumb
+							ofSetColor(ofColor::white, 255);
+							ofFill();
+							imgThumbs[i].draw(x, y);
+							x += w;
+
+							if (bFit)
+							{
+								if (i == (int)dirThumbs.size() - 2) break;//last
+
+								// video aspect ratio
+								float _w = player.getWidth();
+								float _h = player.getHeight();
+								float _ratio = _w / _h;
+
+								// thumb size
+								float h = BarHeight;
+								float w = BarHeight * _ratio;
+
+								//x += 10;
+								x += thumbGap;
+							}
+						}
+					}
+					fbo.end();
+				}
+				if (bFboReady && imgThumbs.size() > 0)
+				{
+					float x = getBarRectangle().getTopLeft().x;
+					float y = getBarRectangle().getTopLeft().y;
+					fbo.draw(x, y);
+				}
+
+				//--
+
+				// 1. Border rect only.
+				// full video timeline
+				ofNoFill();
+				ofSetLineWidth(3.0f);
+				if (bTheme) ofSetColor(ofColor::white, 48); // light
+				else ofSetColor(ofColor::black, 255); // dark
+				//ofSetColor(ofColor::white, BarAlpha);
+
+				ofDrawRectangle(barFull);
+				//ofDrawRectRounded(barFull, BarRounded);
+
+				//--
+
+				// 3. Loop clip
+				// 
+				// Don't draw loop bar if loop not enable
+				if (bMODE_Loop)
+				{
+					//TODO; make inverted
+
+					// 3. Markers loop rectangle: 
+					// 
+					// from loop start to loop end
+					int padding = 0;
+					int pStart, pWidth;
+
+					pStart = BarInset + barFull.width * position_In;
+					pWidth = (BarInset + barFull.width * position_Out) - pStart;
+
+					pStart = ofClamp(pStart, BarInset, BarInset + barFull.width);
+					pWidth = ofClamp(pWidth, 0, (BarInset + barFull.width) - pStart);
+
+					ofRectangle barLoop = ofRectangle(pStart, yy + padding, pWidth, BarHeight - padding * 2);
 
 					/*
-					if (!bPlay) c = ofColor(ofColor::red, 255 * a * a2);
-					else c = ofColor(ofColor::red, 255 * 0.02 * a2);
-					*/
-					c = ofColor(ofColor::red, 255 * a * a2);
-
-					ofSetColor(c);
 					ofFill();
+					// Mode zone
+					*/
+
+					/*
+					ofSetColor(ofColor::white, BarAlpha);
+					ofSetColor(ofColor(255), 192); // lighter grey
+					//ofSetColor(ofColor(64), 192); // darker grey
 					ofDrawRectangle(barLoop);
+					*/
 
-					// in/out border lines
-					ofNoFill();
-					ofSetLineWidth(2.0);
-					c = ofColor(ofColor::red, 255 * ofMap(a * a2, 0., 1., 0.4, 1.0, true));
-					ofSetColor(c);
-					//ofSetColor(ofColor::red);
-					ofDrawLine(pStart, yy + padding, pStart, yy + BarHeight - 1);
-					ofDrawLine(pStart + pWidth, yy + padding, pStart + pWidth, yy + BarHeight - 1);
+					// Mode inverted
+					/*
+					ofRectangle barNoLoopPre = ofRectangle(barFull.getTopLeft().x, yy + padding,
+						pStart, BarHeight - padding * 2);
+
+					ofRectangle barNoLoopPost = ofRectangle(barFull.getTopLeft().x + pWidth, yy + padding,
+						pStart, BarHeight - padding * 2);
+					*/
+
+					// add opacity
+					ofFill();
+					//ofSetColor(ofColor(0), 150); // dark
+					ofSetColor(ofColor(0), 125); // dark
+					ofDrawRectangle(barLoopPre);
+					ofDrawRectangle(barLoopPost);
+
+					//--
+
+					// 3.2 Red line marks to start/end loop
+
+					//if (bMODE_Edit)
+					{
+						ofColor c;
+
+						// filled 
+						float a2 = ofMap(player.getPosition(), position_In, position_Out, 1.00, 0.00, true);
+						//float a = ofMap(player.getPosition(), position_In, position_Out, 0.40, 0.00, true);
+						float a = ofxSurfingHelpers::getFadeBlink(0.02, 0.40, 0.5);
+						//float a = ofxSurfingHelpers::getFadeBlink(0.40, 0.70, 0.3);
+						//a *= a2;
+						//if (!bPlay) a = a2 = 1;
+
+						/*
+						if (!bPlay) c = ofColor(ofColor::red, 255 * a * a2);
+						else c = ofColor(ofColor::red, 255 * 0.02 * a2);
+						*/
+
+						// fill
+						if (bMODE_Edit)
+						{
+							c = ofColor(ofColor::red, 255 * a * a2);
+							ofSetColor(c);
+							ofFill();
+							ofDrawRectangle(barLoop);
+						}
+
+						// lines
+						// in/out border lines
+						ofNoFill();
+						ofSetLineWidth(2.0);
+
+						//ofSetColor(ofColor::red);
+						if (bMODE_Edit) c = ofColor(ofColor::red, 255 * ofMap(a * a2, 0., 1., 0.4, 1.0, true));
+						else c = ofColor(ofColor::red, 255 * 0.4);
+
+						// lines
+						ofSetColor(c);
+						ofDrawLine(pStart, yy + padding, pStart, yy + BarHeight - 1);
+						ofDrawLine(pStart + pWidth, yy + padding, pStart + pWidth, yy + BarHeight - 1);
+
+						// rectangle
+						ofSetColor(ofColor(ofColor::red, 255 * 0.4));
+						ofRectangle r(pStart, yy + padding, pWidth, BarHeight - 1);
+						ofDrawRectangle(r);
+					}
 				}
+
+				//-
+
+				// 4. Red line for current video player time
+				ofNoFill();
+				ofSetColor(ofColor::red);
+				ofSetLineWidth(4.0);
+				//float posTime = barLoopPre.width + BarInset;
+				float posTime = BarInset + barFull.width * player.getPosition();
+				posTime = ofClamp(posTime, BarInset, BarInset + barFull.width);
+				int padding = 1;
+				ofDrawLine(posTime, yy - padding, posTime, yy + BarHeight + padding);
 			}
-
-			//-
-
-			// 4. Red line for current video player time
-			ofNoFill();
-			ofSetColor(ofColor::red);
-			ofSetLineWidth(4.0);
-			//float posTime = barLoopPre.width + BarInset;
-			float posTime = BarInset + barFull.width * player.getPosition();
-			posTime = ofClamp(posTime, BarInset, BarInset + barFull.width);
-			int padding = 1;
-			ofDrawLine(posTime, yy - padding, posTime, yy + BarHeight + padding);
-
 			ofPopStyle();
 		}
 	}
@@ -2954,6 +3040,9 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 	{
 		doGenerateThumbs();
 	}
+#else 
+	// Load thumbs to images
+	loadThumbs();
 #endif
 }
 
@@ -3026,6 +3115,7 @@ void ofxSurfingVideoSkip::exit()
 	ofRemoveListener(oscHelper.params_Targets.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Targets);
 #endif
 
+	outStream.close();
 }
 
 #ifdef USE_ofxSurfingOsc 
@@ -3643,9 +3733,30 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 					ui.BeginBlinkText(bBlink);
 					{
-						ui.AddLabel(videoFilePath.get().data());
+						ui.AddLabel(videoName.get());
+						string s = videoFilePath.get();
+						ui.AddTooltip(s);
 					}
 					ui.EndBlinkText(bBlink);
+
+					ui.AddSpacing();
+
+					// center
+
+					float w = ui.getWidgetsWidth(4);
+					string lb = "AUDIO";
+					ui.pushStyleFont(2);
+					auto sz = ImGui::CalcTextSize(lb.c_str()).x;
+					ui.popStyleFont();
+					ImGui::Dummy(ImVec2(w + sz / 2, 0));
+					//ImGui::Dummy(ImVec2(w, 0));
+					ImGui::SameLine();
+					ui.AddLabelBig(lb);
+
+					ImGui::Dummy(ImVec2(w, 0));
+					ImGui::SameLine();
+					ui.Add(volumeVideo, OFX_IM_KNOB_DOTKNOB, 2);
+					//ui.Add(volumeVideo, OFX_IM_STEPPER);
 
 					//--
 
@@ -3713,6 +3824,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 							// Control Bar
 							ui.Add(bGui_VideoBarControl, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 							if (bGui_VideoBarControl) ui.Add(bAutoHideVideoBar, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+							ui.Add(bTheme, OFX_IM_TOGGLE_ROUNDED_MINI);
 
 							ui.Unindent();
 						}
@@ -4184,8 +4296,15 @@ void ofxSurfingVideoSkip::doOpenDialogToSetPath()
 	if (openFileResult.bSuccess)
 	{
 		//processOpenFileSelection(openFileResult);
+
+		ofFile file(openFileResult.getPath());
+		videoName = file.getBaseName();
+		videoFilePath = file.getAbsolutePath();
+
+		/*
 		videoName = openFileResult.getName();
 		videoFilePath = openFileResult.getPath();
+		*/
 
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "video name: " << videoName;
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "video path: " << videoFilePath;

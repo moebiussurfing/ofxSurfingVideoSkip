@@ -32,6 +32,7 @@ class ofApp : public ofBaseApp {
 public:
 
 	void setup();
+	void update();
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 
