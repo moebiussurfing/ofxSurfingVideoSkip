@@ -4057,15 +4057,15 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 										if (ui.AddButton("-", OFX_IM_BUTTON_MEDIUM, 2))
 										{
 											//workflow
-											if (bPlay)bPlay = false;
-
+											if (bPlay) bPlay = false;
+											 
 											bDoKickL = true;
 										}
 										ui.SameLine();
 										if (ui.AddButton("+", OFX_IM_BUTTON_MEDIUM, 2))
 										{
 											//workflow
-											if (bPlay)bPlay = false;
+											if (bPlay) bPlay = false;
 
 											bDoKickR = true;
 										}

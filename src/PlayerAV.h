@@ -120,6 +120,30 @@ public:
 		ofRemoveListener(params_Audio.parameterChangedE(), this, &PlayerAV::Changed_Params);
 	};
 
+
+	// setters
+	void setPaused(bool b) {
+		player.setPaused(b);
+		playerAudio.setPaused(b);
+	};
+	void setPosition(float pos) {
+		player.setPosition(pos);
+		playerAudio.setPosition(pos);
+	};
+	void setVolume(float vol) {
+		//player.setVolume(vol);
+		playerAudio.setVolume(vol);
+	};
+	void setSpeed(float speed) {
+		player.setSpeed(speed);
+		playerAudio.setSpeed(speed);
+	};
+	void setLoopState(ofLoopType state) {
+		player.setLoopState(state);
+		playerAudio.setLoop(state);
+	};
+
+	// getters
 	float getWidth() const {
 		return player.getWidth();
 	};
@@ -132,26 +156,6 @@ public:
 	float getDuration() const {
 		return player.getDuration();
 	};
-	void setLoopState(ofLoopType state) {
-		player.setLoopState(state);
-		playerAudio.setLoop(state);
-	};
-	float getPosition() const {
-		return player.getPosition();
-	};
-	void setPosition(float pos) {
-		playerAudio.setPosition(pos);
-		player.setPosition(pos);
-	};
-	void setVolume(float vol) {
-		player.setVolume(vol);
-	};
-	void setSpeed(float speed) {
-		player.setSpeed(speed);
-	};
-	void setPaused(bool b) {
-		player.setPaused(b);
-	};
 	bool isLoaded() const {
 		return player.isLoaded();
 	};
@@ -160,6 +164,9 @@ public:
 	};
 	bool isPaused() const {
 		return player.isPaused();
+	};
+	float getPosition() const {
+		return player.getPosition();
 	};
 	bool getIsMovieDone() const {
 		return player.getIsMovieDone();
