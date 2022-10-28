@@ -220,8 +220,8 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	params_AppSettings.add(videoName);
 	params_AppSettings.add(videoFilePath);
 	params_AppSettings.add(bKeys);
-	params_AppSettings.add(bGui_VideoBarControl);
-	params_AppSettings.add(bAutoHideVideoBar);
+	params_AppSettings.add(bGui_BarControl);
+	params_AppSettings.add(bAutoHide_BarControl);
 	params_AppSettings.add(bTheme);
 	params_AppSettings.add(surfingPreview.params);
 	params_AppSettings.add(bGui_Main);
@@ -297,8 +297,8 @@ void ofxSurfingVideoSkip::setup()
 
 	inScrub = false;
 
-	bGui_VideoBarControl.set("Control Bar", true); // var used to hide/show player bar and gui also
-	//bGui_VideoBarControl.addListener(this, &ofxSurfingVideoSkip::Changed_draw_Autohide);
+	bGui_BarControl.set("Control Bar", true); // var used to hide/show player bar and gui also
+	bGui_BarControl.addListener(this, &ofxSurfingVideoSkip::Changed_VideoBarControl);
 
 	//--
 
@@ -307,7 +307,7 @@ void ofxSurfingVideoSkip::setup()
 	videoName.set("FILE", "NO FILE");
 	videoTIME.set("", ""); // current time position
 
-	bAutoHideVideoBar.set("AutoHide Bar", true);
+	bAutoHide_BarControl.set("AutoHide Bar", true);
 
 	bDoKickL.set("FRAME L", false);
 	bDoKickR.set("FRAME R", false);
@@ -553,7 +553,7 @@ void ofxSurfingVideoSkip::setup()
 #endif
 	params_Control.add(_param_Keys);
 
-	//params_Control.add(bAutoHideVideoBar);//?
+	//params_Control.add(bAutoHide_BarControl);//?
 	//params_Control.add(videoName);
 
 	params_Control.add(bTheme);
@@ -1185,39 +1185,20 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 
 	//--
 
-	// auto hide gui system
-
-	//if (ofGetElapsedTimeMillis() - lastMovement < time_autoHide)
-	//{
-	//	bGui_VideoControlBar_PRE = bGui_VideoBarControl;
-	//	bGui_VideoBarControl = true;
-	//}
-	//else
-	//{
-	//	if (bAutoHideVideoBar)
-	//	{
-	//		bGui_VideoBarControl = false;
-	//		bGui_VideoControlBar_PRE = bGui_VideoBarControl;
-	//	}
-	//}
-
-	//--
-
-	//TODO
-	// Disable to avoid bug with clicks l/r on gui (ofxGuiExtended2)
-	// Hide mouse if changed
-	if ((bGui_VideoBarControl != bGui_VideoControlBar_PRE) || bAutoHideVideoBar)
-	{
-		ofRectangle window = ofGetWindowRect();
-		if (!bGui_VideoBarControl && window.inside(ofGetMouseX(), ofGetMouseY()))
+	// Auto hide GUI system
+	if (bAutoHide_BarControl)
+		if (ofGetElapsedTimeMillis() - lastMovement < time_autoHide)
 		{
-			ofHideCursor();
+			//bGui_BarControl = true;
+			if (!bGui_BarControl.get()) bGui_BarControl = true;
 		}
 		else
 		{
-			ofShowCursor();
+			//if (bAutoHide_BarControl)
+			{
+				if (bGui_BarControl.get()) bGui_BarControl = false;
+			}
 		}
-	}
 
 	//----
 
@@ -1421,13 +1402,13 @@ void ofxSurfingVideoSkip::setGuiVisible(bool b)
 	//ENABLE_GuiVisibleByAutoHide = b;
 	if (b)
 	{
-		bGui_VideoControlBar_PRE = bGui_VideoBarControl;
-		//bGui_VideoBarControl = true;
+		//bGui_VideoControlBar_PRE = bGui_BarControl;
+		//bGui_BarControl = true;
 		lastMovement = ofGetElapsedTimeMillis();
 	}
 
 	// draw control bar
-	//bGui_VideoBarControl = b;
+	//bGui_BarControl = b;
 
 	//-
 
@@ -1506,7 +1487,7 @@ void ofxSurfingVideoSkip::mouseRefreshPressed(int button, float position)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::mouseScrolled(ofMouseEventArgs& eventArgs)
 {
-	if (bActive && bGui_VideoBarControl)
+	if (bActive && bGui_BarControl)
 	{
 		const int& x = eventArgs.x;
 		const int& y = eventArgs.y;
@@ -1554,7 +1535,7 @@ void ofxSurfingVideoSkip::mouseScrolled(ofMouseEventArgs& eventArgs)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::mouseDragged(ofMouseEventArgs& eventArgs)
 {
-	if (bActive && bGui_VideoBarControl)
+	if (bActive && bGui_BarControl)
 	{
 		const int& x = eventArgs.x;
 		const int& y = eventArgs.y;
@@ -1638,7 +1619,7 @@ void ofxSurfingVideoSkip::mouseDragged(ofMouseEventArgs& eventArgs)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::mousePressed(ofMouseEventArgs& eventArgs)
 {
-	if (bActive && bGui_VideoBarControl)
+	if (bActive && bGui_BarControl)
 	{
 		const int& x = eventArgs.x;
 		const int& y = eventArgs.y;
@@ -1708,7 +1689,7 @@ void ofxSurfingVideoSkip::mousePressed(ofMouseEventArgs& eventArgs)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::mouseReleased(ofMouseEventArgs& eventArgs)
 {
-	if (bActive && bGui_VideoBarControl)
+	if (bActive && bGui_BarControl)
 	{
 		const int& x = eventArgs.x;
 		const int& y = eventArgs.y;
@@ -1931,16 +1912,6 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 		else if (key == 'G')
 		{
 			bGui = !bGui; // independent to auto hide state
-
-			//		//hide/show cursor
-			//		if (!bGui)
-			//		{
-			//			ofHideCursor();
-			//		}
-			//		else
-			//		{
-			//			ofShowCursor();
-			//		}
 		}
 
 		//--
@@ -2366,7 +2337,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		else if (name == bGui_Main.getName())
 		{
 			//bool b = bGui_Main.get();
-			//bGui_VideoBarControl = b;
+			//bGui_BarControl = b;
 		}
 
 		//#ifdef USE_ofxSurfingMoods
@@ -2476,7 +2447,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		bSyncRemote = true;
 		//remoteServer.syncParameters();//hangs
 #endif
-	}
+}
 }
 
 //--------------------------------------------------------------
@@ -2618,7 +2589,7 @@ void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 	if (bGui)
 	{
 		draw_Gui();
-	}
+}
 
 	//--
 
@@ -2709,7 +2680,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 	if (player.isLoaded())
 	{
 		// Draw the position bar if appropriate
-		if (bGui_VideoBarControl)
+		if (bGui_BarControl)
 		{
 			ofPushStyle();
 			{
@@ -3030,7 +3001,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 		videoFilePath.set("NO FILE");
 		videoName.set("NO FILE");
 		videoTIME.set(""); // current time position
-	}
+}
 
 	//--
 
@@ -3080,8 +3051,8 @@ void ofxSurfingVideoSkip::exit()
 	// disable for the moment
 	//ofRemoveListener(params_Control_VideoFX.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_params_VideoFX);
 
-	//// auto hide callback
-	//bGui_VideoBarControl.removeListener(this, &ofxSurfingVideoSkip::Changed_draw_Autohide);
+	// auto hide callback
+	bGui_BarControl.removeListener(this, &ofxSurfingVideoSkip::Changed_VideoBarControl);
 
 	//-
 
@@ -3286,7 +3257,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	//ui.addExtraParamToLayoutPresets(surfingPreview.bGui);
 	//ui.addExtraParamToLayoutPresets(surfingPreview.bGui_PreviewBig);
 	////ui.addExtraParamToLayoutPresets(surfingPreview.bFullScreen);
-	//ui.addExtraParamToLayoutPresets(bGui_VideoBarControl);
+	//ui.addExtraParamToLayoutPresets(bGui_BarControl);
 
 	//// Other
 	//ui.addExtraParamToLayoutPresets(ui.bMinimize);
@@ -3822,8 +3793,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 							ui.Indent();
 
 							// Control Bar
-							ui.Add(bGui_VideoBarControl, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
-							if (bGui_VideoBarControl) ui.Add(bAutoHideVideoBar, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+							ui.Add(bGui_BarControl, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+							if (bGui_BarControl) ui.Add(bAutoHide_BarControl, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 							ui.Add(bTheme, OFX_IM_TOGGLE_ROUNDED_MINI);
 
 							ui.Unindent();
@@ -4137,7 +4108,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 					}
 				}
-			}
+				}
 
 			//--
 
@@ -4188,9 +4159,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			*/
 
 			ui.EndWindow();
-		}
-	}
-}
+			}
+					}
+				}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui()
@@ -4644,4 +4615,27 @@ void ofxSurfingVideoSkip::removeKeysListeners()
 {
 	ofRemoveListener(ofEvents().keyPressed, this, &ofxSurfingVideoSkip::keyPressed);
 	ofRemoveListener(ofEvents().keyReleased, this, &ofxSurfingVideoSkip::keyReleased);
+}
+
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::Changed_VideoBarControl(bool& b)
+{
+	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << ofToString(b ? "TRUE" : "FALSE");
+
+	static bool bGui_BarControl_PRE = !bGui_BarControl.get();
+	if (bGui_BarControl.get() != bGui_BarControl_PRE)
+	{
+		bGui_BarControl_PRE = bGui_BarControl.get();
+	}
+	//else return;
+
+	if (!bGui_BarControl.get())
+	{
+		ofHideCursor();
+	}
+	else
+	{
+		ofShowCursor();
+	}
 }

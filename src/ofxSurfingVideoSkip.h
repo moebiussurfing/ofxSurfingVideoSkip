@@ -10,7 +10,7 @@
 
 	IDEAS:
 	mark some word with another color
- 
+	add center offset or duration, to translate a clip/loop
 
 	TODO:
 
@@ -513,7 +513,7 @@ public:
 	//--------------------------------------------------------------
 	void setAudoHide(bool b)
 	{
-		bAutoHideVideoBar = b;
+		bAutoHide_BarControl = b;
 		//lastMovement = ofGetSystemTimeMillis();
 	}
 
@@ -599,9 +599,8 @@ private:
 
 	// auto hide
 	bool ENABLE_GuiVisibleByAutoHide = false;
-	ofParameter<bool> bGui_VideoBarControl;
-	bool bGui_VideoControlBar_PRE;
-	//void Changed_draw_Autohide(bool &b);
+	ofParameter<bool> bGui_BarControl;
+	void Changed_VideoBarControl(bool &b);
 	int time_autoHide = 2500;
 	bool inScrub;
 	bool ENABLE_AutoHide_external = false;
@@ -700,7 +699,7 @@ private:
 	ofParameter<bool> bDoResetAll;
 	ofParameter<bool> bDoResetBpm;
 
-	ofParameter<bool> bAutoHideVideoBar;
+	ofParameter<bool> bAutoHide_BarControl;
 	ofParameter<bool> bENABLE_TimersGlobal;
 
 	ofParameter<bool> bMODE_Beat;

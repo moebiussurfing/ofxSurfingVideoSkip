@@ -701,3 +701,6 @@ examples/addons/ofxFontStash/src/ofxFontStash.nativecodeanalysis.sarif
 examples/addons/ofxFontStash/libs/fontstash/src/stb_truetype.nativecodeanalysis.sarif
 examples/addons/ofxFontStash/libs/fontstash/src/fontstash.nativecodeanalysis.sarif
 examples/1_video-Basic/bin/imgui.ini
+examples/1_video-Basic/bin/imgui.ini
+examples/1_video-Basic/enc_temp_folder/89ce6ef3c847cf67b49a4e9bf7baff/ofxSurfingVideoSkip.h
+examples/1_video-Basic/enc_temp_folder/9812fbe18410e18be62799d95a39b818/ofxSurfingVideoSkip.cpp
