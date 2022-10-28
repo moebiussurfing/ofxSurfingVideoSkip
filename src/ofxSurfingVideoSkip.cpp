@@ -229,35 +229,9 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::setup_Audio()
-{
-	int deviceOut_Port = 2;
-
-	outDevices.clear();
-	outDevices = outStream.getDeviceList(ofSoundDevice::Api::MS_DS);
-	cout << outDevices << endl;
-
-	size_t sampleRate = 48000;
-	size_t bufferSize = 256;
-	size_t numBuffers = 4;
-	size_t numInputChannels = 0;
-	size_t numOutputChannels = 2;
-
-	outSettings.bufferSize = bufferSize;
-	outSettings.numBuffers = numBuffers;
-	outSettings.sampleRate = sampleRate;
-	outSettings.numInputChannels = numInputChannels;
-	outSettings.numOutputChannels = numOutputChannels;
-	outSettings.setOutListener(ofGetAppPtr());
-	outSettings.setOutDevice(outDevices[deviceOut_Port]);
-
-	outStream.setup(outSettings);
-}
-
-//--------------------------------------------------------------
 void ofxSurfingVideoSkip::setup()
 {
-	bDISABLECALLBACKS = true;
+	bDISABLE_CALLBACKS = true;
 
 	//--
 
@@ -273,7 +247,7 @@ void ofxSurfingVideoSkip::setup()
 #endif
 #endif		
 
-	// font big
+	// Font big
 	{
 		if (font.isLoaded()) return;
 		//fontSize = sz;
@@ -413,7 +387,7 @@ void ofxSurfingVideoSkip::setup()
 	params_Engine.add(bMODE_Edit);
 	params_Engine.add(videoName); // NOTE: a longer string will resize the GUI panel width!
 	params_Engine.add(position);
-	params_Engine.add(volumeVideo);
+	params_Engine.add(player.volume);
 	params_Engine.add(videoTIME);
 
 	//--
@@ -496,15 +470,6 @@ void ofxSurfingVideoSkip::setup()
 	ofAddListener(params_Engine.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Params);
 	ofAddListener(params_Control.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Params);
 	// these params are not stored. just from GUI panels here
-
-	//--
-
-#ifdef USE_SOUND_PLAYER_STAND_ALONE
-	params_Audio.add(volumeAudio);
-	params_Audio.add(positionAudio);
-	params_Audio.add(path_Audio);
-	playerAudio.setVolume(volumeAudio);
-#endif
 
 	//--
 
@@ -638,7 +603,7 @@ void ofxSurfingVideoSkip::setup()
 
 	// Audio
 
-	setup_Audio();
+	player.setup();
 
 	//--
 
@@ -759,7 +724,7 @@ void ofxSurfingVideoSkip::setup_Osc()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::startup()
 {
-	bDISABLECALLBACKS = false;
+	bDISABLE_CALLBACKS = false;
 
 	//-
 
@@ -805,8 +770,9 @@ void ofxSurfingVideoSkip::startup()
 	//loadMovie("/Volumes/xTOSHIBA/VIDEO/NightmoVES4.mov");
 
 	player.setLoopState(OF_LOOP_NORMAL);
-	player.setVolume(volumeVideo);
+	//player.setVolume(volumeVideo);
 	//player.setVolume(0.0f);
+	
 	// Workflow
 	// Skip black intro
 	//player.setPosition(0.05);
@@ -823,6 +789,7 @@ void ofxSurfingVideoSkip::startup()
 	subs.setDisableGuiInternal(true);
 	subs.setup(pathSubs);
 	subs.setUiPtr(&ui);
+
 #endif
 
 	//--
@@ -867,13 +834,22 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 		doOpenDialogToSetPath();
 	}
 
-	//#ifdef USE_SOUND_PLAYER_STAND_ALONE
-	ofSoundUpdate();
-	//#endif
+	//--
 
-		//--
+	// Load thumbs to images
+	if (commandThread.isDone())
+	{
+		ofLogNotice("ofxSurfingVideoSkip") << "Thumbs Generated";
+		loadThumbs();
+	}
 
-		// Feed FxPro
+	//--
+
+	player.update();
+
+	//--
+
+	// Feed FxPro
 
 #ifdef USE_ofxSurfingFxPro
 	{
@@ -894,7 +870,19 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 		// unprocessed video
 		if (indexPreviewSource == 0)
 		{
-			player.draw(0, 0);
+			//player.draw(0, 0);
+
+			//get original video at original size. fails if not full hd!
+			//ofRectangle r(0, 0, player.getWidth(), player.getHeight());
+
+			//ofRectangle r = surfingPreview.getRectangle();//fit in window. fail
+			ofRectangle r(0, 0, 1920, 1080);//force to fix if video source is smaller...
+
+			player.draw(r);
+
+			//--
+
+			// subs
 
 #ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
 			subs.drawRaw();
@@ -1189,7 +1177,6 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 	if (bAutoHide_BarControl)
 		if (ofGetElapsedTimeMillis() - lastMovement < time_autoHide)
 		{
-			//bGui_BarControl = true;
 			if (!bGui_BarControl.get()) bGui_BarControl = true;
 		}
 		else
@@ -1210,7 +1197,7 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::updateTimers()
 {
-	//--
+	//----
 
 	// Mode beat
 
@@ -1898,11 +1885,11 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 
 		else if (key == OF_KEY_UP)
 		{
-			volumeVideo = MIN(volumeVideo + 0.1, 1);
+			player.setVolumenUp();
 		}
 		else if (key == OF_KEY_DOWN)
 		{
-			volumeVideo = MAX(volumeVideo - 0.1, 0);
+			player.setVolumenDown();
 		}
 
 		//--
@@ -1996,7 +1983,7 @@ void ofxSurfingVideoSkip::Changed_DONE_load(bool& DONE_load)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 {
-	if (!bDISABLECALLBACKS)
+	if (!bDISABLE_CALLBACKS)
 	{
 		std::string name = e.getName();
 
@@ -2077,10 +2064,10 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			//if (bMODE_Edit)//breaks
 			if (!bPlay && bMODE_Edit)
 			{
-				bDISABLECALLBACKS = true;
+				bDISABLE_CALLBACKS = true;
 				position = position_Out;
 				player.setPosition(position);
-				bDISABLECALLBACKS = false;
+				bDISABLE_CALLBACKS = false;
 			}
 
 			/*
@@ -2112,13 +2099,6 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 				//if (bMODE_Edit) bMODE_Edit = false;
 				////if (!bMODE_Loop) bMODE_Loop = true;
 			}
-		}
-
-		// volume
-		else if (name == volumeVideo.getName())
-		{
-			volumeVideo.setWithoutEventNotifications(ofClamp(volumeVideo, 0, 1));
-			player.setVolume(volumeVideo.get());
 		}
 
 		//--
@@ -2265,8 +2245,14 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			bDoResetAll = false;
 
 			bDoResetEngine = true;
+			
+			//full
+			bMODE_Beat = false;
+			position_In = 0;
+			position_Out = 1;
 
-			bMODE_Beat = true;
+			// a beat
+			//bMODE_Beat = true;
 			beatRescale = 0;
 			beatDuration = 2;
 		}
@@ -2381,24 +2367,24 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			else removeKeysListeners();
 
 			//crashes
-				//bDISABLECALLBACKS = true;
+				//bDISABLE_CALLBACKS = true;
 				//if (bKeys.get())
 				//{
 				//	bKeys_Presets = false;
 				//	bKeys_Fx = false;
 				//}
-				//bDISABLECALLBACKS = false;
+				//bDISABLE_CALLBACKS = false;
 		}
 
 		//		else if (name == bKeys_Presets.getName())
 		//		{
-		//			bDISABLECALLBACKS = true;
+		//			bDISABLE_CALLBACKS = true;
 		//			if (bKeys_Presets.get())
 		//			{
 		//				bKeys = false;
 		//				bKeys_Fx = false;
 		//			}
-		//			bDISABLECALLBACKS = false;
+		//			bDISABLE_CALLBACKS = false;
 		//
 		//#ifdef USE_ofxPresetsManager__VIDEO_SKIP
 		//			presetsManager.setEnableKeys(bKeys_Presets);
@@ -2407,13 +2393,13 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 
 		//else if (name == bKeys_Fx.getName())
 		//{
-		//	bDISABLECALLBACKS = true;
+		//	bDISABLE_CALLBACKS = true;
 		//	if (bKeys_Fx.get())
 		//	{
 		//		bKeys_Presets = false;
 		//		bKeys = false;
 		//	}
-		//	bDISABLECALLBACKS = false;
+		//	bDISABLE_CALLBACKS = false;
 		//}
 
 		//-
@@ -2447,7 +2433,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		bSyncRemote = true;
 		//remoteServer.syncParameters();//hangs
 #endif
-}
+	}
 }
 
 //--------------------------------------------------------------
@@ -2589,7 +2575,7 @@ void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 	if (bGui)
 	{
 		draw_Gui();
-}
+	}
 
 	//--
 
@@ -2627,6 +2613,7 @@ void ofxSurfingVideoSkip::draw_Video()
 
 			// Re scale player rectangle to surfingPreview view port
 
+			// 1. BIG
 			// Full Screen mode
 
 			if (surfingPreview.bFullScreen)
@@ -2634,7 +2621,9 @@ void ofxSurfingVideoSkip::draw_Video()
 				r.scaleTo(ofGetWindowRect(), surfingPreview.scaleMode); // Full view
 			}
 
-			// Floating Preview
+			//--
+
+			// 2. Floating Preview
 
 			else
 			{
@@ -2919,7 +2908,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 			c = ofColor(c_.r, c_.g, c_.b, c_.a * a);
 		}
 
-		if (player.getError().length())
+		if (player.isError())
 		{
 			bError = true;
 			float w = ofxSurfingHelpers::getWidthBBtextBoxed(font, "MUST PICK A VIDEO FILE!");
@@ -2955,7 +2944,6 @@ void ofxSurfingVideoSkip::loadThumbs()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::loadMovie(std::string _path)
 {
-	//player.stopAudio();
 	bool b = player.load(_path);
 
 	if (b)
@@ -3001,7 +2989,14 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 		videoFilePath.set("NO FILE");
 		videoName.set("NO FILE");
 		videoTIME.set(""); // current time position
-}
+	}
+
+	//--
+	
+	//TODO:
+	//add dialog loader
+	// Audio
+	player.loadAudio("Z:\\_DATA\\VIDEO\\HuxleyHAP.wav");
 
 	//--
 
@@ -3014,6 +3009,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 #else 
 	// Load thumbs to images
 	loadThumbs();
+	bFboReady = false;
 #endif
 }
 
@@ -3086,7 +3082,7 @@ void ofxSurfingVideoSkip::exit()
 	ofRemoveListener(oscHelper.params_Targets.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Targets);
 #endif
 
-	outStream.close();
+	//player.exit();
 }
 
 #ifdef USE_ofxSurfingOsc 
@@ -3712,10 +3708,14 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 					ui.AddSpacing();
 
-					// center
+					//ui.AddLabelBig("AUDIO");
+					ui.Add(player.volume, OFX_IM_KNOB_DOTKNOB, 2);
 
-					float w = ui.getWidgetsWidth(4);
+					//TODO:
+					// center
+					/*
 					string lb = "AUDIO";
+					float w = ui.getWidgetsWidth(4);
 					ui.pushStyleFont(2);
 					auto sz = ImGui::CalcTextSize(lb.c_str()).x;
 					ui.popStyleFont();
@@ -3726,8 +3726,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 					ImGui::Dummy(ImVec2(w, 0));
 					ImGui::SameLine();
-					ui.Add(volumeVideo, OFX_IM_KNOB_DOTKNOB, 2);
+					ui.Add(player.volume, OFX_IM_KNOB_DOTKNOB, 2);
 					//ui.Add(volumeVideo, OFX_IM_STEPPER);
+					*/
 
 					//--
 
@@ -4108,7 +4109,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 					}
 				}
-				}
+			}
 
 			//--
 
@@ -4159,9 +4160,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			*/
 
 			ui.EndWindow();
-			}
-					}
-				}
+		}
+	}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui()
@@ -4373,8 +4374,24 @@ void ofxSurfingVideoSkip::doGenerateThumbs()
 	someCmd += "-f image2 ";
 	someCmd += pathData + "thumb_%02d.jpg";//files
 
+	//--
+
 	// Log & Run!
-	doRunCommand(someCmd);
+
+	// a. Blocking
+	//doRunCommand(someCmd);
+
+	// b. Using threading
+	commandThread.set(someCmd);
+	if (!commandThread.isThreadRunning())
+	{
+		commandThread.startThread();
+		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "Starting Thread!";
+	}
+	else
+	{
+		ofLogError("ofxSurfingVideoSkip") << (__FUNCTION__) << "Thread already running! Wait to work is done!";
+	}
 
 	//--
 
@@ -4452,8 +4469,9 @@ void ofxSurfingVideoSkip::doGenerateThumbs()
 
 	//--
 
+	// a. Blocking
 	// Load thumbs to images
-	loadThumbs();
+	//loadThumbs();
 }
 
 //--

@@ -13,6 +13,7 @@
 	add center offset or duration, to translate a clip/loop
 
 	TODO:
+	+ make thumbs using threading
 
 	UI:
 	fix custom range big slider, un exact position
@@ -113,9 +114,8 @@
 // -> 10. SRT subtitler
 #define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
 // Requires to un comment on ofxSurfingTextSubtitle.h: #define USE_IM_GUI__SUBTITLES 
- 
-//#define USE_SOUND_PLAYER_STAND_ALONE
- 
+
+
 //--
 
 #endif // end of no minimal stuff
@@ -126,7 +126,8 @@
 
 // Core Stuff
 
-#include "ofxHapPlayer.h"
+#include "PlayerAV.h"
+
 #include "ofxInteractiveRect.h"
 #include "ofxSurfingImGui.h"
 #include "WindowFbo.h"
@@ -191,15 +192,14 @@
 #define SPEED_MIN 0.20f
 #define SPEED_MAX 50.0f
 
+#include "CommandThread.h" // to call the thumbs generator without breaking drawing!
+
 //--------------------------------------------------------------
 class ofxSurfingVideoSkip
 {
-
 private:
-	ofSoundStreamSettings outSettings;
-	ofSoundStream outStream;
-	std::vector<ofSoundDevice> outDevices;
-	void setup_Audio();
+
+	PlayerAV player;
 
 	//--
 
@@ -208,7 +208,7 @@ public:
 	ofxSurfingTextSubtitle subs;
 	string pathSubs;
 	//--------------------------------------------------------------
-	void refreshTimerPlayForced() 
+	void refreshTimerPlayForced()
 	{
 		//TODO: pass time to subtitler
 		auto t = ((60000 / bpmDivider.get()) / (bpm.get()));
@@ -430,7 +430,7 @@ private:
 	bool bDockingReset = false;
 	void dockingReset();
 
-	//-
+	//--
 
 public:
 
@@ -440,12 +440,15 @@ public:
 	}
 
 	void doOpenDialogToSetPath();
+
+	bool bFboReady = false;
 	void doGenerateThumbs();
 	void doRunCommand(string s) {
-		cout << (s) << endl<< endl;
+		cout << (s) << endl << endl;
 		cout << ofSystem(s) << endl;
 	};
-	bool bFboReady = false;
+	
+	CommandThread commandThread;
 
 private:
 
@@ -470,7 +473,7 @@ private:
 #endif
 
 	//----
-	ofParameter<bool>bTheme{"Theme", false};
+	ofParameter<bool>bTheme{ "Theme", false };
 
 public:
 
@@ -574,33 +577,16 @@ private:
 
 private:
 
-	// Hap video player
-	void loadMovie(std::string movie);
 	ofRectangle getBarRectangle() const;
-	ofxHapPlayer player;
 	uint64_t lastMovement;
 	bool wasPaused;
-
-	//--
-
-	ofParameter<float> volumeVideo{ "Volume", 0.5, 0, 1 };
-
-	// Audio
-#ifdef USE_SOUND_PLAYER_STAND_ALONE
-	ofSoundPlayer  playerAudio;
-	void loadAudio(std::string movie);
-	ofParameterGroup params_Audio{ "AUDIO" };
-	ofParameter<float> volumeAudio{ "Volume", 0.5, 0, 1 };
-	ofParameter<float> positionAudio{ "Position", 0, 0, 1 };
-	ofParameter <string> path_Audio{ "Path", "" };
-#endif
 
 	//--
 
 	// auto hide
 	bool ENABLE_GuiVisibleByAutoHide = false;
 	ofParameter<bool> bGui_BarControl;
-	void Changed_VideoBarControl(bool &b);
+	void Changed_VideoBarControl(bool& b);
 	int time_autoHide = 2500;
 	bool inScrub;
 	bool ENABLE_AutoHide_external = false;
@@ -733,7 +719,7 @@ private:
 
 	ofParameterGroup params_Engine;
 	void Changed_Params(ofAbstractParameter& e);
-	bool bDISABLECALLBACKS;
+	bool bDISABLE_CALLBACKS;
 
 	ofParameterGroup params_Control;
 
@@ -754,6 +740,8 @@ private:
 
 	ofParameter<std::string> videoFilePath;
 	ofParameter<std::string> videoName;
+
+	void loadMovie(std::string movie);
 
 	//--
 
