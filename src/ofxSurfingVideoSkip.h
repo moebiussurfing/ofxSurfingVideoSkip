@@ -94,7 +94,7 @@
 //#define USE_MIDI_PARAMS__VIDEO_SKIP 
 
 // -> 5. FX Channel
-//#define USE_ofxSurfingFxChannel 
+#define USE_ofxSurfingFxChannel 
 
 //TODO:
 // -> 6. Remote Parameters
@@ -391,6 +391,7 @@ public:
 	void setup_ImGui();
 
 	void draw_ImGui();
+	void draw_ImGui_Docking();
 	void draw_ImGui_Main();
 	void draw_ImGui_SkipTimers();
 	void draw_ImGui_Preview();
@@ -406,6 +407,8 @@ public:
 	//--
 
 private:
+
+	ofParameter<bool> bLinkAllFiles;//video, audio and srt.
 
 	// Preview Monitor
 	SurfingPreview surfingPreview;

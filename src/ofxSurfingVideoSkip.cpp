@@ -261,6 +261,8 @@ void ofxSurfingVideoSkip::setup()
 
 	//--
 
+	bLinkAllFiles.set("Link Files", true);
+
 	bGui.set("SURFING VIDEO", true);
 	bGui_Main.set("VIDEO SKIP", true);
 	bGui_SkipTimers.set("SKIP TIMERS", false);
@@ -736,6 +738,21 @@ void ofxSurfingVideoSkip::startup()
 
 	if (!bMODE_SkipLooped && !bMODE_SkipPowered) bMODE_SkipPowered = true;
 
+	//--
+
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+
+	pathSubs = "subs/Huxley.srt";
+	//pathSubs = "subs/Alphaville.srt";
+	//pathSubs = "subs/spanish.srt";
+
+	subs.setDuration(player.getDuration());//link durations
+	subs.setDisableGuiInternal(true);
+	subs.setup(pathSubs);
+	subs.setUiPtr(&ui);
+
+#endif
+
 	//----
 
 	// HAP video player
@@ -772,25 +789,10 @@ void ofxSurfingVideoSkip::startup()
 	player.setLoopState(OF_LOOP_NORMAL);
 	//player.setVolume(volumeVideo);
 	//player.setVolume(0.0f);
-	
+
 	// Workflow
 	// Skip black intro
 	//player.setPosition(0.05);
-
-	//--
-
-#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
-
-	pathSubs = "subs/Huxley.srt";
-	//pathSubs = "subs/Alphaville.srt";
-	//pathSubs = "subs/spanish.srt";
-
-	subs.setDuration(player.getDuration());//link durations
-	subs.setDisableGuiInternal(true);
-	subs.setup(pathSubs);
-	subs.setUiPtr(&ui);
-
-#endif
 
 	//--
 
@@ -876,9 +878,37 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 			//ofRectangle r(0, 0, player.getWidth(), player.getHeight());
 
 			//ofRectangle r = surfingPreview.getRectangle();//fit in window. fail
+
+			//TODO:
 			ofRectangle r(0, 0, 1920, 1080);//force to fix if video source is smaller...
 
-			player.draw(r);
+			//-
+
+			//player.draw(r);
+
+			//--
+
+			// Fx Processed
+#ifdef USE_ofxSurfingFxChannel
+			if (channelFx.bEnable_Fx)
+			{
+				channelFx.begin();
+				{
+					ofSetColor(255, 255, 255, 255);
+					player.draw(r);
+				}
+				channelFx.end();
+				channelFx.draw(); // draw processed
+			}
+
+			// Raw clean
+			else
+#endif
+			{
+				//ofEnableArbTex();
+				ofSetColor(255, 255, 255, 255);
+				player.draw(r);
+			}
 
 			//--
 
@@ -1621,7 +1651,7 @@ void ofxSurfingVideoSkip::mousePressed(ofMouseEventArgs& eventArgs)
 			ofLogVerbose("ofxSurfingVideoSkip") << (__FUNCTION__) << "mousePressed INSIDE: (" << x << "," << y << ")";
 
 			inScrub = true;
-			wasPaused = player.isPaused() || player.getIsMovieDone();
+			wasPaused = player.isPaused() || player.isMovieDone();
 
 			// workflow
 			// auto stop
@@ -2011,6 +2041,10 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		{
 			player.setPosition(position);
 
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+			subs.setPosition(position);
+#endif
+
 			// workflow
 
 			//if (!bPlay && bMODE_Edit)
@@ -2245,7 +2279,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			bDoResetAll = false;
 
 			bDoResetEngine = true;
-			
+
 			//full
 			bMODE_Beat = false;
 			position_In = 0;
@@ -2533,6 +2567,8 @@ void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 
 	//--
 
+	// Channel Fx
+
 	/*
 #ifdef USE_ofxSurfingFxChannel
 	//if (ENABLE_Video_FX)
@@ -2648,15 +2684,40 @@ void ofxSurfingVideoSkip::draw_Video()
 			//--
 
 			// Draw video frame
+			//{
+			//	ofSetColor(255, 255, 255, 255);
+			//	player.draw(r.x, r.y, r.width, r.height);
+			//}
+
+			//--
+
+			// Fx Processed
+#ifdef USE_ofxSurfingFxChannel
+			if (channelFx.bEnable_Fx)
 			{
+				channelFx.begin();
+				{
+					ofSetColor(255, 255, 255, 255);
+					player.draw(r.x, r.y, r.width, r.height);
+				}
+				channelFx.end();
+				channelFx.draw(); // draw processed
+			}
+
+			// Raw clean
+			else
+#endif
+			{
+				//ofEnableArbTex();
 				ofSetColor(255, 255, 255, 255);
 				player.draw(r.x, r.y, r.width, r.height);
 			}
 
+			//--
+
 #ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
 			subs.draw(r);
 #endif
-
 			//--
 		}
 		ofPopStyle();
@@ -2944,7 +3005,7 @@ void ofxSurfingVideoSkip::loadThumbs()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::loadMovie(std::string _path)
 {
-	bool b = player.load(_path);
+	bool b = player.load(_path, bLinkAllFiles);
 
 	if (b)
 	{
@@ -2955,21 +3016,22 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 	}
 	else
 	{
+		// try a default alternative file
+
 		ofLogError("ofxSurfingVideoSkip") << (__FUNCTION__) << "VIDEO NOT FOUND '" << _path << "' z!";
 
 		_path = "movies/SampleHap.mov";
 		ofLogWarning("ofxSurfingVideoSkip") << (__FUNCTION__) << "...TRYING TO LOAD A BACKUP MOVIE: '" << _path << "' !";
 
-		b = player.load(_path);
+		b = player.load(_path, bLinkAllFiles);
+
 		if (!b) ofLogError("ofxSurfingVideoSkip") << (__FUNCTION__) << "BAD ERROR!";
 	}
 	bLoaded = b;
 
-	// workflow
-	// autostart play
-	if (!bPlay) bPlay = true;
+	//--
 
-	// to fix startup bug..
+	// To fix startup bug..
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 	{
 		std::string _path = ofToString("ofxSurfingPresets/" + videoName.get());
@@ -2992,13 +3054,6 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 	}
 
 	//--
-	
-	//TODO:
-	//add dialog loader
-	// Audio
-	player.loadAudio("Z:\\_DATA\\VIDEO\\HuxleyHAP.wav");
-
-	//--
 
 	//TODO; 
 #ifdef AUTO_GENERATE_THUMBS_ON_LOADING
@@ -3011,6 +3066,30 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 	loadThumbs();
 	bFboReady = false;
 #endif
+
+	//----
+
+	//TODO:
+	//add dialog loader
+	// Audio
+	//player.loadAudio("Z:\\_DATA\\VIDEO\\HUXLEY2\\HUXLEY2.wav");
+
+	//--
+
+	if (bLinkAllFiles) 
+	{
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+		pathSubs = player.getPathSrt();
+		subs.setDuration(player.getDuration());//link durations
+		subs.load(pathSubs);
+#endif
+	}
+
+	//--
+
+	// workflow
+	// autostart play
+	if (!bPlay) bPlay = true;
 }
 
 //--------------------------------------------------------------
@@ -3027,20 +3106,16 @@ void ofxSurfingVideoSkip::exit()
 	// Save app settings
 	ofxSurfingHelpers::saveGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
 
-	// Channel fx
-#ifdef USE_ofxSurfingFxChannel
+	//	// Channel fx
+	//#ifdef USE_ofxSurfingFxChannel
+	////#ifndef USE_ofxPresetsManager__VIDEO_SKIP
+	////	saveGroup(params_Preset, path_GLOBAL_Folder + "/" + path_fileName_ChannelFX);
+	////#endif
+	//#endif
 
-//#ifndef USE_ofxPresetsManager__VIDEO_SKIP
-//	saveGroup(params_Preset, path_GLOBAL_Folder + "/" + path_fileName_ChannelFX);
-//#endif
+		//-
 
-	// ofxChannelFx
-	channelFx.exit();
-#endif
-
-	//-
-
-	// Callbacks
+		// Callbacks
 	ofRemoveListener(params_Engine.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Params);
 	ofRemoveListener(params_Control.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Params);
 
@@ -3672,65 +3747,96 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 			if (!ui.bMinimize)
 			{
-				std::string n = videoName;
-
-				if (ui.BeginTree(n))
+				if (ui.BeginTree("FILES"))
 				{
-					bool bBlink = (n == "\"NO FILE\"");//video file path not settled yet!
+					std::string n = videoName;
 
-					//TODO:
-					//SurfingGuiTypes st = (bBlink ? OFX_IM_BUTTON_SMALL_BORDER_BLINK : OFX_IM_BUTTON_SMALL);
-					SurfingGuiTypes st = OFX_IM_BUTTON_SMALL;
-
-					ui.BeginBlinkFrame(bBlink);
+					//if (ui.BeginTree(n))
+					if (ui.BeginTree("VIDEO"))
 					{
-						if (ui.AddButton("OPEN FILE", st))
+						//bool bBlink = (n == "\"NO FILE\"");//video file path not settled yet!
+						bool bBlink = !player.isLoaded();
+
+						ui.BeginBlinkText(bBlink);
 						{
-							doOpenDialogToSetPath();
+							ui.AddLabel(videoName.get());
+							string s = videoFilePath.get();
+							ui.AddTooltip(s);
 						}
+						ui.EndBlinkText(bBlink);
+
+						ui.AddSpacing();
+
+						//TODO:
+						//SurfingGuiTypes st = (bBlink ? OFX_IM_BUTTON_SMALL_BORDER_BLINK : OFX_IM_BUTTON_SMALL);
+						SurfingGuiTypes st = OFX_IM_BUTTON_SMALL;
+
+						ui.BeginBlinkFrame(bBlink);
+						{
+							if (ui.AddButton("Open File", st))
+							{
+								doOpenDialogToSetPath();
+							}
+						}
+						ui.EndBlinkFrame(bBlink);
+
+						if (ui.AddButton("Generate Thumbs", st))
+						{
+							doGenerateThumbs();
+						}
+
+						ui.AddSpacing();
+
+						//--
+
+						ui.EndTree();
 					}
-					ui.EndBlinkFrame(bBlink);
-
-					if (ui.AddButton("Generate Thumbs", st))
-					{
-						doGenerateThumbs();
-					}
-
-					ui.AddSpacing();
-
-					ui.BeginBlinkText(bBlink);
-					{
-						ui.AddLabel(videoName.get());
-						string s = videoFilePath.get();
-						ui.AddTooltip(s);
-					}
-					ui.EndBlinkText(bBlink);
-
-					ui.AddSpacing();
-
-					//ui.AddLabelBig("AUDIO");
-					ui.Add(player.volume, OFX_IM_KNOB_DOTKNOB, 2);
-
-					//TODO:
-					// center
-					/*
-					string lb = "AUDIO";
-					float w = ui.getWidgetsWidth(4);
-					ui.pushStyleFont(2);
-					auto sz = ImGui::CalcTextSize(lb.c_str()).x;
-					ui.popStyleFont();
-					ImGui::Dummy(ImVec2(w + sz / 2, 0));
-					//ImGui::Dummy(ImVec2(w, 0));
-					ImGui::SameLine();
-					ui.AddLabelBig(lb);
-
-					ImGui::Dummy(ImVec2(w, 0));
-					ImGui::SameLine();
-					ui.Add(player.volume, OFX_IM_KNOB_DOTKNOB, 2);
-					//ui.Add(volumeVideo, OFX_IM_STEPPER);
-					*/
 
 					//--
+
+					if (ui.BeginTree("AUDIO"))
+					{
+						bool bBlink = !player.isLoadedAudio();
+						ui.BeginBlinkText(bBlink);
+						{
+							ui.AddLabel(player.name_Audio);
+							string s = player.getPathAudio();
+							ui.AddTooltip(s);
+						}
+						ui.EndBlinkText(bBlink);
+
+						ui.AddSpacing();
+
+						SurfingGuiTypes st = OFX_IM_BUTTON_SMALL;
+						if (ui.AddButton("Open Audio File", st))
+						{
+							player.doOpenDialogPathAudio();
+						}
+
+						ui.Add(player.volume, OFX_IM_HSLIDER_MINI);
+						//ui.Add(player.volume, OFX_IM_KNOB_DOTKNOB, 2);
+
+						//TODO:
+						// center
+						/*
+						string lb = "AUDIO";
+						float w = ui.getWidgetsWidth(4);
+						ui.pushStyleFont(2);
+						auto sz = ImGui::CalcTextSize(lb.c_str()).x;
+						ui.popStyleFont();
+						ImGui::Dummy(ImVec2(w + sz / 2, 0));
+						//ImGui::Dummy(ImVec2(w, 0));
+						ImGui::SameLine();
+						ui.AddLabelBig(lb);
+
+						ImGui::Dummy(ImVec2(w, 0));
+						ImGui::SameLine();
+						ui.Add(player.volume, OFX_IM_KNOB_DOTKNOB, 2);
+						//ui.Add(volumeVideo, OFX_IM_STEPPER);
+						*/
+
+						ui.EndTree();
+					}
 
 					ui.EndTree();
 				}
@@ -3825,7 +3931,11 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			ui.AddSpacingSeparated();
 			ui.Add(subs.bGui, OFX_IM_TOGGLE_BUTTON_ROUNDED);
 #endif
+			//--
 
+#if defined(USE_ofxSurfingFxChannel) || defined(USE_ofxSurfingFxPro) 
+			ui.Add(channelFx.bGui, OFX_IM_TOGGLE_BUTTON_ROUNDED);
+#endif
 			//--
 
 			// Skip Panel
@@ -4058,7 +4168,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 										{
 											//workflow
 											if (bPlay) bPlay = false;
-											 
+
 											bDoKickL = true;
 										}
 										ui.SameLine();
@@ -4165,6 +4275,28 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 }
 
 //--------------------------------------------------------------
+void ofxSurfingVideoSkip::draw_ImGui_Docking()
+{
+	ui.BeginDocking();
+	{
+		//dockingPopulate(); // -> initialize and "bypass" layout presets system if required
+
+		//--
+
+		//if (bDockingReset)
+		//{
+		//	bDockingReset = false;
+		//	dockingReset();
+		//}
+
+		//--
+
+		//if (ui.bGui_Menu) draw_ImGui_Menu();
+	}
+	ui.EndDocking();
+}
+
+//--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui()
 {
 	if (!bGui) return;
@@ -4174,25 +4306,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 	ui.Begin();
 	{
 		// Docking
-		{
-			ui.BeginDocking();
-			{
-				//dockingPopulate(); // -> initialize and "bypass" layout presets system if required
-
-				//--
-
-				//if (bDockingReset)
-				//{
-				//	bDockingReset = false;
-				//	dockingReset();
-				//}
-
-				//--
-
-				//if (ui.bGui_Menu) draw_ImGui_Menu();
-			}
-			ui.EndDocking();
-		}
+		draw_ImGui_Docking();
 
 		//----
 
@@ -4258,10 +4372,10 @@ void ofxSurfingVideoSkip::draw_ImGui()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::doOpenDialogToSetPath()
 {
-	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "Set presets path";
+	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "Set path";
 
 	// Open the Open File Dialog
-	std::string str = "Select video file. Must be enconded in HAP codec! Example: myVideo.mov\n";
+	std::string str = "Select a video file. Must be encoded in .mov HAP codec! \n";
 	ofFileDialogResult openFileResult = ofSystemLoadDialog(str, false);
 
 	// Check if the user opened a file
@@ -4280,6 +4394,7 @@ void ofxSurfingVideoSkip::doOpenDialogToSetPath()
 
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "video name: " << videoName;
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "video path: " << videoFilePath;
+
 		loadMovie(videoFilePath);
 	}
 	else
