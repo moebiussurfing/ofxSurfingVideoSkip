@@ -937,7 +937,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 	updateVideoPlayer();
 
 #ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
-	subs.updatePos(player.getPosition());
+	subs.updatePosition(player.getPosition());
 #endif
 
 	//--
@@ -1795,6 +1795,12 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "mod_ALT: " << (mod_ALT ? "ON" : "OFF");
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "mod_SHIFT: " << (mod_SHIFT ? "ON" : "OFF");
 	}
+
+	//--
+
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+	subs.keyPressed(key);
+#endif
 
 	//--
 
