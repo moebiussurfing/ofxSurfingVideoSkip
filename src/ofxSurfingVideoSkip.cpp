@@ -226,6 +226,8 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	params_AppSettings.add(surfingPreview.params);
 	params_AppSettings.add(bGui_Main);
 	params_AppSettings.add(bMODE_Edit);
+	params_AppSettings.add(bMODE_Edit);
+	params_AppSettings.add(player.volume);
 }
 
 //--------------------------------------------------------------
@@ -389,7 +391,6 @@ void ofxSurfingVideoSkip::setup()
 	params_Engine.add(bMODE_Edit);
 	params_Engine.add(videoName); // NOTE: a longer string will resize the GUI panel width!
 	params_Engine.add(position);
-	params_Engine.add(player.volume);
 	params_Engine.add(videoTIME);
 
 	//--
