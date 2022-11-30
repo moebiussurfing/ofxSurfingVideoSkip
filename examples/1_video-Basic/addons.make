@@ -1,4 +1,3 @@
-ofxFontStash
 ofxGui
 ofxHapPlayer
 ofxImGui
@@ -6,5 +5,4 @@ ofxSurfingBox
 ofxSurfingFxChannel
 ofxSurfingHelpers
 ofxSurfingImGui
-ofxSurfingTextSubtitle
 ofxSurfingVideoSkip

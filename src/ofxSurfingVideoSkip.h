@@ -112,7 +112,7 @@
 //#define USE_ofxNDI
 
 // -> 10. SRT subtitler
-#define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+//#define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
 // Requires to un comment on ofxSurfingTextSubtitle.h: #define USE_IM_GUI__SUBTITLES 
 
 
@@ -185,9 +185,13 @@
 //----
 
 
-#define BAR_INSET 15
-#define BAR_HEIGHT 40
-//#define BAR_HEIGHT 50
+#define BAR_INSET 4
+//#define BAR_INSET 15
+
+//#define BAR_HEIGHT 60
+//#define BAR_HEIGHT 80
+//#define BAR_HEIGHT 40
+#define BAR_HEIGHT 50
 
 #define SPEED_MIN 0.20f
 #define SPEED_MAX 50.0f
@@ -220,6 +224,7 @@ public:
 	//--
 
 public:
+
 	ofDirectory dirThumbs;
 	vector<ofImage> imgThumbs;
 	void loadThumbs();
@@ -292,6 +297,8 @@ private:
 	void exit();
 
 private:
+
+	bool bToolTips = false;
 
 	// Keys
 	bool mod_CONTROL;

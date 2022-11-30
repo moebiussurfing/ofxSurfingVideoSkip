@@ -77,7 +77,7 @@ void ofxSurfingVideoSkip::setup_Preset()
 	params_Preset.add(speedNorm);
 	//params_Preset.add(speed);
 
-	//params_Preset.add(bMODE_Loop);//exclude. allways loop mode
+	params_Preset.add(bMODE_Loop); // exclude. always loop mode
 
 	params_Preset.add(bMODE_LoopedBack);
 	params_Preset.add(bMODE_Reversed);
@@ -226,7 +226,7 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	params_AppSettings.add(surfingPreview.params);
 	params_AppSettings.add(bGui_Main);
 	params_AppSettings.add(bMODE_Edit);
-	params_AppSettings.add(bMODE_Edit);
+	params_AppSettings.add(bMODE_Loop);
 	params_AppSettings.add(player.volume);
 }
 
@@ -301,7 +301,7 @@ void ofxSurfingVideoSkip::setup()
 	bMODE_LoopedBack.set("LOOP BACK", false);
 	bMODE_Reversed.set("REVERSE", false);
 	bDoResetEngine.set("RESET ENGINE", false);
-	bDoResetAll.set("RESET", false);
+	bDoResetAll.set("RESET ALL", false);
 	bDoResetBpm.set("RESET BPM", false);
 
 	//bGui_Advanced.set("SHOW ADVANCED", false);
@@ -363,7 +363,7 @@ void ofxSurfingVideoSkip::setup()
 	last_TRIG_reverse = 0;
 
 	// Exclude
-	bMODE_Loop.setSerializable(false);//forced true
+	//bMODE_Loop.setSerializable(false);//forced true
 	//bMODE_Edit.setSerializable(false);
 	speed.setSerializable(false);
 	timer_SkipTime.setSerializable(false);
@@ -377,9 +377,9 @@ void ofxSurfingVideoSkip::setup()
 
 	// Modes. Not included into presets
 
-#ifdef USE_ofxSurfingFxChannel
-	channelFx.bGui.setName("FX CHANNEL");
-#endif
+//#ifdef USE_ofxSurfingFxChannel
+//	channelFx.bGui.setName("FX CHANNEL");
+//#endif
 
 	//--
 
@@ -389,6 +389,7 @@ void ofxSurfingVideoSkip::setup()
 	params_Engine.add(bGui_SkipTimers);
 	params_Engine.add(bPlay);
 	params_Engine.add(bMODE_Edit);
+	params_Engine.add(bMODE_Loop);
 	params_Engine.add(videoName); // NOTE: a longer string will resize the GUI panel width!
 	params_Engine.add(position);
 	params_Engine.add(videoTIME);
@@ -1581,7 +1582,7 @@ void ofxSurfingVideoSkip::mouseDragged(ofMouseEventArgs& eventArgs)
 			//--
 
 			//// workflow
-			////disable loop if cursor is out-of-loop
+			//// disable loop if cursor is out-of-loop
 			//if (position < position_In || position > position_Out)
 			//{
 			//	if (bMODE_Loop && !bMODE_Edit) bMODE_Loop = false;
@@ -3374,12 +3375,12 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 
 			// Manual triggers
 			ui.Add(bDoSkipTime, OFX_IM_BUTTON_BIG, 2, true);
-			string s = "Manually Trig a Skip Time";
-			ui.AddTooltip(s);
+			string s = "Manually Trig \nSkip Time";
+			ui.AddTooltip(s, bToolTips);
 
 			ui.Add(bDoSkipReverse, OFX_IM_BUTTON_BIG, 2, false);
-			s = "Manually Trig a Rev Direction";
-			ui.AddTooltip(s);
+			s = "Manually Trig \nRev Direction";
+			ui.AddTooltip(s, bToolTips);
 
 			ui.AddSpacingSeparated();
 
@@ -3388,7 +3389,7 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 			// Big enablers
 			ui.Add(bENABLE_TimersGlobal, OFX_IM_TOGGLE_BIG_XXL_BORDER);
 			s = "Global ByPass for both Timers";
-			ui.AddTooltip(s);
+			ui.AddTooltip(s, bToolTips);
 
 			ui.AddSpacing();
 
@@ -3430,7 +3431,7 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 
 				ui.Add(bMODE_SkipTime, OFX_IM_TOGGLE_BIG_XXL_BORDER_BLINK);
 				string s = "When Timer happens position is randomized";
-				ui.AddTooltip(s);
+				ui.AddTooltip(s, bToolTips);
 
 				if (bMODE_SkipTime)
 					if (bENABLE_TimersGlobal)
@@ -3447,17 +3448,17 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 
 							ui.Add(bMODE_SkipLooped, OFX_IM_TOGGLE_SMALL, 2, true);
 							string s = "Random goes to any point";
-							ui.AddTooltip(s);
+							ui.AddTooltip(s, bToolTips);
 
 							ui.Add(bMODE_SkipPowered, OFX_IM_TOGGLE_SMALL, 2, false);
 							s = "Random goes to a closer or far point";
-							ui.AddTooltip(s);
+							ui.AddTooltip(s, bToolTips);
 
 							if (bMODE_SkipPowered)
 							{
 								ui.Add(skipPower);
 								string s = "How much close or far is the random";
-								ui.AddTooltip(s);
+								ui.AddTooltip(s, bToolTips);
 							}
 
 							ui.EndTree();
@@ -3474,7 +3475,7 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 
 				ui.Add(bMODE_SkipReverse, OFX_IM_TOGGLE_BIG_XXL_BORDER_BLINK);
 				s = "When Timer happens direction is switched";
-				ui.AddTooltip(s);
+				ui.AddTooltip(s, bToolTips);
 
 				if (bMODE_SkipReverse)
 					if (bENABLE_TimersGlobal)
@@ -3734,7 +3735,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 		//IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
 		ofxImGuiSurfing::SetWindowContraintsWidth(200);
 
-		if (ui.BeginWindow(bGui_Main))
+		if (ui.BeginWindowSpecial(bGui_Main))
+		//if (ui.BeginWindow(bGui_Main))
 		{
 			float ___w1;
 			float ___w2;
@@ -3768,7 +3770,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						{
 							ui.AddLabel(videoName.get());
 							string s = videoFilePath.get();
-							ui.AddTooltip(s);
+							ui.AddTooltip(s, bToolTips);
 						}
 						ui.EndBlinkText(bBlink);
 
@@ -3860,6 +3862,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 				// workflow
 				if (!bGui_Previews) surfingPreview.bGui_Extra = false;
 			};
+			ui.AddTooltip("MODULE \nIMAGE \nPREVIEWS", bToolTips);
 
 			// minimized
 			if (ui.bMinimize) {
@@ -3941,7 +3944,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			//--
 
 #if defined(USE_ofxSurfingFxChannel) || defined(USE_ofxSurfingFxPro) 
-			ui.Add(channelFx.bGui, OFX_IM_TOGGLE_BUTTON_ROUNDED);
+			ui.Add(channelFx.bGui, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
+			ui.AddTooltip("MODULE \nFX \nCHANNEL", bToolTips);
 #endif
 			//--
 
@@ -3950,6 +3954,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			ui.AddSpacingSeparated();
 
 			ui.Add(bGui_SkipTimers, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
+			ui.AddTooltip("TEMPO BASED \nSKIP TIMERS \nENGINE", bToolTips);
 
 			ui.AddSpacingSeparated();
 
@@ -3967,6 +3972,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 				{
 					ui.AddSpacing();
 					ui.Add(bMODE_Edit, OFX_IM_TOGGLE_MEDIUM_BORDER);
+					ui.Add(bMODE_Loop, OFX_IM_TOGGLE_SMALL);
 				}
 
 				ui.AddSpacingSeparated();
@@ -4050,13 +4056,13 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 					ui.Add(position_In, OFX_IM_HSLIDER_MINI_NO_LABELS);
 					s = "Mark In";
-					ui.AddTooltip(s);
+					ui.AddTooltip(s, bToolTips);
 
 					if (!bMODE_Beat)
 					{
 						ui.Add(position_Out, OFX_IM_HSLIDER_MINI_NO_LABELS);
 						s = "Mark Out";
-						ui.AddTooltip(s);
+						ui.AddTooltip(s, bToolTips);
 
 						//ui.Add(position_Out);
 					}
@@ -4070,7 +4076,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 						ui.Add(beatDuration, OFX_IM_HSLIDER_MINI_NO_NAME);
 						s = "Beats Duration";
-						ui.AddTooltip(s);
+						ui.AddTooltip(s, bToolTips);
 
 						//ui.Add(position_Out, OFX_IM_INACTIVE);
 					}
@@ -4087,7 +4093,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 					ui.Add(bMODE_Beat, OFX_IM_TOGGLE_MEDIUM);
 					string s = bMODE_Beat ?
 						"Out Mark is settled \nby Beats Duration" : "Out Mark can be \nmanually settled";
-					ui.AddTooltip(s);
+					ui.AddTooltip(s, bToolTips);
 					//ui.AddSpacing();
 
 					if (bMODE_Beat)
@@ -4096,7 +4102,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						if (!ui.bMinimize) {
 							ui.Add(beatRescale, OFX_IM_STEPPER);
 							s = "Beat Scale";
-							ui.AddTooltip(s);
+							ui.AddTooltip(s, bToolTips);
 						}
 					}
 
@@ -4109,10 +4115,10 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 				ui.Add(bMODE_LoopedBack, OFX_IM_TOGGLE_MEDIUM, 2, true);
 				s = "Alternate Direction";
-				ui.AddTooltip(s);
+				ui.AddTooltip(s, bToolTips);
 				ui.Add(bMODE_Reversed, OFX_IM_TOGGLE_MEDIUM, 2);
 				s = "Direction";
-				ui.AddTooltip(s);
+				ui.AddTooltip(s, bToolTips);
 				ui.AddSpacingSeparated();
 
 				//--
@@ -4276,7 +4282,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 			}
 			*/
 
-			ui.EndWindow();
+			ui.EndWindowSpecial();
+			//ui.EndWindow();
 		}
 	}
 }
@@ -4307,6 +4314,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Docking()
 void ofxSurfingVideoSkip::draw_ImGui()
 {
 	if (!bGui) return;
+
+	bToolTips = !ui.bMinimize;
 
 	//--
 

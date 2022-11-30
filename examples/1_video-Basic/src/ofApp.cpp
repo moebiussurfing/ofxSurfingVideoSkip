@@ -7,6 +7,8 @@ void ofApp::setup()
 	ofSetWindowPosition(-1920, 25);
 
 	player.setup();
+
+	ofSetEscapeQuitsApp(false);
 }
 
 //--------------------------------------------------------------
