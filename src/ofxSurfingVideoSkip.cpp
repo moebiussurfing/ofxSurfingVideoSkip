@@ -842,7 +842,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 	}
 
 	// fix loading settings
-	// seems that need overwrite ImGui management
+	// seems that need overwrite the ImGui management
 	if (ofGetFrameNum() == 2)
 	{
 		startup();
@@ -1174,7 +1174,8 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 				player.setPosition(position);
 			}
 
-			else if (player.getPosition() <= position_In) // ? < only
+			else if (player.getPosition() < position_In) // ? < only
+			//else if (player.getPosition() <= position_In) // ? < only
 			{
 				if (!bMODE_LoopedBack)
 				{
@@ -2066,11 +2067,13 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 
 			// workflow
 
-			//if (!bPlay && bMODE_Edit)
-			if (bMODE_Edit)
-			{
-				position_In = position;
-			}
+			//BUG
+			////TODO:
+			////if (!bPlay && bMODE_Edit)
+			//if (bMODE_Edit)
+			//{
+			//	position_In = position;
+			//}
 
 			//if (!bPlay && !bMODE_Edit) {
 			//	bMODE_Edit = true;
