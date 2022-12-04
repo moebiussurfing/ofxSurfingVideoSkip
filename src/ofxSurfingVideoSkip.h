@@ -132,7 +132,7 @@
 #include "ofxSurfingImGui.h"
 #include "WindowFbo.h"
 
-//#define AUTO_GENERATE_THUMBS_ON_LOADING
+#define AUTO_GENERATE_THUMBS_ON_LOADING
 
 //--
 

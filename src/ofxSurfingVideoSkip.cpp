@@ -228,6 +228,9 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	params_AppSettings.add(bMODE_Edit);
 	params_AppSettings.add(bMODE_Loop);
 	params_AppSettings.add(player.volume);
+#ifdef USE_ofxSurfingFxChannel
+	params_AppSettings.add(channelFx.bGui);
+#endif
 }
 
 //--------------------------------------------------------------
@@ -640,7 +643,7 @@ void ofxSurfingVideoSkip::setup()
 
 	// Startup 
 	// video file path will (must) be loaded now
-	startup();
+	//startup();
 }
 
 #ifdef USE_ofxSurfingOsc
@@ -838,8 +841,16 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 		doOpenDialogToSetPath();
 	}
 
+	// fix loading settings
+	// seems that need overwrite ImGui management
+	if (ofGetFrameNum() == 2)
+	{
+		startup();
+	}
+
 	//--
 
+	// When generating thumbs finished:
 	// Load thumbs to images
 	if (commandThread.isDone())
 	{
@@ -3084,7 +3095,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 
 	//--
 
-	if (bLinkAllFiles) 
+	if (bLinkAllFiles)
 	{
 #ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
 		pathSubs = player.getPathSrt();
@@ -3399,8 +3410,10 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 			{
 				if (!ui.bMinimize)
 				{
-					if (ui.BeginTree("BPM CLOCK", bMODE_SkipTime || bMODE_SkipReverse))
+					//if (ui.BeginTree("BPM CLOCK", bMODE_SkipTime || bMODE_SkipReverse))
+					if (ui.BeginTree("BPM CLOCK", false))
 					{
+						ui.AddSpacing();
 						ui.Add(bpm, OFX_IM_DEFAULT);
 						ui.Add(bpmDivider, OFX_IM_DEFAULT);
 
@@ -3429,14 +3442,15 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 
 				// Skip Time
 
-				ui.Add(bMODE_SkipTime, OFX_IM_TOGGLE_BIG_XXL_BORDER_BLINK);
+				ui.Add(bMODE_SkipTime, OFX_IM_TOGGLE_BIG_BORDER_BLINK);
 				string s = "When Timer happens position is randomized";
 				ui.AddTooltip(s, bToolTips);
 
 				if (bMODE_SkipTime)
 					if (bENABLE_TimersGlobal)
 					{
-						if (ui.BeginTree("A SKIP TIME", bMODE_SkipTime.get()))
+						ui.AddSpacing();
+						if (ui.BeginTree("##A SKIP TIME", bMODE_SkipTime.get(), false, ImGuiTreeNodeFlags_None))
 						{
 							if (bMODE_SkipTime && bENABLE_TimersGlobal)
 							{
@@ -3473,14 +3487,15 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 
 				// Skip Rev
 
-				ui.Add(bMODE_SkipReverse, OFX_IM_TOGGLE_BIG_XXL_BORDER_BLINK);
+				ui.Add(bMODE_SkipReverse, OFX_IM_TOGGLE_BIG_BORDER_BLINK);
 				s = "When Timer happens direction is switched";
 				ui.AddTooltip(s, bToolTips);
 
 				if (bMODE_SkipReverse)
 					if (bENABLE_TimersGlobal)
 					{
-						if (ui.BeginTree("B SKIP REV", bMODE_SkipReverse.get()))
+						ui.AddSpacing();
+						if (ui.BeginTree("##B SKIP REV", bMODE_SkipReverse.get(), false, ImGuiTreeNodeFlags_None))
 						{
 							ui.refreshLayout();
 
@@ -3736,7 +3751,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 		ofxImGuiSurfing::SetWindowContraintsWidth(200);
 
 		if (ui.BeginWindowSpecial(bGui_Main))
-		//if (ui.BeginWindow(bGui_Main))
+			//if (ui.BeginWindow(bGui_Main))
 		{
 			float ___w1;
 			float ___w2;
@@ -3769,6 +3784,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						ui.BeginBlinkText(bBlink);
 						{
 							ui.AddLabel(videoName.get());
+
 							string s = videoFilePath.get();
 							ui.AddTooltip(s, bToolTips);
 						}
@@ -3805,14 +3821,14 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 					if (ui.BeginTree("AUDIO"))
 					{
-						bool bBlink = !player.isLoadedAudio();
-						ui.BeginBlinkText(bBlink);
+						bool bNotLoadedAudio = !player.isLoadedAudio();
+						ui.BeginBlinkText(bNotLoadedAudio);
 						{
 							ui.AddLabel(player.name_Audio);
 							string s = player.getPathAudio();
 							ui.AddTooltip(s);
 						}
-						ui.EndBlinkText(bBlink);
+						ui.EndBlinkText(bNotLoadedAudio);
 
 						ui.AddSpacing();
 
@@ -3822,8 +3838,10 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 							player.doOpenDialogPathAudio();
 						}
 
-						ui.Add(player.volume, OFX_IM_HSLIDER_MINI);
-						//ui.Add(player.volume, OFX_IM_KNOB_DOTKNOB, 2);
+						if (!bNotLoadedAudio) {
+							ui.Add(player.volume, OFX_IM_HSLIDER_MINI);
+							//ui.Add(player.volume, OFX_IM_KNOB_DOTKNOB, 2);
+						}
 
 						//TODO:
 						// center
