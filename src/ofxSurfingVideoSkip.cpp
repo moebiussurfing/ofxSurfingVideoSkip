@@ -122,7 +122,7 @@ void ofxSurfingVideoSkip::setup_Remote()
 
    //--
 
-#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
+#ifdef USE_ofxBeatClock__VIDEO_SKIP
 
 	beatClock.setup();
 	beatClock.bGui.setName("CLOCK");
@@ -228,7 +228,7 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	params_AppSettings.add(bMODE_Edit);
 	params_AppSettings.add(bMODE_Loop);
 	params_AppSettings.add(player.volume);
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	params_AppSettings.add(channelFx.bGui);
 #endif
 }
@@ -247,7 +247,7 @@ void ofxSurfingVideoSkip::setup()
 
 #ifndef USE_ofxPresetsManager__VIDEO_SKIP
 	path_Preset = "ofxSurfingVideoSkip_Engine_Settings.xml";
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	path_fileName_ChannelFX = "ofxSurfingVideoSkip_ChannelFX_Settings.xml";
 #endif
 #endif		
@@ -269,7 +269,8 @@ void ofxSurfingVideoSkip::setup()
 	bLinkAllFiles.set("Link Files", true);
 
 	bGui.set("SURFING VIDEO", true);
-	bGui_Main.set("VIDEO SKIP", true);
+	bGui_Main.set("VIDEO", true);
+	//bGui_Main.set("VIDEO SKIP", true);
 	bGui_SkipTimers.set("SKIP TIMERS", false);
 	bGui_Previews.set("MONITOR", false);
 	//bGui_Previews.set("PREVIEWS", false);
@@ -353,7 +354,7 @@ void ofxSurfingVideoSkip::setup()
 	bMODE_Lock.set("LOCK", false);//?
 
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
-#if defined(USE_ofxSurfingFxChannel) || defined(USE_ofxSurfingFxPro) 
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
 	indexPreviewSource.set("Source Preview", 0, 0, previewSources.size() - 1);
 #else
 	indexPreviewSource.set("Source Preview", 0, 0, 0);
@@ -380,7 +381,7 @@ void ofxSurfingVideoSkip::setup()
 
 	// Modes. Not included into presets
 
-//#ifdef USE_ofxSurfingFxChannel
+//#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 //	channelFx.bGui.setName("FX CHANNEL");
 //#endif
 
@@ -508,19 +509,19 @@ void ofxSurfingVideoSkip::setup()
 	//	_param_Keys.add(bKeys_Presets);
 	//#endif
 	//
-	//#ifdef USE_ofxSurfingFxChannel
+	//#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	//	_param_Keys.add(bKeys_Fx);
 	//#endif
 
 	//--
 
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	params_Control.add(_param_ChannelFx);
 #endif
 
 	//--
 
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 	params_Control.add(_param_MoodMachine);
 #endif
 	params_Control.add(_param_Keys);
@@ -534,18 +535,18 @@ void ofxSurfingVideoSkip::setup()
 
 	// Channel Fx
 
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	setup_ChannelFx();
 #endif
 
 	//--
 
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 
 	moods.bpmSpeed.makeReferenceTo(bpm);
 
 	// Link Mood BPM to BeatBlock instance:
-#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
+#ifdef USE_ofxBeatClock__VIDEO_SKIP
 	moods.bpmSpeed.makeReferenceTo(beatClock.BPM_Global);
 	bpm.makeReferenceTo(beatClock.BPM_Global);
 
@@ -822,7 +823,7 @@ void ofxSurfingVideoSkip::setKeysEnable(bool b)
 #endif
 }
 
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::setup_ChannelFx()
 {
@@ -902,7 +903,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 			//--
 
 			// Fx Processed
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 			if (channelFx.bEnable_Fx)
 			{
 				channelFx.begin();
@@ -1175,7 +1176,7 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 			}
 
 			else if (player.getPosition() < position_In) // ? < only
-			//else if (player.getPosition() <= position_In) // ? < only
+				//else if (player.getPosition() <= position_In) // ? < only
 			{
 				if (!bMODE_LoopedBack)
 				{
@@ -1839,7 +1840,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 			setPlay(!bPlay);
 		}
 
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 		else if (key == OF_KEY_RETURN)
 		{
 			bool b = !moods.isPlaying();
@@ -2382,7 +2383,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			//bGui_BarControl = b;
 		}
 
-		//#ifdef USE_ofxSurfingMoods
+		//#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 		//		else if (name == SHOW_MoodMachine.getName())
 		//		{
 		//			moods.setGui_Visible(SHOW_MoodMachine);
@@ -2479,7 +2480,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 
 		else if (name == bTheme.getName())
 		{
-			bFboReady = false;
+			bThumbsReadyFbo = false;
 		}
 
 		//--
@@ -2510,7 +2511,7 @@ void ofxSurfingVideoSkip::Changed_bGui()
 	}
 }
 
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 
 // Moods
 // listeners for inside moods
@@ -2592,7 +2593,7 @@ void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 	// Channel Fx
 
 	/*
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	//if (ENABLE_Video_FX)
 	if (channelFx.bENABLE_Fx)
 	{
@@ -2714,7 +2715,7 @@ void ofxSurfingVideoSkip::draw_Video()
 			//--
 
 			// Fx Processed
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 			if (channelFx.bEnable_Fx)
 			{
 				channelFx.begin();
@@ -2780,10 +2781,10 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 				// 5. Draw thumbs
 				//TODO: make a cached fbo
 				static ofFbo fbo;
-				//static bool bFboReady = false;
-				if (!bFboReady && imgThumbs.size() > 0)
+				//static bool bThumbsReadyFbo = false;
+				if (!bThumbsReadyFbo && imgThumbs.size() > 0)
 				{
-					bFboReady = true;
+					bThumbsReadyFbo = true;
 					fbo.allocate(barFull.getWidth(), barFull.getHeight());
 					fbo.begin();
 					ofClear(0, 255);
@@ -2839,7 +2840,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 					}
 					fbo.end();
 				}
-				if (bFboReady && imgThumbs.size() > 0)
+				if (bThumbsReadyFbo && imgThumbs.size() > 0)
 				{
 					float x = getBarRectangle().getTopLeft().x;
 					float y = getBarRectangle().getTopLeft().y;
@@ -2994,14 +2995,17 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 		if (player.isError())
 		{
 			bError = true;
-			float w = ofxSurfingHelpers::getWidthBBtextBoxed(font, "MUST PICK A VIDEO FILE!");
-			ofxSurfingHelpers::drawTextBoxed(font, "MUST PICK A VIDEO FILE!", ofGetWidth() / 2 - w / 2, 40, c);
+			string s = "MUST PICK A VIDEO FILE!";
+			float w = ofxSurfingHelpers::getWidthBBtextBoxed(font, s);
+			ofxSurfingHelpers::drawTextBoxed(font, s, ofGetWidth() / 2 - w / 2, 40, c);
 			//player.getError() 
 		}
 		else
 		{
 			bError = false;
-			ofxSurfingHelpers::drawTextBoxed(font, "LOADING VIDEO FILE...", 20, 40, c);
+			string s = "LOADING VIDEO FILE...";
+			float w = ofxSurfingHelpers::getWidthBBtextBoxed(font, s);
+			ofxSurfingHelpers::drawTextBoxed(font, s, ofGetWidth() / 2 - w / 2, 40, c);
 		}
 	}
 }
@@ -3086,7 +3090,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 #else 
 	// Load thumbs to images
 	loadThumbs();
-	bFboReady = false;
+	bThumbsReadyFbo = false;
 #endif
 
 	//----
@@ -3105,7 +3109,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 		subs.setDuration(player.getDuration());//link durations
 		subs.load(pathSubs);
 #endif
-	}
+}
 
 	//--
 
@@ -3129,7 +3133,7 @@ void ofxSurfingVideoSkip::exit()
 	ofxSurfingHelpers::saveGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
 
 	//	// Channel fx
-	//#ifdef USE_ofxSurfingFxChannel
+	//#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	////#ifndef USE_ofxPresetsManager__VIDEO_SKIP
 	////	saveGroup(params_Preset, path_GLOBAL_Folder + "/" + path_fileName_ChannelFX);
 	////#endif
@@ -3164,7 +3168,7 @@ void ofxSurfingVideoSkip::exit()
 	// 
 		//--
 
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 	// Listener for inside class moods
 	moods.RANGE_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_RANGE);
 	moods.TARGET_Selected.removeListener(this, &ofxSurfingVideoSkip::Changed_Mood_TARGET);
@@ -3207,7 +3211,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 			{
 				ofLogNotice("ofxSurfingVideoSkip") << "Bang 0 >";
 				//presetsManager.doLoadNext();
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 				moods.doBeatTick();
 #endif
 				return;
@@ -3218,7 +3222,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 				ofLogNotice("ofxSurfingVideoSkip") << "Bang 1 > ";
 				//presetsManager.doLoadNext();
 				//presetsManager.load(7);
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 				moods.doBeatTick();
 #endif
 				return;
@@ -3229,7 +3233,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 				ofLogNotice("ofxSurfingVideoSkip") << "Bang 2 > ";
 				//presetsManager.doLoadNext();
 				//presetsManager.load(7);
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 				moods.doBeatTick();
 #endif
 				return;
@@ -3256,7 +3260,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 		if (_name == "VALUE_" + ofToString(1))
 		{
 			//ofLogNotice("ofxSurfingVideoSkip") << "Value 1 > " << ofToString(p, 2);
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 			//moods.controlManual = 1 - p; // flip
 			moods.controlManual = p;
 #endif
@@ -3310,15 +3314,15 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	ui.addWindowSpecial(mMidiParams.bGui);
 #endif
 
-#ifdef USE_ofxSurfingMoods 
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP 
 	ui.addWindowSpecial(moods.bGui);
 #endif
 
-#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
+#ifdef USE_ofxBeatClock__VIDEO_SKIP
 	ui.addWindowSpecial(beatClock.bGui);
 #endif
 
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	ui.addWindowSpecial(channelFx.bGui);
 #endif
 
@@ -3362,7 +3366,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	ui.addExtraParamToLayoutPresets(oscHelper.bGui_Plots);
 #endif
 
-#ifdef USE_ofxSurfingMoods 
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP 
 	ui.addExtraParamToLayoutPresets(moods.bGui_PreviewWidget);
 	ui.addExtraParamToLayoutPresets(moods.bGui_ManualSlider);
 #endif
@@ -3405,7 +3409,7 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 			s = "Global ByPass for both Timers";
 			ui.AddTooltip(s, bToolTips);
 
-			ui.AddSpacing();
+			if (bENABLE_TimersGlobal) ui.AddSpacingSeparated();
 
 			//--
 
@@ -3533,7 +3537,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Preview()
 	string n = "";
 
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
-#if defined(USE_ofxSurfingFxChannel) || defined(USE_ofxSurfingFxPro) 
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
 	if (indexPreviewSource < previewSources.size()) n = previewSources[indexPreviewSource];
 #endif
 #endif
@@ -3808,7 +3812,10 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 						ui.EndBlinkFrame(bBlink);
 
-						if (ui.AddButton("Generate Thumbs", st))
+						bool b = !commandThread.isThreadRunning();
+						//bool b = bThumbsReadyFbo;
+						SurfingGuiTypes sth = (b ? OFX_IM_BUTTON_SMALL : OFX_IM_BUTTON_SMALL_BORDER_BLINK);
+						if (ui.AddButton("Generate Thumbs", sth))
 						{
 							doGenerateThumbs();
 						}
@@ -3900,7 +3907,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 						// Source Selector
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
-#if defined(USE_ofxSurfingFxChannel) || defined(USE_ofxSurfingFxPro) 
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
 						if (surfingPreview.bGui_MiniPreview)
 						{
 							if (previewSources.size() > 1)
@@ -3940,7 +3947,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 						// Source Selector
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
-#if defined(USE_ofxSurfingFxChannel) || defined(USE_ofxSurfingFxPro) 
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
 						if (surfingPreview.bGui_MiniPreview)
 						{
 							if (previewSources.size() > 1)
@@ -3964,7 +3971,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 #endif
 			//--
 
-#if defined(USE_ofxSurfingFxChannel) || defined(USE_ofxSurfingFxPro) 
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
 			ui.Add(channelFx.bGui, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
 			ui.AddTooltip("MODULE \nFX \nCHANNEL", bToolTips);
 #endif
@@ -4120,7 +4127,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 					if (bMODE_Beat)
 					{
 						//ui.Add(beatDuration, OFX_IM_SLIDER);
-						if (!ui.bMinimize) {
+						//if (!ui.bMinimize)
+						{
 							ui.Add(beatRescale, OFX_IM_STEPPER);
 							s = "Beat Scale";
 							ui.AddTooltip(s, bToolTips);
@@ -4146,8 +4154,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 				// Speed
 
-				ui.Add(speedNorm, OFX_IM_SLIDER);
-				if (!ui.bMinimize) ui.Add(speedNorm, OFX_IM_STEPPER);
+				ui.Add(speedNorm, OFX_IM_STEPPER);
+				if (!ui.bMinimize) ui.Add(speedNorm, OFX_IM_HSLIDER_MINI_NO_LABELS);
 				ui.Add(bDoResetSpeed, OFX_IM_BUTTON_SMALL);
 				ui.AddSpacingSeparated();
 
@@ -4386,17 +4394,17 @@ void ofxSurfingVideoSkip::draw_ImGui()
 #endif
 
 	// Moods
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 	moods.drawGui();
 #endif
 
 	// BeatClock
-#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
+#ifdef USE_ofxBeatClock__VIDEO_SKIP
 	beatClock.draw();
 #endif
 
 	// FX Channel
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	channelFx.drawGui();
 #endif
 
@@ -4447,7 +4455,7 @@ void ofxSurfingVideoSkip::doGenerateThumbs()
 {
 	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__);
 
-	bFboReady = false;
+	bThumbsReadyFbo = false;
 
 	//--
 
@@ -4628,14 +4636,14 @@ void ofxSurfingVideoSkip::doGenerateThumbs()
 
 //--
 
-#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
+#ifdef USE_ofxBeatClock__VIDEO_SKIP
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_BeatTick() // callback to receive BeatTicks
 {
 	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "Beat #" << beatClock.getBeat();
 
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 	moods.doBeatTick();
 #endif
 
@@ -4648,7 +4656,7 @@ void ofxSurfingVideoSkip::Changed_BeatTick() // callback to receive BeatTicks
 //
 //	//bpm.set(beatClock.getBpm());
 //
-////#ifdef USE_ofxSurfingMoods
+////#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 ////	moods.setBpm(beatClock.getBpm());
 ////#endif
 //

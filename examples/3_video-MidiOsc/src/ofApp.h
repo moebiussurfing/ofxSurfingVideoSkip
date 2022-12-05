@@ -2,9 +2,7 @@
 
 #include "ofMain.h"
 
-
 //----
-
 
 /*
 
@@ -14,20 +12,8 @@
 	That's to allow enable some of the optional add-ons.
 
 	Then uncomment only these lines to enable the optional add-ons like i.e.:
-
-		// Optional compatible add-ons list:
-
-		// -> 1A. Simple Presets
-		#define USE_ofxSurfingPresets__VIDEO_SKIP
-
-		// -> 2. Mood Machine
-		#define USE_ofxSurfingMoods__VIDEO_SKIP
-
-		// -> 3. Beat Clock
-		#define USE_ofxBeatClock__VIDEO_SKIP
-
-		// -> 5. FX Channel
-		#define USE_ofxSurfingFxChannel__VIDEO_SKIP
+	#define USE_ofxSurfingPresets__VIDEO_SKIP
+	#define USE_ofxSurfingMoods
 
 	Let the other Optional Modules commented/disabled!
 
@@ -36,9 +22,7 @@
 
 */
 
-
 //----
-
 
 #include "ofxSurfingVideoSkip.h"
 
@@ -49,7 +33,6 @@ class ofApp : public ofBaseApp
 public:
 
 	void setup();
-	void keyPressed(int key);
 	void windowResized(int w, int h);
 	void dragEvent(ofDragInfo dragInfo);
 

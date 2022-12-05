@@ -80,21 +80,21 @@
 //
 // -> 1A. Simple Presets
 // -> Recommended! for GUI integration
-//#define USE_ofxSurfingPresets__VIDEO_SKIP 
+#define USE_ofxSurfingPresets__VIDEO_SKIP 
 // -> 1B. Power Presets
 //#define USE_ofxPresetsManager__VIDEO_SKIP 
 
 // -> 2. Mood Machine
-//#define USE_ofxSurfingMoods 
+#define USE_ofxSurfingMoods__VIDEO_SKIP 
 
 // -> 3. Beat Clock
-//#define USE_OF_BEAT_CLOCK__VIDEO_SKIP
+#define USE_ofxBeatClock__VIDEO_SKIP
 
 // -> 4. MIDI Input to control GUI and switch presets
 //#define USE_MIDI_PARAMS__VIDEO_SKIP 
 
 // -> 5. FX Channel
-#define USE_ofxSurfingFxChannel 
+#define USE_ofxSurfingFxChannel__VIDEO_SKIP 
 
 //TODO:
 // -> 6. Remote Parameters
@@ -113,8 +113,6 @@
 
 // -> 10. SRT subtitler
 //#define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
-// Requires to un comment on ofxSurfingTextSubtitle.h: #define USE_IM_GUI__SUBTITLES 
-
 
 //--
 
@@ -132,7 +130,7 @@
 #include "ofxSurfingImGui.h"
 #include "WindowFbo.h"
 
-#define AUTO_GENERATE_THUMBS_ON_LOADING
+//#define AUTO_GENERATE_THUMBS_ON_LOADING
 
 //--
 
@@ -154,7 +152,7 @@
 #include "ofxPresetsManager.h"
 #endif
 
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 #include "ofxSurfingMoods.h"
 #endif
 
@@ -162,11 +160,11 @@
 #include "ofxMidiParams.h"
 #endif
 
-#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
+#ifdef USE_ofxBeatClock__VIDEO_SKIP
 #include "ofxBeatClock.h"
 #endif
 
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 #include "ofxSurfingFxChannel.h"
 #endif
 
@@ -193,8 +191,10 @@
 //#define BAR_HEIGHT 40
 #define BAR_HEIGHT 50
 
-#define SPEED_MIN 0.20f
-#define SPEED_MAX 50.0f
+//#define SPEED_MIN 0.20f
+//#define SPEED_MAX 50.0f
+#define SPEED_MIN 0.25f
+#define SPEED_MAX 4.0f
 
 #include "CommandThread.h" // to call the thumbs generator without breaking drawing!
 
@@ -235,6 +235,7 @@ public:
 
 	//TODO:
 	// https://github.com/ocornut/imgui/issues/5627#event-7303371114
+	//--------------------------------------------------------------
 	static void AspectRatio(ImGuiSizeCallbackData* data) {
 		float aspect_ratio = *(float*)data->UserData;
 		data->DesiredSize.x = IM_MAX(data->CurrentSize.x, data->CurrentSize.y);
@@ -369,7 +370,7 @@ private:
 
 	// Clock
 
-#ifdef USE_OF_BEAT_CLOCK__VIDEO_SKIP
+#ifdef USE_ofxBeatClock__VIDEO_SKIP
 	ofxBeatClock beatClock;
 	ofEventListener listenerBeat;
 	void Changed_BeatTick();
@@ -415,14 +416,14 @@ public:
 
 private:
 
-	ofParameter<bool> bLinkAllFiles;//video, audio and srt.
+	ofParameter<bool> bLinkAllFiles; // video, audio and srt.
 
 	// Preview Monitor
 	SurfingPreview surfingPreview;
 
 	// If some Fx enabled
 #ifndef USE_MINIMAL_ofxSurfingVideoSkip
-#if defined(USE_ofxSurfingFxChannel) || defined(USE_ofxSurfingFxPro) 
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
 	std::vector<std::string> previewSources = { "Source", "Processed" };
 #else
 	std::vector<std::string> previewSources = { "Source" };
@@ -451,8 +452,10 @@ public:
 
 	void doOpenDialogToSetPath();
 
-	bool bFboReady = false;
+	bool bThumbsReadyFbo = false;
 	void doGenerateThumbs();
+
+	//--------------------------------------------------------------
 	void doRunCommand(string s) {
 		cout << (s) << endl << endl;
 		cout << ofSystem(s) << endl;
@@ -478,7 +481,7 @@ private:
 
 	ofParameter<bool> bKeys{ "Keys", true };
 
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	ofxSurfingFxChannel channelFx;
 #endif
 
@@ -490,6 +493,7 @@ public:
 	void setActive(bool b);
 	void setKeysEnable(bool b);
 	void setGuiVisible(bool b);
+
 	//--------------------------------------------------------------
 	void setGuiToggleVisible() {
 		bGui = !bGui;
@@ -550,7 +554,7 @@ public:
 
 	//--
 
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 
 	//--------------------------------------------------------------
 	void setPlay_MoodMachine(bool b)
@@ -577,7 +581,7 @@ public:
 
 private:
 
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	void setup_ChannelFx();
 	//ofParameter<bool> ENABLE_Video_FX;
 	//ofParameter<bool> SHOW_Video_FX;
@@ -733,10 +737,10 @@ private:
 
 	ofParameterGroup params_Control;
 
-#ifdef USE_ofxSurfingFxChannel
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	ofParameterGroup _param_ChannelFx{ "FX" };
 #endif
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 	ofParameterGroup _param_MoodMachine{ "MOOD-MACHINE" };
 #endif
 
@@ -770,7 +774,7 @@ private:
 
 	//--
 
-#ifdef USE_ofxSurfingMoods
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 	ofxSurfingMoods moods;
 
 	void Changed_Mood_RANGE(int& targetVal);
