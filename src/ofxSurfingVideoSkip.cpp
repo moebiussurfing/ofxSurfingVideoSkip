@@ -15,9 +15,12 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 
+
 	// Customize before add the group! that will call setup()
 
 	presetsManager.setFliped(true);
+
+	presetsManager.setColorized(true);
 
 	presetsManager.setKeyFirstChar('0');
 	//presetsManager.setKeyFirstChar('a'); 
@@ -829,7 +832,7 @@ void ofxSurfingVideoSkip::setup_ChannelFx()
 {
 	channelFx.setPath_GlobalFolder(path_GLOBAL_Folder + "/ofxChannelFx");//ofxSurfingVideoSkip/ofxChannelFx
 	channelFx.setup();
-	channelFx.setVisibleGui(true);
+	//channelFx.setVisibleGui(true);
 	channelFx.setKeysExtra(false);//disables space and arrows keys for browsing presets
 }
 #endif
@@ -1220,7 +1223,7 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 
 	// Auto hide GUI system
 	if (bAutoHide_BarControl)
-		if (ofGetElapsedTimeMillis() - lastMovement < time_autoHide)
+		if (ofGetElapsedTimeMillis() - tLastMovement < tAutoHide)
 		{
 			if (!bGui_BarControl.get()) bGui_BarControl = true;
 		}
@@ -1436,7 +1439,7 @@ void ofxSurfingVideoSkip::setGuiVisible(bool b)
 	{
 		//bGui_VideoControlBar_PRE = bGui_BarControl;
 		//bGui_BarControl = true;
-		lastMovement = ofGetElapsedTimeMillis();
+		tLastMovement = ofGetElapsedTimeMillis();
 	}
 
 	// draw control bar
@@ -1463,7 +1466,7 @@ void ofxSurfingVideoSkip::mouseMoved(ofMouseEventArgs& eventArgs)
 		const int& button = eventArgs.button;
 
 		{
-			lastMovement = ofGetElapsedTimeMillis();
+			tLastMovement = ofGetElapsedTimeMillis();
 		}
 	}
 }
@@ -1573,7 +1576,7 @@ void ofxSurfingVideoSkip::mouseDragged(ofMouseEventArgs& eventArgs)
 		const int& y = eventArgs.y;
 		const int& button = eventArgs.button;
 
-		lastMovement = ofGetElapsedTimeMillis();
+		tLastMovement = ofGetElapsedTimeMillis();
 
 		if (inScrub)
 		{
@@ -1714,7 +1717,7 @@ void ofxSurfingVideoSkip::mousePressed(ofMouseEventArgs& eventArgs)
 			//ofLogNotice("ofxSurfingVideoSkip")<<(__FUNCTION__) << "OUTSIDE";
 		}
 
-		lastMovement = ofGetElapsedTimeMillis();
+		tLastMovement = ofGetElapsedTimeMillis();
 	}
 }
 
@@ -2511,56 +2514,60 @@ void ofxSurfingVideoSkip::Changed_bGui()
 	}
 }
 
+//--
+
 #ifdef USE_ofxSurfingMoods__VIDEO_SKIP
+
+//--
 
 // Moods
 // listeners for inside moods
 
 //-------------------------------------------------
-void ofxSurfingVideoSkip::Changed_Mood_RANGE(int& targetVal)
+void ofxSurfingVideoSkip::Changed_Mood_RANGE(int& i)
 {
-	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << targetVal;
+	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << " : " << i;
 
-	//if (targetVal == 0)
+	//if (i == 0)
 	//{
 	//    ofBackground(color_MOOD1);
 	//}
-	//if (targetVal == 1)
+	//if (i == 1)
 	//{
 	//    ofBackground(color_MOOD2);
 	//}
-	//if (targetVal == 2)
+	//if (i == 2)
 	//{
 	//    ofBackground(color_MOOD3);
 	//}
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_Mood_TARGET(int& targetVal)
+void ofxSurfingVideoSkip::Changed_Mood_TARGET(int& i)
 {
-	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << targetVal;
+	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << " : " << i;
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_Mood_PRESET_A(int& targetVal)
+void ofxSurfingVideoSkip::Changed_Mood_PRESET_A(int& i)
 {
-	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << targetVal;
+	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << " : " << i;
 
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
-	presetsManager.loadPreset(targetVal, 0);
+	presetsManager.loadPreset(i, 0);
 #endif
 
 	//-
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
-	presetsManager.load(targetVal);
+	presetsManager.load(i);
 #endif
 }
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_Mood_PRESET_B(int& i)
 {
-	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << i;
+	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << " : " << i;
 
 #ifdef USE_ofxSurfingFxPro
 	fxPro.presetsManager.load(i);
@@ -2568,16 +2575,23 @@ void ofxSurfingVideoSkip::Changed_Mood_PRESET_B(int& i)
 }
 
 //-------------------------------------------------
-void ofxSurfingVideoSkip::Changed_Mood_PRESET_C(int& targetVal)
+void ofxSurfingVideoSkip::Changed_Mood_PRESET_C(int& i)
 {
-	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << targetVal;
-}
+	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << " : " << i;
+
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
+	auto& _i = channelFx.presetsManager.index;
+	_i.set(ofClamp(i, _i.getMin(), _i.getMax()));
 #endif
+}
+
+#endif
+
+//--
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw(ofEventArgs& args)
 {
-
 	//ofClear(surfingPreview.colorBg);
 
 	//ofEnableDepthTest();
@@ -2863,7 +2877,12 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 				//--
 
 				// 3. Loop clip
-				// 
+
+				ofColor _c = ofColor::red;
+#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+				if (presetsManager.isColorized()) _c = presetsManager.getColor();
+#endif
+		
 				// Don't draw loop bar if loop not enable
 				if (bMODE_Loop)
 				{
@@ -2935,7 +2954,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 						// fill
 						if (bMODE_Edit)
 						{
-							c = ofColor(ofColor::red, 255 * a * a2);
+							c = ofColor(_c, 255 * a * a2);
 							ofSetColor(c);
 							ofFill();
 							ofDrawRectangle(barLoop);
@@ -2947,7 +2966,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 						ofSetLineWidth(2.0);
 
 						//ofSetColor(ofColor::red);
-						if (bMODE_Edit) c = ofColor(ofColor::red, 255 * ofMap(a * a2, 0., 1., 0.4, 1.0, true));
+						if (bMODE_Edit) c = ofColor(_c, 255 * ofMap(a * a2, 0., 1., 0.4, 1.0, true));
 						else c = ofColor(ofColor::red, 255 * 0.4);
 
 						// lines
@@ -2956,7 +2975,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 						ofDrawLine(pStart + pWidth, yy + padding, pStart + pWidth, yy + BarHeight - 1);
 
 						// rectangle
-						ofSetColor(ofColor(ofColor::red, 255 * 0.4));
+						ofSetColor(ofColor(_c, 255 * 0.4));
 						ofRectangle r(pStart, yy + padding, pWidth, BarHeight - 1);
 						ofDrawRectangle(r);
 					}
@@ -2966,7 +2985,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 
 				// 4. Red line for current video player time
 				ofNoFill();
-				ofSetColor(ofColor::red);
+				ofSetColor(_c);
 				ofSetLineWidth(4.0);
 				//float posTime = barLoopPre.width + BarInset;
 				float posTime = BarInset + barFull.width * player.getPosition();
@@ -3038,7 +3057,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "LOADED VIDEO '" << _path << "'";
 
 		calculateKick(); // just try bc if video is not loaded will need to do again
-		lastMovement = ofGetElapsedTimeMillis();
+		tLastMovement = ofGetElapsedTimeMillis();
 	}
 	else
 	{
@@ -3109,7 +3128,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 		subs.setDuration(player.getDuration());//link durations
 		subs.load(pathSubs);
 #endif
-}
+	}
 
 	//--
 
@@ -3373,8 +3392,32 @@ void ofxSurfingVideoSkip::setup_ImGui()
 
 	//--
 
+	// Optional: before startup
+
+// Customize the names for the 4 default Layout Presets. 
+// Default names are P0-P1-P2-P3
+// Set to 1 to enable an to test it
+	if (1) {
+		vector<std::string> names;
+		names.push_back("CLIPS");
+		names.push_back("ENGINE");
+		names.push_back("CONTROL");
+		names.push_back("FX");
+
+		ui.setPresetsNames(names);
+	}
+
+	//--
+
 	// -> Initiates when adding process finished!
 	ui.startup();
+
+	//--
+
+	//TODO:
+	// Help info
+	string s = "HELP ofxSurfingVideoSkip\n\nEnjoy!";
+	ui.setHelpInfoApp(s);
 }
 
 //--------------------------------------------------------------
@@ -3757,8 +3800,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 		//IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
 		ofxImGuiSurfing::SetWindowContraintsWidth(200);
 
+		//if (ui.BeginWindow(bGui_Main))
 		if (ui.BeginWindowSpecial(bGui_Main))
-			//if (ui.BeginWindow(bGui_Main))
 		{
 			float ___w1;
 			float ___w2;

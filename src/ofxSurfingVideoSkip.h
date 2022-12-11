@@ -531,7 +531,7 @@ public:
 	void setAudoHide(bool b)
 	{
 		bAutoHide_BarControl = b;
-		//lastMovement = ofGetSystemTimeMillis();
+		//tLastMovement = ofGetSystemTimeMillis();
 	}
 
 	//--------------------------------------------------------------
@@ -592,7 +592,7 @@ private:
 private:
 
 	ofRectangle getBarRectangle() const;
-	uint64_t lastMovement;
+	uint64_t tLastMovement;
 	bool wasPaused;
 
 	//--
@@ -601,7 +601,7 @@ private:
 	bool ENABLE_GuiVisibleByAutoHide = false;
 	ofParameter<bool> bGui_BarControl;
 	void Changed_VideoBarControl(bool& b);
-	int time_autoHide = 2500;
+	uint64_t tAutoHide = 2500;
 	bool inScrub;
 	bool ENABLE_AutoHide_external = false;
 	float scrubDragStart;
@@ -777,11 +777,11 @@ private:
 #ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 	ofxSurfingMoods moods;
 
-	void Changed_Mood_RANGE(int& targetVal);
-	void Changed_Mood_TARGET(int& targetVal); // listener for inside class surfingMoods
-	void Changed_Mood_PRESET_A(int& targetVal);
-	void Changed_Mood_PRESET_B(int& targetVal);
-	void Changed_Mood_PRESET_C(int& targetVal);
+	void Changed_Mood_RANGE(int& i);
+	void Changed_Mood_TARGET(int& i); // listener for inside class surfingMoods
+	void Changed_Mood_PRESET_A(int& i);
+	void Changed_Mood_PRESET_B(int& i);
+	void Changed_Mood_PRESET_C(int& i);
 #endif
 
 private:

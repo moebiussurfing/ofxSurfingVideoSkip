@@ -4,6 +4,7 @@
 void ofApp::setup()
 {
 	w.setEscapeQuitsApp(false);
+	w.setConsoleVisible(false);
 
 	player.setup();
 }
@@ -23,8 +24,5 @@ void ofApp::dragEvent(ofDragInfo dragInfo)
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key)
 {
-	if (key == 'T')
-	{
-		w.setToggleAlwaysOnTop();
-	}
+	if (key == 'T') w.setToggleAlwaysOnTop();
 }
