@@ -91,7 +91,7 @@
 #define USE_ofxBeatClock__VIDEO_SKIP
 
 // -> 4. MIDI Input to control GUI and switch presets
-//#define USE_MIDI_PARAMS__VIDEO_SKIP 
+#define USE_MIDI_PARAMS__VIDEO_SKIP 
 
 // -> 5. FX Channel
 #define USE_ofxSurfingFxChannel__VIDEO_SKIP 
@@ -103,7 +103,7 @@
 // Will serve OSC/MIDI
 
 // -> 7. FX Pro
-//#define USE_ofxSurfingFxPro
+#define USE_ofxSurfingFxPro
 
 // -> 8. OSC Remote
 //#define USE_ofxSurfingOsc
@@ -201,6 +201,30 @@
 //--------------------------------------------------------------
 class ofxSurfingVideoSkip
 {
+public:
+
+	//--------------------------------------------------------------
+	ofxSurfingVideoSkip()
+	{
+		ofAddListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
+		//ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
+
+		addMouseListeners();
+	}
+
+	//--------------------------------------------------------------
+	~ofxSurfingVideoSkip()
+	{
+		ofRemoveListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
+		//ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
+
+		removeMouseListeners();
+
+		exit();
+	}
+
+	//--
+
 private:
 
 	PlayerAV player;
@@ -242,27 +266,6 @@ public:
 		data->DesiredSize.y = (float)(int)(data->DesiredSize.x / aspect_ratio);
 	}
 
-
-	//--------------------------------------------------------------
-	ofxSurfingVideoSkip()
-	{
-		ofAddListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
-		ofAddListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
-
-		addMouseListeners();
-	}
-
-	//--------------------------------------------------------------
-	~ofxSurfingVideoSkip()
-	{
-		ofRemoveListener(ofEvents().update, this, &ofxSurfingVideoSkip::update);
-		ofRemoveListener(ofEvents().draw, this, &ofxSurfingVideoSkip::draw, OF_EVENT_ORDER_APP);
-
-		removeMouseListeners();
-
-		exit();
-	}
-
 	//--
 
 #ifdef USE_ofxSurfingOsc
@@ -284,6 +287,7 @@ private:
 public:
 
 	void setup();
+	void draw();
 
 private:
 
@@ -293,7 +297,8 @@ private:
 	void setup_PresetsStuff();
 
 	void update(ofEventArgs& args);
-	void draw(ofEventArgs& args);
+
+	//void draw(ofEventArgs& args);
 
 	void exit();
 

@@ -3,6 +3,9 @@
 
 	TODO
 
+	add split independent mode.
+		player with loop toggle.
+		not linked to video
 	make video loader/dialog runtime
 	add non hap loader too
 	integrate with ofxSoundObjects
@@ -70,6 +73,8 @@ public:
 	ofParameterGroup params_Video{ "VIDEO" };
 	ofParameterGroup params_Audio{ "AUDIO" };
 	ofParameter<float> volume{ "Volume", 0.5, 0, 1 };
+	ofParameter<bool> bLink{ "Linked", false };
+	ofParameter<bool> bLoop{ "Loop", false };
 	ofParameter<float> position{ "Position", 0, 0, 1 };
 	ofParameter<float> positionAudio{ "Position Audio", 0, 0, 1 };
 	ofParameter<string> path_Audio{ "PathAudio", "" };
@@ -98,6 +103,8 @@ public:
 	{
 #ifdef USE_SOUND_PLAYER_STAND_ALONE
 		params_Audio.add(path_Audio);
+		params_Audio.add(bLink);
+		params_Audio.add(bLoop);
 		params_Audio.add(volume);
 		params_Audio.add(positionAudio);
 		playerAudio.setVolume(volume);
@@ -105,7 +112,7 @@ public:
 #endif
 		//--
 
-		//hardcoded device
+		// hardcoded device
 		int deviceOut_Port = 0;
 
 		outDevices.clear();
@@ -164,6 +171,7 @@ public:
 	void update() {
 
 		if (position != player.getPosition()) position.setWithoutEventNotifications(player.getPosition());
+		if (positionAudio != playerAudio.getPosition()) positionAudio.setWithoutEventNotifications(playerAudio.getPosition());
 
 		player.update();//?
 		ofSoundUpdate();
@@ -190,11 +198,11 @@ public:
 	// setters
 	void setPaused(bool b) {
 		player.setPaused(b);
-		playerAudio.setPaused(b);
+		if (bLink) playerAudio.setPaused(b);
 	};
 	void setPosition(float pos) {
 		player.setPosition(pos);
-		playerAudio.setPosition(pos);
+		if (bLink) playerAudio.setPosition(pos);
 	};
 	void setVolume(float vol) {
 		//player.setVolume(vol);
@@ -202,11 +210,11 @@ public:
 	};
 	void setSpeed(float speed) {
 		player.setSpeed(speed);
-		playerAudio.setSpeed(speed);
+		if (bLink) playerAudio.setSpeed(speed);
 	};
 	void setLoopState(ofLoopType state) {
 		player.setLoopState(state);
-		playerAudio.setLoop(state);
+		if (bLink) playerAudio.setLoop(state);
 	};
 
 	// getters
@@ -282,6 +290,10 @@ public:
 			volume.setWithoutEventNotifications(ofClamp(volume, 0, 1));
 			player.setVolume(volume.get());
 			playerAudio.setVolume(volume.get());
+		}
+		if (name == positionAudio.getName())
+		{
+			playerAudio.setPosition(positionAudio);
 		}
 	};
 

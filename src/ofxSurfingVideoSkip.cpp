@@ -15,11 +15,9 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 
-
 	// Customize before add the group! that will call setup()
 
 	presetsManager.setFliped(true);
-
 	presetsManager.setColorized(true);
 
 	presetsManager.setKeyFirstChar('0');
@@ -52,11 +50,11 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 	// We want to remote the preset controller vars.
 	// Add after created presets manager object.
 
-#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
+//#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
 	mMidiParams.add(presetsManager.getParametersSelectorToggles());
 #endif
-#endif
+//#endif
 
 	//--
 
@@ -194,7 +192,11 @@ void ofxSurfingVideoSkip::setup_Remote()
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
 
 	mMidiParams.connect();
+
+#ifdef USE_ofxRemoteParameters
 	mMidiParams.add(params_Remote);
+#endif
+
 	//mMidiParams.add(params_Preset);
 
 	//TODO:
@@ -578,6 +580,11 @@ void ofxSurfingVideoSkip::setup()
 	moods.PRESET_B_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_B);
 	moods.PRESET_C_Selected.addListener(this, &ofxSurfingVideoSkip::Changed_Mood_PRESET_C);
 
+	//TODO:
+	//could use better approach by linking target / presets params
+	//then we will not need these callbacks 
+	//and we will get a better workflow, with dual direction selectors! 
+
 	//moods.setTickMode(true);
 #endif
 
@@ -841,7 +848,8 @@ void ofxSurfingVideoSkip::setup_ChannelFx()
 void ofxSurfingVideoSkip::update(ofEventArgs& args)
 {
 	//TODO:
-	if (bError && ofGetFrameNum() == 60 * 4) {
+	if (bError && ofGetFrameNum() == 60 * 4) 
+	{
 		doOpenDialogToSetPath();
 	}
 
@@ -860,6 +868,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 	{
 		ofLogNotice("ofxSurfingVideoSkip") << "Thumbs Generated";
 		loadThumbs();
+		bThumbsReadyFbo = false;
 	}
 
 	//--
@@ -944,6 +953,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 #else
 		else if (indexPreviewSource == 1) draw_Video();
 #endif
+
 	}
 	surfingPreview.end();
 
@@ -2553,11 +2563,11 @@ void ofxSurfingVideoSkip::Changed_Mood_PRESET_A(int& i)
 {
 	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << " : " << i;
 
+	//--
+
 #ifdef USE_ofxPresetsManager__VIDEO_SKIP
 	presetsManager.loadPreset(i, 0);
 #endif
-
-	//-
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 	presetsManager.load(i);
@@ -2590,7 +2600,8 @@ void ofxSurfingVideoSkip::Changed_Mood_PRESET_C(int& i)
 //--
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::draw(ofEventArgs& args)
+//void ofxSurfingVideoSkip::draw(ofEventArgs& args)
+void ofxSurfingVideoSkip::draw()
 {
 	//ofClear(surfingPreview.colorBg);
 
@@ -2879,6 +2890,8 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 				// 3. Loop clip
 
 				ofColor _c = ofColor::red;
+
+				// change color depending mood
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 				if (presetsManager.isColorized()) _c = presetsManager.getColor();
 #endif
@@ -2889,7 +2902,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 					//TODO; make inverted
 
 					// 3. Markers loop rectangle: 
-					// 
+					 
 					// from loop start to loop end
 					int padding = 0;
 					int pStart, pWidth;
@@ -2927,6 +2940,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 					ofFill();
 					//ofSetColor(ofColor(0), 150); // dark
 					ofSetColor(ofColor(0), 125); // dark
+
 					ofDrawRectangle(barLoopPre);
 					ofDrawRectangle(barLoopPost);
 
@@ -4317,42 +4331,43 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 			//--
 
-			/*
+			///*
 			if (!ui.bMinimize)
 			{
 				ui.AddSpacingSeparated();
-				ui.refreshLayout();
 
 				// Extra
-
 				ui.Add(ui.bExtra, OFX_IM_TOGGLE_BUTTON_ROUNDED);
 				if (ui.bExtra)
 				{
 					ui.Indent();
 					{
-						ui.refreshLayout();
+						//TODO:
 
-						ui.Add(bKeys, OFX_IM_TOGGLE_BUTTON_ROUNDED);
-						ui.Add(ui.bAutoResize, OFX_IM_TOGGLE_BUTTON_ROUNDED);
+//#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
+#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
+						
+						if (ui.AddButton("ReBuild"))
+						{
+							presetsManager.doBuildMidiNotes();
+						}
 
 						//--
 
-						//TODO:
-
-#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
-#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-						static bool bPopulateMidiToggles = false;
-						if (ofxImGuiSurfing::ToggleRoundedButton("Populate Midi", &bPopulateMidiToggles))
+						//static bool bPopulateMidiToggles = false;
+						//if (ofxImGuiSurfing::ToggleRoundedButton("Populate Midi", &bPopulateMidiToggles))
+						if(ui.AddButton("Populate Midi"))
 						{
 							mMidiParams.add(presetsManager.getParametersSelectorToggles());
 						}
+
 #endif
-#endif
+//#endif
 					}
 					ui.Unindent();
 				}
 			}
-			*/
+			//*/
 
 			ui.EndWindowSpecial();
 			//ui.EndWindow();
