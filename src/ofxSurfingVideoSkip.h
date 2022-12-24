@@ -64,12 +64,12 @@
 
 // MAIN
 // 
-//#define USE_MINIMAL_ofxSurfingVideoSkip
+//#define USE_MINIMAL__VIDEO_SKIP
  // -> Uncomment this above line to: 
 // Force and disable ALL the below optional add-ons / compatible modules. 
 // Then allows only the use of the MINIMAL CORE stuff of the add-on.
 
-#ifndef USE_MINIMAL_ofxSurfingVideoSkip
+#ifndef USE_MINIMAL__VIDEO_SKIP
 
 //--
 
@@ -103,7 +103,7 @@
 // Will serve OSC/MIDI
 
 // -> 7. FX Pro
-#define USE_ofxSurfingFxPro
+#define USE_ofxSurfingFxPro__VIDEO_SKIP
 
 // -> 8. OSC Remote
 //#define USE_ofxSurfingOsc
@@ -140,7 +140,7 @@
 #include "SurfingNDIManager.h"
 #endif
 
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 #include "ofxSurfingFxPro.h"
 #endif
 
@@ -349,7 +349,7 @@ public:
 
 	// FX Processor
 
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 	ofxSurfingFxPro fxPro;
 #endif
 
@@ -410,6 +410,8 @@ public:
 	void draw_ImGui_Preview();
 	void draw_ImGui_Menu();
 
+	void draw_ImGui_GameMode(); // final user selected / most important controls!
+
 public:
 
 	ofParameter<bool> bGui; // independent to auto hide state
@@ -427,8 +429,8 @@ private:
 	SurfingPreview surfingPreview;
 
 	// If some Fx enabled
-#ifndef USE_MINIMAL_ofxSurfingVideoSkip
-#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
+#ifndef USE_MINIMAL__VIDEO_SKIP
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP) 
 	std::vector<std::string> previewSources = { "Source", "Processed" };
 #else
 	std::vector<std::string> previewSources = { "Source" };
@@ -491,6 +493,7 @@ private:
 #endif
 
 	//----
+
 	ofParameter<bool>bTheme{ "Theme", false };
 
 public:

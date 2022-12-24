@@ -14,5 +14,6 @@ ofxSurfingPlayer
 ofxSurfingPresets
 ofxSurfingRandomizer
 ofxSurfingSplashScreen
+ofxSurfingUndoHelper
 ofxSurfingVideoSkip
 ofxWindowApp

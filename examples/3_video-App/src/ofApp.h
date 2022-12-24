@@ -10,7 +10,7 @@
 
 	This example requires, to run out-of-the-box,
 	go to ofxSurfingVideoSkip.h and comment the line
-	//#define USE_MINIMAL_ofxSurfingVideoSkip
+	//#define USE_MINIMAL__VIDEO_SKIP
 	That's to allow enable some of the optional add-ons.
 
 	Then uncomment only these lines to enable the optional add-ons like i.e.:

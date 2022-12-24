@@ -54,11 +54,11 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
 	mMidiParams.add(presetsManager.getParametersSelectorToggles());
 #endif
-//#endif
+	//#endif
 
-	//--
+		//--
 
-	// App Session Settings
+		// App Session Settings
 
 	ofxSurfingHelpers::loadGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
 }
@@ -358,8 +358,8 @@ void ofxSurfingVideoSkip::setup()
 	beatRescale.set("SCALE", 0, -8, 8);
 	bMODE_Lock.set("LOCK", false);//?
 
-#ifndef USE_MINIMAL_ofxSurfingVideoSkip
-#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
+#ifndef USE_MINIMAL__VIDEO_SKIP
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP) 
 	indexPreviewSource.set("Source Preview", 0, 0, previewSources.size() - 1);
 #else
 	indexPreviewSource.set("Source Preview", 0, 0, 0);
@@ -848,7 +848,7 @@ void ofxSurfingVideoSkip::setup_ChannelFx()
 void ofxSurfingVideoSkip::update(ofEventArgs& args)
 {
 	//TODO:
-	if (bError && ofGetFrameNum() == 60 * 4) 
+	if (bError && ofGetFrameNum() == 60 * 4)
 	{
 		doOpenDialogToSetPath();
 	}
@@ -879,7 +879,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 
 	// Feed FxPro
 
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 	{
 		fxPro.begin();
 		{
@@ -947,7 +947,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 
 		//--
 
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 		// processed video
 		else if (indexPreviewSource == 1) fxPro.draw();
 #else
@@ -1004,7 +1004,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 		// FxPro
 
 		// We can choose the behavior.. 
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 		//if (surfingPreview.bGui_PreviewBig) fxPro.draw();
 		fxPro.draw();
 #else
@@ -1793,7 +1793,7 @@ void ofxSurfingVideoSkip::mouseReleased(ofMouseEventArgs& eventArgs)
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::windowResized(int _w, int _h)
 {
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 	fxPro.windowResized(_w, _h);
 #endif
 
@@ -1832,7 +1832,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 
 	//--
 
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 	fxPro.keyPressed(key);
 #endif
 
@@ -1981,7 +1981,7 @@ void ofxSurfingVideoSkip::keyReleased(ofKeyEventArgs& eventArgs)
 	bool mod_COMMAND = eventArgs.hasModifier(OF_KEY_COMMAND);
 	bool mod_SHIFT = eventArgs.hasModifier(OF_KEY_SHIFT);
 
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 	fxPro.keyReleased(key);
 #endif
 }
@@ -2579,7 +2579,7 @@ void ofxSurfingVideoSkip::Changed_Mood_PRESET_B(int& i)
 {
 	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << " : " << i;
 
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 	fxPro.presetsManager.load(i);
 #endif
 }
@@ -2645,7 +2645,7 @@ void ofxSurfingVideoSkip::draw()
 
 	// FxPro
 
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 	// We can choose the behavior.. 
 	if (surfingPreview.bGui_PreviewBig) fxPro.draw();
 #else
@@ -2895,14 +2895,14 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 				if (presetsManager.isColorized()) _c = presetsManager.getColor();
 #endif
-		
+
 				// Don't draw loop bar if loop not enable
 				if (bMODE_Loop)
 				{
 					//TODO; make inverted
 
 					// 3. Markers loop rectangle: 
-					 
+
 					// from loop start to loop end
 					int padding = 0;
 					int pStart, pWidth;
@@ -3337,6 +3337,8 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	// This bool toggles will control the show of the added window
 	// and will be added too to layout presets engine
 
+	ui.addWindowSpecial(ui.bGui_GameMode);
+
 	ui.addWindowSpecial(bGui_Main);
 
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
@@ -3359,7 +3361,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	ui.addWindowSpecial(channelFx.bGui);
 #endif
 
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 	ui.addWindowSpecial(fxPro.bGui);
 #endif
 
@@ -3432,6 +3434,61 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	// Help info
 	string s = "HELP ofxSurfingVideoSkip\n\nEnjoy!";
 	ui.setHelpInfoApp(s);
+}
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::draw_ImGui_GameMode()
+{
+	if (ui.bGui_GameMode)
+	{
+		if (ui.BeginWindowSpecial(ui.bGui_GameMode))
+		{
+			static ofParameter<bool> bExp{ "Expand", false };
+
+#ifdef USE_ofxBeatClock__VIDEO_SKIP
+			ImGui::BeginGroup();
+			ImGui::PushID("##USE_ofxBeatClock__VIDEO_SKIP");
+			beatClock.draw_ImGui_GameMode();
+			ImGui::PopID();
+			ImGui::EndGroup();
+
+			ui.AddSpacingSeparated();
+#endif
+
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
+			moods.draw_ImGui_GameMode();
+			
+			ui.AddSpacing();
+			ui.Add(bExp, OFX_IM_TOGGLE_ROUNDED_SMALL);
+#endif
+			if (bExp)
+			{
+				ui.AddSpacingSeparated();
+
+#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+				ui.AddSpacing();
+				ui.AddLabelBig("CLIPS");
+				presetsManager.draw_ImGui_GameMode();
+#endif
+
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
+				ui.AddSpacing();
+				ui.AddLabelBig("FX PRO");
+				fxPro.draw_ImGui_GameMode();
+#endif
+
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
+				ui.AddSpacing();
+				ui.AddLabelBig("FX CH");
+				channelFx.draw_ImGui_GameMode();
+#endif
+			}
+
+			//--
+
+			ui.EndWindowSpecial();
+		}
+	}
 }
 
 //--------------------------------------------------------------
@@ -3514,6 +3571,7 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 					if (bENABLE_TimersGlobal)
 					{
 						ui.AddSpacing();
+
 						if (ui.BeginTree("##A SKIP TIME", bMODE_SkipTime.get(), false, ImGuiTreeNodeFlags_None))
 						{
 							if (bMODE_SkipTime && bENABLE_TimersGlobal)
@@ -3541,8 +3599,6 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 
 							ui.EndTree();
 						}
-
-						ui.refreshLayout();
 					}
 
 				//--
@@ -3561,8 +3617,6 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 						ui.AddSpacing();
 						if (ui.BeginTree("##B SKIP REV", bMODE_SkipReverse.get(), false, ImGuiTreeNodeFlags_None))
 						{
-							ui.refreshLayout();
-
 							if (bMODE_SkipReverse && bENABLE_TimersGlobal)
 							{
 								ui.Add(divBeatReverse, OFX_IM_DEFAULT);
@@ -3573,7 +3627,6 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers()
 
 							ui.EndTree();
 						}
-						ui.refreshLayout();
 					}
 
 				ui.AddSpacingSeparated();
@@ -3593,8 +3646,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Preview()
 
 	string n = "";
 
-#ifndef USE_MINIMAL_ofxSurfingVideoSkip
-#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
+#ifndef USE_MINIMAL__VIDEO_SKIP
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP) 
 	if (indexPreviewSource < previewSources.size()) n = previewSources[indexPreviewSource];
 #endif
 #endif
@@ -3814,8 +3867,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 		//IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
 		ofxImGuiSurfing::SetWindowContraintsWidth(200);
 
-		//if (ui.BeginWindow(bGui_Main))
-		if (ui.BeginWindowSpecial(bGui_Main))
+		if (ui.BeginWindow(bGui_Main))
+			//if (ui.BeginWindowSpecial(bGui_Main))
 		{
 			float ___w1;
 			float ___w2;
@@ -3963,8 +4016,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						ui.Add(surfingPreview.bGui_MiniPreview, OFX_IM_TOGGLE_BUTTON_ROUNDED);
 
 						// Source Selector
-#ifndef USE_MINIMAL_ofxSurfingVideoSkip
-#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
+#ifndef USE_MINIMAL__VIDEO_SKIP
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP) 
 						if (surfingPreview.bGui_MiniPreview)
 						{
 							if (previewSources.size() > 1)
@@ -4003,8 +4056,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 
 						// Source Selector
-#ifndef USE_MINIMAL_ofxSurfingVideoSkip
-#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
+#ifndef USE_MINIMAL__VIDEO_SKIP
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP) 
 						if (surfingPreview.bGui_MiniPreview)
 						{
 							if (previewSources.size() > 1)
@@ -4028,7 +4081,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 #endif
 			//--
 
-#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro) 
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP) 
 			ui.Add(channelFx.bGui, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM);
 			ui.AddTooltip("MODULE \nFX \nCHANNEL", bToolTips);
 #endif
@@ -4346,7 +4399,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 //#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-						
+
 						if (ui.AddButton("ReBuild"))
 						{
 							presetsManager.doBuildMidiNotes();
@@ -4356,21 +4409,23 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 						//static bool bPopulateMidiToggles = false;
 						//if (ofxImGuiSurfing::ToggleRoundedButton("Populate Midi", &bPopulateMidiToggles))
-						if(ui.AddButton("Populate Midi"))
+						if (ui.AddButton("Populate Midi"))
 						{
 							mMidiParams.add(presetsManager.getParametersSelectorToggles());
 						}
 
 #endif
-//#endif
+						//#endif
 					}
 					ui.Unindent();
 				}
 			}
 			//*/
 
-			ui.EndWindowSpecial();
-			//ui.EndWindow();
+			//--
+
+			//ui.EndWindowSpecial();
+			ui.EndWindow();
 		}
 	}
 }
@@ -4412,6 +4467,11 @@ void ofxSurfingVideoSkip::draw_ImGui()
 		draw_ImGui_Docking();
 
 		//----
+
+		// GameMode
+		if (ui.bGui_GameMode) draw_ImGui_GameMode();
+
+		//--
 
 		if (bGui_Main)
 		{
@@ -4467,7 +4527,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 #endif
 
 	// FxPro
-#ifdef USE_ofxSurfingFxPro
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 	fxPro.drawGui();
 #endif
 }
@@ -4857,7 +4917,7 @@ void ofxSurfingVideoSkip::removeKeysListeners()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_VideoBarControl(bool& b)
 {
-	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << ofToString(b ? "TRUE" : "FALSE");
+	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << " " << ofToString(b ? "TRUE" : "FALSE");
 
 	static bool bGui_BarControl_PRE = !bGui_BarControl.get();
 	if (bGui_BarControl.get() != bGui_BarControl_PRE)
