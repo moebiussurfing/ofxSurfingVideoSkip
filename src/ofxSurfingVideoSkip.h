@@ -186,10 +186,11 @@
 #define BAR_INSET 4
 //#define BAR_INSET 15
 
+//#define BAR_HEIGHT 50
+#define BAR_HEIGHT 30
 //#define BAR_HEIGHT 60
 //#define BAR_HEIGHT 80
 //#define BAR_HEIGHT 40
-#define BAR_HEIGHT 50
 
 //#define SPEED_MIN 0.20f
 //#define SPEED_MAX 50.0f

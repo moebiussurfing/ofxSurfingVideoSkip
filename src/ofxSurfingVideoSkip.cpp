@@ -52,13 +52,22 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 
 //#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
 #ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-	mMidiParams.add(presetsManager.getParametersSelectorToggles());
+
+	// Clips
+	//mMidiParams.add(presetsManager.getParametersSelectorToggles());
+
+	// Target State
+#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
+	mMidiParams.add(moods.getParametersSelectorToggles());
+	//mMidiParams.add(moods.PRESET_B_Selected);
 #endif
-	//#endif
 
-		//--
+#endif
+//#endif
 
-		// App Session Settings
+	//--
+
+	// App Session Settings
 
 	ofxSurfingHelpers::loadGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
 }
@@ -1014,7 +1023,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 		//--
 
 		ndi.drawSignals();
-	}
+}
 	ndi.end_NDI_OUT();
 
 #endif
@@ -1967,7 +1976,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 
 		//--
 	}
-}
+	}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::keyReleased(ofKeyEventArgs& eventArgs)
@@ -2040,7 +2049,7 @@ void ofxSurfingVideoSkip::Changed_DONE_load(bool& DONE_load)
 
 		//// workflow
 		//if (!bMODE_Loop) bMODE_Loop = true;
-	}
+}
 }
 #endif
 
@@ -2092,7 +2101,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			//if (!bPlay && !bMODE_Edit) {
 			//	bMODE_Edit = true;
 			//}
-		}
+	}
 
 		else if (name == position_In.getName())
 		{
@@ -2193,7 +2202,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
 			}
-		}
+			}
 
 		//// loop
 		//else if (name == bMODE_Loop.getName())
@@ -2503,8 +2512,8 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		bSyncRemote = true;
 		//remoteServer.syncParameters();//hangs
 #endif
-	}
-}
+		}
+		}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_bGui()
@@ -2767,10 +2776,10 @@ void ofxSurfingVideoSkip::draw_Video()
 			subs.draw(r);
 #endif
 			//--
-		}
+			}
 		ofPopStyle();
+		}
 	}
-}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_VideoBarControl()
@@ -3004,7 +3013,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl()
 				//float posTime = barLoopPre.width + BarInset;
 				float posTime = BarInset + barFull.width * player.getPosition();
 				posTime = ofClamp(posTime, BarInset, BarInset + barFull.width);
-				int padding = 1;
+				int padding = 2;
 				ofDrawLine(posTime, yy - padding, posTime, yy + BarHeight + padding);
 			}
 			ofPopStyle();
@@ -3142,7 +3151,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 		subs.setDuration(player.getDuration());//link durations
 		subs.load(pathSubs);
 #endif
-	}
+}
 
 	//--
 
@@ -3306,7 +3315,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 			bpm.set(p);
 			return;
 		}
-	}
+}
 
 	//*/
 }
@@ -3457,7 +3466,7 @@ void ofxSurfingVideoSkip::draw_ImGui_GameMode()
 
 #ifdef USE_ofxSurfingMoods__VIDEO_SKIP
 			moods.draw_ImGui_GameMode();
-			
+
 			ui.AddSpacing();
 			ui.Add(bExp, OFX_IM_TOGGLE_ROUNDED_SMALL);
 #endif
@@ -4426,9 +4435,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 			//ui.EndWindowSpecial();
 			ui.EndWindow();
+			}
 		}
 	}
-}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui_Docking()
