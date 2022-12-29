@@ -231,17 +231,22 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	params_AppSettings.setName("AppSettings");
 	params_AppSettings.add(bGui_SkipTimers);
 	params_AppSettings.add(bPlay);
+
+	//TODO:
+	//move to player
 	params_AppSettings.add(videoName);
 	params_AppSettings.add(videoFilePath);
+
 	params_AppSettings.add(bKeys);
 	params_AppSettings.add(bGui_BarControl);
 	params_AppSettings.add(bAutoHide_BarControl);
 	params_AppSettings.add(bTheme);
 	params_AppSettings.add(surfingPreview.params);
 	params_AppSettings.add(bGui_Main);
+	params_AppSettings.add(bGui_Files);
 	params_AppSettings.add(bMODE_Edit);
 	params_AppSettings.add(bMODE_Loop);
-	params_AppSettings.add(player.volume);
+	params_AppSettings.add(player.volumeAudio);
 #ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	params_AppSettings.add(channelFx.bGui);
 #endif
@@ -280,14 +285,17 @@ void ofxSurfingVideoSkip::setup()
 
 	//--
 
-	bLinkAllFiles.set("Link Files", true);
+	bLinkAllFiles.set("Link Files", true);//for srt only
+	//bLinkAllFiles.makeReferenceTo(player.bLinkAudio);
 
 	bGui.set("SURFING VIDEO", true);
 	bGui_Main.set("VIDEO", true);
+	bGui_Files.set("FILES", true);
 	//bGui_Main.set("VIDEO SKIP", true);
 	bGui_SkipTimers.set("SKIP TIMERS", false);
-	bGui_Previews.set("MONITOR", false);
-	//bGui_Previews.set("PREVIEWS", false);
+
+	//bGui_Previews.set("MONITOR", false);
+	bGui_Previews.set("PREVIEWS", false);
 
 	//--
 
@@ -510,6 +518,7 @@ void ofxSurfingVideoSkip::setup()
 	params_Control.setName("SURFING VIDEO SKIP");
 
 	params_Control.add(bGui_Main);
+	params_Control.add(bGui_Files);
 	params_Control.add(bGui_SkipTimers);
 	params_Control.add(bGui);
 
@@ -1023,7 +1032,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 		//--
 
 		ndi.drawSignals();
-}
+	}
 	ndi.end_NDI_OUT();
 
 #endif
@@ -1976,7 +1985,7 @@ void ofxSurfingVideoSkip::keyPressed(ofKeyEventArgs& eventArgs)
 
 		//--
 	}
-	}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::keyReleased(ofKeyEventArgs& eventArgs)
@@ -2049,7 +2058,7 @@ void ofxSurfingVideoSkip::Changed_DONE_load(bool& DONE_load)
 
 		//// workflow
 		//if (!bMODE_Loop) bMODE_Loop = true;
-}
+	}
 }
 #endif
 
@@ -2101,7 +2110,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			//if (!bPlay && !bMODE_Edit) {
 			//	bMODE_Edit = true;
 			//}
-	}
+		}
 
 		else if (name == position_In.getName())
 		{
@@ -2202,7 +2211,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 				presetsManager.setEnableKeysArrowBrowse(true);
 #endif
 			}
-			}
+		}
 
 		//// loop
 		//else if (name == bMODE_Loop.getName())
@@ -2512,8 +2521,8 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 		bSyncRemote = true;
 		//remoteServer.syncParameters();//hangs
 #endif
-		}
-		}
+	}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_bGui()
@@ -2776,10 +2785,10 @@ void ofxSurfingVideoSkip::draw_Video()
 			subs.draw(r);
 #endif
 			//--
-			}
-		ofPopStyle();
 		}
+		ofPopStyle();
 	}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_VideoBarControl()
@@ -3073,7 +3082,8 @@ void ofxSurfingVideoSkip::loadThumbs()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::loadMovie(std::string _path)
 {
-	bool b = player.load(_path, bLinkAllFiles);
+	bool b = player.load(_path);
+	//bool b = player.load(_path, bLinkAllFiles);
 
 	if (b)
 	{
@@ -3091,7 +3101,8 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 		_path = "movies/SampleHap.mov";
 		ofLogWarning("ofxSurfingVideoSkip") << (__FUNCTION__) << "...TRYING TO LOAD A BACKUP MOVIE: '" << _path << "' !";
 
-		b = player.load(_path, bLinkAllFiles);
+		b = player.load(_path);
+		//b = player.load(_path, bLinkAllFiles);
 
 		if (!b) ofLogError("ofxSurfingVideoSkip") << (__FUNCTION__) << "BAD ERROR!";
 	}
@@ -3151,7 +3162,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 		subs.setDuration(player.getDuration());//link durations
 		subs.load(pathSubs);
 #endif
-}
+	}
 
 	//--
 
@@ -3315,7 +3326,7 @@ void ofxSurfingVideoSkip::Changed_Targets(ofAbstractParameter& e)
 			bpm.set(p);
 			return;
 		}
-}
+	}
 
 	//*/
 }
@@ -3496,6 +3507,171 @@ void ofxSurfingVideoSkip::draw_ImGui_GameMode()
 			//--
 
 			ui.EndWindowSpecial();
+		}
+	}
+}
+
+//--
+
+// PlayerAV.h widgets
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::draw_ImGui_Files()
+{
+	if (bGui_Files)
+	{
+		// Video Title / File
+
+		if (ui.BeginWindow(bGui_Files))
+		{
+			//if (!ui.bMinimize)
+			{
+				//if (ui.BeginTree("FILES"))
+				{
+					std::string n = videoName;
+
+					//if (ui.BeginTree(n))
+					if (ui.BeginTree("VIDEO"))
+					{
+						if (!ui.bMinimize)
+						{
+							//bool bBlink = (n == "\"NO FILE\"");//video file path not settled yet!
+							bool bBlink = !player.isLoaded();
+
+							ui.BeginBlinkText(bBlink);
+							{
+								ui.AddLabel(videoName.get());
+
+								string s = videoFilePath.get();
+								ui.AddTooltip(s, bToolTips);
+							}
+							ui.EndBlinkText(bBlink);
+
+							ui.AddSpacing();
+
+							//TODO:
+							//SurfingGuiTypes st = (bBlink ? OFX_IM_BUTTON_SMALL_BORDER_BLINK : OFX_IM_BUTTON_SMALL);
+							SurfingGuiTypes st = OFX_IM_BUTTON_SMALL;
+
+							ui.BeginBlinkFrame(bBlink);
+							{
+								if (ui.AddButton("Open File", st))
+								{
+									doOpenDialogToSetPath();
+								}
+							}
+							ui.EndBlinkFrame(bBlink);
+						}
+
+						//--
+
+						bool b = !commandThread.isThreadRunning();
+						//bool b = bThumbsReadyFbo;
+
+						SurfingGuiTypes sth = (b ? OFX_IM_BUTTON_SMALL : OFX_IM_BUTTON_SMALL_BORDER_BLINK);
+						if (ui.AddButton("Generate Thumbs", sth))
+						{
+							doGenerateThumbs();
+						}
+
+						ui.AddSpacing();
+
+						//--
+
+						ui.EndTree();
+					}
+
+					//--
+
+					if (ui.BeginTree("AUDIO"))
+					{
+						bool bNotLoadedAudio = !player.isLoadedAudio();
+
+						if (!ui.bMinimize) 
+						{
+							ui.BeginBlinkText(bNotLoadedAudio);
+							{
+								ui.AddLabel(player.name_Audio);
+								string s = player.getPathAudio();
+								ui.AddTooltip(s);
+							}
+							ui.EndBlinkText(bNotLoadedAudio);
+
+							ui.AddSpacing();
+
+							SurfingGuiTypes st = OFX_IM_BUTTON_SMALL;
+							if (ui.AddButton("Open File", st))
+							{
+								player.doOpenDialogPathAudio();
+							}
+						}
+
+						if (!bNotLoadedAudio)
+						{
+							ui.Add(player.volumeAudio, OFX_IM_HSLIDER_MINI);
+							//ui.Add(player.volumeAudio, OFX_IM_KNOB_DOTKNOB, 2);
+
+							ui.Add(player.bLinkAudio, OFX_IM_TOGGLE_ROUNDED_SMALL);
+							string s;
+							if (player.bLinkAudio) s = "ENABLED \nWill search for a WAV file \nwith the same name than the MOV video file";
+							else s = "DISABLED \nYou can load another WAV file \nIndependent and not played linked";
+							ui.AddTooltip(s, bToolTips);
+
+							if (!player.bLinkAudio)
+							{
+								ui.Add(player.bLoop, OFX_IM_TOGGLE_ROUNDED_SMALL);
+
+								ui.Add(player.positionAudio, OFX_IM_HSLIDER_MINI_NO_LABELS);
+
+								int t = player.getPositionAudioMS() / 1000.f;
+								int currMin, currSec;
+								std::string strMin, strSec;
+								currMin = t / 60;
+								currSec = t % 60;
+								strMin = (currMin < 10) ? "0" : "";
+								strSec = (currSec < 10) ? "0" : "";
+								strMin += ofToString(currMin);
+								strSec += ofToString(currSec);
+								string s = strMin + ":" + strSec;
+								ui.AddLabelBig(s);
+
+								ui.Add(player.bPlayAudio, OFX_IM_TOGGLE_BORDER, 2, 0.7f);
+								ui.SameLine();
+								ui.Add(player.bStopAudio, OFX_IM_BUTTON, 2, 0.3f);
+							}
+						}
+
+						//TODO:
+						// center
+						/*
+						string lb = "AUDIO";
+						float w = ui.getWidgetsWidth(4);
+						ui.pushStyleFont(2);
+						auto sz = ImGui::CalcTextSize(lb.c_str()).x;
+						ui.popStyleFont();
+						ImGui::Dummy(ImVec2(w + sz / 2, 0));
+						//ImGui::Dummy(ImVec2(w, 0));
+						ImGui::SameLine();
+						ui.AddLabelBig(lb);
+
+						ImGui::Dummy(ImVec2(w, 0));
+						ImGui::SameLine();
+						ui.Add(player.volumeAudio, OFX_IM_KNOB_DOTKNOB, 2);
+						//ui.Add(volumeVideo, OFX_IM_STEPPER);
+						*/
+
+						ui.EndTree();
+					}
+
+					//ui.EndTree();
+				}
+
+				//ui.AddSpacingSeparated();
+			}
+
+			//--
+
+			ui.EndWindow();
 		}
 	}
 }
@@ -3876,8 +4052,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 		//IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
 		ofxImGuiSurfing::SetWindowContraintsWidth(200);
 
+		//if (ui.BeginWindowSpecial(bGui_Main))
 		if (ui.BeginWindow(bGui_Main))
-			//if (ui.BeginWindowSpecial(bGui_Main))
 		{
 			float ___w1;
 			float ___w2;
@@ -3893,111 +4069,12 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 			//--
 
-			// Video Title / File
+			// Files
 
 			if (!ui.bMinimize)
 			{
-				if (ui.BeginTree("FILES"))
-				{
-					std::string n = videoName;
-
-					//if (ui.BeginTree(n))
-					if (ui.BeginTree("VIDEO"))
-					{
-						//bool bBlink = (n == "\"NO FILE\"");//video file path not settled yet!
-						bool bBlink = !player.isLoaded();
-
-						ui.BeginBlinkText(bBlink);
-						{
-							ui.AddLabel(videoName.get());
-
-							string s = videoFilePath.get();
-							ui.AddTooltip(s, bToolTips);
-						}
-						ui.EndBlinkText(bBlink);
-
-						ui.AddSpacing();
-
-						//TODO:
-						//SurfingGuiTypes st = (bBlink ? OFX_IM_BUTTON_SMALL_BORDER_BLINK : OFX_IM_BUTTON_SMALL);
-						SurfingGuiTypes st = OFX_IM_BUTTON_SMALL;
-
-						ui.BeginBlinkFrame(bBlink);
-						{
-							if (ui.AddButton("Open File", st))
-							{
-								doOpenDialogToSetPath();
-							}
-						}
-						ui.EndBlinkFrame(bBlink);
-
-						bool b = !commandThread.isThreadRunning();
-						//bool b = bThumbsReadyFbo;
-						SurfingGuiTypes sth = (b ? OFX_IM_BUTTON_SMALL : OFX_IM_BUTTON_SMALL_BORDER_BLINK);
-						if (ui.AddButton("Generate Thumbs", sth))
-						{
-							doGenerateThumbs();
-						}
-
-						ui.AddSpacing();
-
-						//--
-
-						ui.EndTree();
-					}
-
-					//--
-
-					if (ui.BeginTree("AUDIO"))
-					{
-						bool bNotLoadedAudio = !player.isLoadedAudio();
-						ui.BeginBlinkText(bNotLoadedAudio);
-						{
-							ui.AddLabel(player.name_Audio);
-							string s = player.getPathAudio();
-							ui.AddTooltip(s);
-						}
-						ui.EndBlinkText(bNotLoadedAudio);
-
-						ui.AddSpacing();
-
-						SurfingGuiTypes st = OFX_IM_BUTTON_SMALL;
-						if (ui.AddButton("Open Audio File", st))
-						{
-							player.doOpenDialogPathAudio();
-						}
-
-						if (!bNotLoadedAudio) {
-							ui.Add(player.volume, OFX_IM_HSLIDER_MINI);
-							//ui.Add(player.volume, OFX_IM_KNOB_DOTKNOB, 2);
-						}
-
-						//TODO:
-						// center
-						/*
-						string lb = "AUDIO";
-						float w = ui.getWidgetsWidth(4);
-						ui.pushStyleFont(2);
-						auto sz = ImGui::CalcTextSize(lb.c_str()).x;
-						ui.popStyleFont();
-						ImGui::Dummy(ImVec2(w + sz / 2, 0));
-						//ImGui::Dummy(ImVec2(w, 0));
-						ImGui::SameLine();
-						ui.AddLabelBig(lb);
-
-						ImGui::Dummy(ImVec2(w, 0));
-						ImGui::SameLine();
-						ui.Add(player.volume, OFX_IM_KNOB_DOTKNOB, 2);
-						//ui.Add(volumeVideo, OFX_IM_STEPPER);
-						*/
-
-						ui.EndTree();
-					}
-
-					ui.EndTree();
-				}
-
-				ui.AddSpacingSeparated();
+				ui.Add(bGui_Files, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+				ui.AddTooltip("LOAD VIDEO AND/OR \nAUDIO FILES LINKED \nOR NOT", bToolTips);
 			}
 
 			//--
@@ -4435,9 +4512,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 			//ui.EndWindowSpecial();
 			ui.EndWindow();
+				}
 			}
 		}
-	}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui_Docking()
@@ -4487,8 +4564,10 @@ void ofxSurfingVideoSkip::draw_ImGui()
 			// Main
 			draw_ImGui_Main();
 
+			draw_ImGui_Files();
+
 			// Timers
-			if (bGui_SkipTimers) draw_ImGui_SkipTimers();
+			draw_ImGui_SkipTimers();
 		}
 
 		//--
@@ -4510,7 +4589,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 		oscHelper.drawImGui();
 #endif
 		//--
-	}
+		}
 	ui.End();
 
 	//--
@@ -4539,7 +4618,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 #ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 	fxPro.drawGui();
 #endif
-}
+	}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::doOpenDialogToSetPath()

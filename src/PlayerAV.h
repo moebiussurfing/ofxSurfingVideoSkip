@@ -8,6 +8,7 @@
 		not linked to video
 	make video loader/dialog runtime
 	add non hap loader too
+	add vector of pointer players
 	integrate with ofxSoundObjects
 
 
@@ -21,7 +22,9 @@
 #define USE_SOUND_PLAYER_STAND_ALONE
 
 #include "ofMain.h"
+
 #include "ofxHapPlayer.h"
+#include "ofxSurfingHelpers.h"
 
 class PlayerAV
 {
@@ -36,6 +39,11 @@ public:
 
 	//--
 
+private:
+
+	string path_GLOBAL = "PlayerAV";
+	string path_AppSettings = "Settings_PlayerAV.json";
+
 	// Video Player
 	// Hap 
 	ofxHapPlayer player;
@@ -47,68 +55,77 @@ public:
 
 	//--
 
-	// Audio
-#ifdef USE_SOUND_PLAYER_STAND_ALONE
-
-	ofSoundPlayer playerAudio;
-
-	bool loadAudio(std::string path) {
-		bool b = playerAudio.load(path);
-
-		if (b) ofLogNotice("PlayerAV") << "SUCCESS Loaded Audio " << path;
-		else ofLogError("PlayerAV") << "Audio File not found " << path;
-
-		playerAudio.setVolume(volume);
-		playerAudio.setMultiPlay(false);
-
-		//workflow
-		//auto play
-		playerAudio.play();
-		playerAudio.setPosition(this->getPosition());//link both players
-
-		return b;
-	};
+public:
 
 	ofParameterGroup params{ "PLAYER" };
 	ofParameterGroup params_Video{ "VIDEO" };
-	ofParameterGroup params_Audio{ "AUDIO" };
-	ofParameter<float> volume{ "Volume", 0.5, 0, 1 };
-	ofParameter<bool> bLink{ "Linked", false };
+
+	ofParameter<string> path_Video{ "Path Video", "" };
 	ofParameter<bool> bLoop{ "Loop", false };
 	ofParameter<float> position{ "Position", 0, 0, 1 };
-	ofParameter<float> positionAudio{ "Position Audio", 0, 0, 1 };
-	ofParameter<string> path_Audio{ "PathAudio", "" };
-	ofParameter<string> path_Video{ "PathVideo", "" };
-	string name_Audio = "NO FILE";
-	string name_Video = "NO FILE";
-	ofParameter<string> path_Srt{ "PathSrt", "" };
 
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
+	ofParameterGroup params_Audio{ "AUDIO" };
+	ofParameter<string> path_Audio{ "Path Audio", "" };
+	ofParameter<float> volumeAudio{ "Volume Audio", 0.5, 0, 1 };
+	ofParameter<bool> bLinkAudio{ "Link Audio", false };
+	ofParameter<bool> bPlayAudio{ "Play Audio", false };
+	ofParameter<void> bStopAudio{ "Stop Audio" };
+	ofParameter<bool> bLoopAudio{ "Loop Audio", false };
+	ofParameter<float> positionAudio{ "Position Audio", 0, 0, 1 };
+	string name_Audio = "NO FILE";
 #endif
 
-	void setup() {
+private:
+
+	string name_Video = "NO FILE";
+
+	ofParameter<string> path_Srt{ "PathSrt", "" };
+
+public:
+
+	void setup()
+	{
 		setup_Video();
 		setup_Audio();
 
 		ofAddListener(params.parameterChangedE(), this, &PlayerAV::Changed_Params);
+
+		startup();
+	};
+
+private:
+
+	void startup() {
+		ofxSurfingHelpers::loadGroup(params, path_GLOBAL + "/" + path_AppSettings);
 	};
 
 	void setup_Video()
 	{
 		params_Video.add(path_Video);
+		params_Video.add(bLoop);
 		params_Video.add(position);
+
+		position.setSerializable(false);
+
 		params.add(params_Video);
-	}
+	};
 
 	void setup_Audio()
 	{
 #ifdef USE_SOUND_PLAYER_STAND_ALONE
 		params_Audio.add(path_Audio);
-		params_Audio.add(bLink);
-		params_Audio.add(bLoop);
-		params_Audio.add(volume);
+		params_Audio.add(bLinkAudio);
+		params_Audio.add(bPlayAudio);
+		params_Audio.add(bStopAudio);
+		params_Audio.add(bLoopAudio);
 		params_Audio.add(positionAudio);
-		playerAudio.setVolume(volume);
+		params_Audio.add(volumeAudio);
+
 		params.add(params_Audio);
+
+		// to starts at zero always!
+		positionAudio.setSerializable(false);
 #endif
 		//--
 
@@ -136,40 +153,10 @@ public:
 		outStream.setup(outSettings);
 	};
 
-	// bLinkFiles true to load audio and srt files too! must have same name
-	bool load(string path, bool bLinkFiles = false)
+public:
+
+	void update()
 	{
-		path_Video = path;
-		bool b = player.load(path_Video);
-		if (b) ofLogNotice("PlayerAV") << "SUCCESS Loading Video File " << path_Video;
-		else ofLogError("PlayerAV") << "Video File not found" << path_Video;
-
-		if (b)
-		{
-			// link both players A/V and prepare srt file path too to be getted after!
-			if (bLinkFiles)
-			{
-				ofFile file(path_Video.get());
-
-				// construct audio path
-				path_Audio = file.getEnclosingDirectory() + file.getBaseName() + ".wav";
-				ofLogNotice("PlayerAV") << "Auto .wav File " << path_Audio;
-				this->loadAudio(path_Audio);
-
-				//this->setPosition(positionAudio);
-
-				// construct srt path
-				path_Srt = file.getBaseName() + ".srt";
-				path_Srt = file.getEnclosingDirectory() + path_Srt.get();
-				ofLogNotice("PlayerAV") << "Auto .srt File " << path_Srt;
-			}
-		}
-
-		return b;
-	};
-
-	void update() {
-
 		if (position != player.getPosition()) position.setWithoutEventNotifications(player.getPosition());
 		if (positionAudio != playerAudio.getPosition()) positionAudio.setWithoutEventNotifications(playerAudio.getPosition());
 
@@ -189,35 +176,63 @@ public:
 		player.draw(r.getX(), r.getY(), r.getWidth(), r.getHeight());
 	};
 
+private:
+
 	void exit() {
 		outStream.close();
 
 		ofRemoveListener(params.parameterChangedE(), this, &PlayerAV::Changed_Params);
+
+		ofxSurfingHelpers::CheckFolder(path_GLOBAL);
+		ofxSurfingHelpers::saveGroup(params, path_GLOBAL + "/" + path_AppSettings);
 	};
 
-	// setters
+	//--
+
+public:
+
+	// Setters
+
 	void setPaused(bool b) {
 		player.setPaused(b);
-		if (bLink) playerAudio.setPaused(b);
+
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
+		if (bLinkAudio) playerAudio.setPaused(b);
+#endif
 	};
 	void setPosition(float pos) {
 		player.setPosition(pos);
-		if (bLink) playerAudio.setPosition(pos);
+
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
+		if (bLinkAudio) playerAudio.setPosition(pos);
+#endif
 	};
 	void setVolume(float vol) {
 		//player.setVolume(vol);
+
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
 		playerAudio.setVolume(vol);
+#endif
 	};
 	void setSpeed(float speed) {
 		player.setSpeed(speed);
-		if (bLink) playerAudio.setSpeed(speed);
+
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
+		if (bLinkAudio) playerAudio.setSpeed(speed);
+#endif
 	};
 	void setLoopState(ofLoopType state) {
 		player.setLoopState(state);
-		if (bLink) playerAudio.setLoop(state);
+
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
+		if (bLinkAudio) playerAudio.setLoop(state);
+#endif
 	};
 
-	// getters
+	//--
+
+	// Getters
+
 	float getWidth() const {
 		return player.getWidth();
 	};
@@ -245,57 +260,113 @@ public:
 	bool isLoaded() const {
 		return player.isLoaded();
 	};
-	bool isLoadedAudio() const {
-		return playerAudio.isLoaded();
-	};
 	string getPath() const {
 		if (isLoaded()) return path_Video.get();
 		else return string("NO FILE");
-	}
-	string getPathAudio() const {
-		if (isLoadedAudio()) return path_Audio.get();
-		else return string("NO FILE");
-	}
+	};
 	string getPathSrt() const {
 		if (isLoaded()) return path_Srt.get();
 		else return string("NO FILE");
-	}
+	};
 	bool isError() const {
 		return (player.getError().length());
 	};
+
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
+	float getPositionAudio() const {
+		return playerAudio.getPosition();
+	};
+	int getPositionAudioMS() const {
+		return playerAudio.getPositionMS();
+	};
+	bool isLoadedAudio() const {
+		return playerAudio.isLoaded();
+	};
+	//float getDurationAudio() const {
+	//	return playerAudio.getPosition();//?
+	//};
+	string getPathAudio() const {
+		if (isLoadedAudio()) return path_Audio.get();
+		else return string("NO FILE");
+	};
+#endif
 
 	//--
 
 	// Audio
 
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
+
 	void setVolumenUp()
 	{
-		volume = MIN(volume + 0.1, 1);
+		volumeAudio = MIN(volumeAudio + 0.1, 1);
 	};
 
 	void setVolumenDown()
 	{
-		volume = MAX(volume - 0.1, 0);
+		volumeAudio = MAX(volumeAudio - 0.1, 0);
 	};
+#endif
 
 	//--
+
+private:
 
 	void Changed_Params(ofAbstractParameter& e) // patch change
 	{
 		std::string name = e.getName();
 
-		// volume
-		if (name == volume.getName())
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
+		if (name == path_Audio.getName())
 		{
-			volume.setWithoutEventNotifications(ofClamp(volume, 0, 1));
-			player.setVolume(volume.get());
-			playerAudio.setVolume(volume.get());
+			if (!bLinkAudio)
+			{
+				this->loadAudio(path_Audio);
+			}
+		}
+		if (name == volumeAudio.getName())
+		{
+			volumeAudio.setWithoutEventNotifications(ofClamp(volumeAudio, 0, 1));
+			player.setVolume(volumeAudio.get());
+			if (!bLinkAudio)
+				playerAudio.setVolume(volumeAudio.get());
 		}
 		if (name == positionAudio.getName())
 		{
-			playerAudio.setPosition(positionAudio);
+			if (!bLinkAudio)
+				playerAudio.setPosition(positionAudio);
 		}
+		if (name == bLoop.getName())
+		{
+			playerAudio.setLoop(bLoop);
+		}
+		if (name == bLinkAudio.getName())
+		{
+			if (bLinkAudio) path_Audio.setSerializable(false);
+			else path_Audio.setSerializable(true);
+		}
+		if (name == bPlayAudio.getName())
+		{
+			if (!bLinkAudio) {
+				if (bPlayAudio) {
+					if (playerAudio.isPlaying()) playerAudio.setPaused(false);
+					else playerAudio.play();
+				}
+				else {
+					if (playerAudio.isPlaying()) playerAudio.setPaused(true);
+					else playerAudio.stop();
+				}
+			}
+		}
+		if (name == bStopAudio.getName())
+		{
+			bPlayAudio.setWithoutEventNotifications(false);
+			playerAudio.stop();
+		}
+#endif
 	};
+
+public:
 
 	void doOpenDialogPathAudio()
 	{
@@ -322,7 +393,7 @@ public:
 		{
 			ofLogNotice("PlayerAV") << (__FUNCTION__) << "User hit cancel";
 		}
-	}
+	};
 
 	void doOpenDialogPathVideo()
 	{
@@ -349,7 +420,79 @@ public:
 		{
 			ofLogNotice("PlayerAV") << (__FUNCTION__) << "User hit cancel";
 		}
-	}
+	};
+
+public:
+
+	// bLinkFiles true to load audio and srt files too! must have same name
+	//bool load(string path, bool bLinkFiles = false)
+	bool load(string path)
+	{
+		bool bLinkFiles = bLinkAudio;
+
+		path_Video = path;
+		bool b = player.load(path_Video);
+		if (b) ofLogNotice("PlayerAV") << "Success: loaded Video File " << path_Video;
+		else ofLogError("PlayerAV") << "Error: Video File not found" << path_Video;
+
+		if (b)
+		{
+			// link both players A/V and prepare srt file path too to be getted after!
+			if (bLinkFiles)
+			{
+				ofFile file(path_Video.get());
+
+				// construct audio path
+				path_Audio = file.getEnclosingDirectory() + file.getBaseName() + ".wav";
+				ofLogNotice("PlayerAV") << "Auto .wav File " << path_Audio;
+				this->loadAudio(path_Audio);
+
+				//this->setPosition(positionAudio);
+
+				// construct srt path
+				path_Srt = file.getBaseName() + ".srt";
+				path_Srt = file.getEnclosingDirectory() + path_Srt.get();
+				ofLogNotice("PlayerAV") << "Auto .srt File " << path_Srt;
+			}
+		}
+
+		return b;
+	};
+
+	//--
+
+	// Audio
+
+#ifdef USE_SOUND_PLAYER_STAND_ALONE
+
 private:
+
+	ofSoundPlayer playerAudio;
+
+public:
+
+	bool loadAudio(std::string path) {
+		bool b = playerAudio.load(path);
+
+		if (b) ofLogNotice("PlayerAV") << "Success: Loaded Audio file " << path;
+		else ofLogError("PlayerAV") << "Error: Audio File not found " << path;
+
+		playerAudio.setVolume(volumeAudio);
+		playerAudio.setMultiPlay(false);
+		playerAudio.setLoop(bLoopAudio);
+
+		//workflow
+		//auto play
+		playerAudio.play();
+		if (bLinkAudio) playerAudio.setPosition(this->getPosition());//link both players
+
+		// labels
+		ofFile file(path_Audio.get());
+		name_Audio = file.getBaseName();
+		//path_Audio = file.getAbsolutePath();
+
+		return b;
+	};
+#endif
 
 };

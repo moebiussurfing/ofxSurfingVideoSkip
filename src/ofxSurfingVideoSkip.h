@@ -407,6 +407,7 @@ public:
 	void draw_ImGui();
 	void draw_ImGui_Docking();
 	void draw_ImGui_Main();
+	void draw_ImGui_Files();
 	void draw_ImGui_SkipTimers();
 	void draw_ImGui_Preview();
 	void draw_ImGui_Menu();
@@ -417,6 +418,7 @@ public:
 
 	ofParameter<bool> bGui; // independent to auto hide state
 	ofParameter<bool> bGui_Main;
+	ofParameter<bool> bGui_Files;
 	ofParameter<bool> bGui_SkipTimers;
 	ofParameter<bool> bGui_Previews;
 
