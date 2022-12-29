@@ -3518,155 +3518,125 @@ void ofxSurfingVideoSkip::draw_ImGui_GameMode()
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui_Files()
 {
+	// Video Title / File
+
 	if (bGui_Files)
 	{
-		// Video Title / File
+		if (bGui_Main && bGui_SkipTimers) ui.setNextWindowAfterWindowNamed(bGui_SkipTimers);
+		else if (bGui_Main && !bGui_SkipTimers) ui.setNextWindowAfterWindowNamed(bGui_Main);
 
 		if (ui.BeginWindow(bGui_Files))
 		{
-			//if (!ui.bMinimize)
+			std::string n = videoName;
+
+			//if (ui.BeginTree(n))
+			if (ui.BeginTree("VIDEO"))
 			{
-				//if (ui.BeginTree("FILES"))
+				if (!ui.bMinimize)
 				{
-					std::string n = videoName;
+					//bool bBlink = (n == "\"NO FILE\"");//video file path not settled yet!
+					bool bBlink = !player.isLoaded();
 
-					//if (ui.BeginTree(n))
-					if (ui.BeginTree("VIDEO"))
+					ui.BeginBlinkText(bBlink);
 					{
-						if (!ui.bMinimize)
-						{
-							//bool bBlink = (n == "\"NO FILE\"");//video file path not settled yet!
-							bool bBlink = !player.isLoaded();
+						ui.AddLabel(videoName.get());
 
-							ui.BeginBlinkText(bBlink);
-							{
-								ui.AddLabel(videoName.get());
-
-								string s = videoFilePath.get();
-								ui.AddTooltip(s, bToolTips);
-							}
-							ui.EndBlinkText(bBlink);
-
-							ui.AddSpacing();
-
-							//TODO:
-							//SurfingGuiTypes st = (bBlink ? OFX_IM_BUTTON_SMALL_BORDER_BLINK : OFX_IM_BUTTON_SMALL);
-							SurfingGuiTypes st = OFX_IM_BUTTON_SMALL;
-
-							ui.BeginBlinkFrame(bBlink);
-							{
-								if (ui.AddButton("Open File", st))
-								{
-									doOpenDialogToSetPath();
-								}
-							}
-							ui.EndBlinkFrame(bBlink);
-						}
-
-						//--
-
-						bool b = !commandThread.isThreadRunning();
-						//bool b = bThumbsReadyFbo;
-
-						SurfingGuiTypes sth = (b ? OFX_IM_BUTTON_SMALL : OFX_IM_BUTTON_SMALL_BORDER_BLINK);
-						if (ui.AddButton("Generate Thumbs", sth))
-						{
-							doGenerateThumbs();
-						}
-
-						ui.AddSpacing();
-
-						//--
-
-						ui.EndTree();
+						string s = videoFilePath.get();
+						ui.AddTooltip(s, bToolTips);
 					}
+					ui.EndBlinkText(bBlink);
 
-					//--
+					ui.AddSpacing();
 
-					if (ui.BeginTree("AUDIO"))
+					ui.BeginBlinkFrame(bBlink);
 					{
-						bool bNotLoadedAudio = !player.isLoadedAudio();
-
-						if (!ui.bMinimize) 
+						if (ui.AddButton("Open File", OFX_IM_BUTTON_SMALL))
 						{
-							ui.BeginBlinkText(bNotLoadedAudio);
-							{
-								ui.AddLabel(player.name_Audio);
-								string s = player.getPathAudio();
-								ui.AddTooltip(s);
-							}
-							ui.EndBlinkText(bNotLoadedAudio);
-
-							ui.AddSpacing();
-
-							SurfingGuiTypes st = OFX_IM_BUTTON_SMALL;
-							if (ui.AddButton("Open File", st))
-							{
-								player.doOpenDialogPathAudio();
-							}
+							doOpenDialogToSetPath();
 						}
-
-						if (!bNotLoadedAudio)
-						{
-							ui.Add(player.volumeAudio, OFX_IM_HSLIDER_MINI);
-							//ui.Add(player.volumeAudio, OFX_IM_KNOB_DOTKNOB, 2);
-
-							ui.Add(player.bLinkAudio, OFX_IM_TOGGLE_ROUNDED_SMALL);
-							string s;
-							if (player.bLinkAudio) s = "ENABLED \nWill search for a WAV file \nwith the same name than the MOV video file";
-							else s = "DISABLED \nYou can load another WAV file \nIndependent and not played linked";
-							ui.AddTooltip(s, bToolTips);
-
-							if (!player.bLinkAudio)
-							{
-								ui.Add(player.bLoop, OFX_IM_TOGGLE_ROUNDED_SMALL);
-
-								ui.Add(player.positionAudio, OFX_IM_HSLIDER_MINI_NO_LABELS);
-
-								int t = player.getPositionAudioMS() / 1000.f;
-								int currMin, currSec;
-								std::string strMin, strSec;
-								currMin = t / 60;
-								currSec = t % 60;
-								strMin = (currMin < 10) ? "0" : "";
-								strSec = (currSec < 10) ? "0" : "";
-								strMin += ofToString(currMin);
-								strSec += ofToString(currSec);
-								string s = strMin + ":" + strSec;
-								ui.AddLabelBig(s);
-
-								ui.Add(player.bPlayAudio, OFX_IM_TOGGLE_BORDER, 2, 0.7f);
-								ui.SameLine();
-								ui.Add(player.bStopAudio, OFX_IM_BUTTON, 2, 0.3f);
-							}
-						}
-
-						//TODO:
-						// center
-						/*
-						string lb = "AUDIO";
-						float w = ui.getWidgetsWidth(4);
-						ui.pushStyleFont(2);
-						auto sz = ImGui::CalcTextSize(lb.c_str()).x;
-						ui.popStyleFont();
-						ImGui::Dummy(ImVec2(w + sz / 2, 0));
-						//ImGui::Dummy(ImVec2(w, 0));
-						ImGui::SameLine();
-						ui.AddLabelBig(lb);
-
-						ImGui::Dummy(ImVec2(w, 0));
-						ImGui::SameLine();
-						ui.Add(player.volumeAudio, OFX_IM_KNOB_DOTKNOB, 2);
-						//ui.Add(volumeVideo, OFX_IM_STEPPER);
-						*/
-
-						ui.EndTree();
 					}
-
-					//ui.EndTree();
+					ui.EndBlinkFrame(bBlink);
 				}
 
-				//ui.AddSpacingSeparated();
+				//--
+
+				bool b = !commandThread.isThreadRunning();
+				//bool b = bThumbsReadyFbo;
+
+				SurfingGuiTypes sth = (b ? OFX_IM_BUTTON_SMALL : OFX_IM_BUTTON_SMALL_BORDER_BLINK);
+				if (ui.AddButton("Generate Thumbs", sth))
+				{
+					doGenerateThumbs();
+				}
+
+				ui.AddSpacing();
+
+				//--
+
+				ui.EndTree();
+			}
+
+			//--
+
+			if (ui.BeginTree("AUDIO"))
+			{
+				bool bNotLoadedAudio = !player.isLoadedAudio();
+
+				if (!ui.bMinimize)
+				{
+					ui.BeginBlinkText(bNotLoadedAudio);
+					{
+						ui.AddLabel(player.name_Audio);
+						string s = player.getPathAudio();
+						ui.AddTooltip(s);
+					}
+					ui.EndBlinkText(bNotLoadedAudio);
+
+					ui.AddSpacing();
+
+					SurfingGuiTypes st = OFX_IM_BUTTON_SMALL;
+					if (ui.AddButton("Open File", st))
+					{
+						player.doOpenDialogPathAudio();
+					}
+				}
+
+				if (!bNotLoadedAudio)
+				{
+					ui.Add(player.volumeAudio, OFX_IM_HSLIDER_MINI);
+					//ui.Add(player.volumeAudio, OFX_IM_KNOB_DOTKNOB, 2);
+
+					ui.Add(player.bLinkAudio, OFX_IM_TOGGLE_ROUNDED_SMALL);
+					string s;
+					if (player.bLinkAudio) s = "ENABLED \nWill search for a WAV file \nwith the same name than the MOV video file";
+					else s = "DISABLED \nYou can load another WAV file \nIndependent and not played linked";
+					ui.AddTooltip(s, bToolTips);
+
+					if (!player.bLinkAudio)
+					{
+						ui.Add(player.bLoop, OFX_IM_TOGGLE_ROUNDED_SMALL);
+
+						ui.Add(player.positionAudio, OFX_IM_HSLIDER_MINI_NO_LABELS);
+
+						int t = player.getPositionAudioMS() / 1000.f;
+						int currMin, currSec;
+						std::string strMin, strSec;
+						currMin = t / 60;
+						currSec = t % 60;
+						strMin = (currMin < 10) ? "0" : "";
+						strSec = (currSec < 10) ? "0" : "";
+						strMin += ofToString(currMin);
+						strSec += ofToString(currSec);
+						string s = strMin + ":" + strSec;
+						ui.AddLabelBig(s);
+
+						ui.Add(player.bPlayAudio, OFX_IM_TOGGLE_BORDER, 2, 0.7f);
+						ui.SameLine();
+						ui.Add(player.bStopAudio, OFX_IM_BUTTON, 2, 0.3f);
+					}
+				}
+
+				ui.EndTree();
 			}
 
 			//--
@@ -4197,7 +4167,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 					ui.AddSpacing();
 					ui.Add(bMODE_Edit, OFX_IM_TOGGLE_MEDIUM_BORDER);
 					ui.Add(bMODE_Loop, OFX_IM_TOGGLE_SMALL);
-				}
+			}
 
 				ui.AddSpacingSeparated();
 
@@ -4457,7 +4427,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 					}
 				}
-			}
+		}
 
 			//--
 
@@ -4512,8 +4482,8 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 			//ui.EndWindowSpecial();
 			ui.EndWindow();
-				}
-			}
+	}
+}
 		}
 
 //--------------------------------------------------------------
@@ -4589,7 +4559,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 		oscHelper.drawImGui();
 #endif
 		//--
-		}
+	}
 	ui.End();
 
 	//--
@@ -4618,7 +4588,7 @@ void ofxSurfingVideoSkip::draw_ImGui()
 #ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 	fxPro.drawGui();
 #endif
-	}
+}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::doOpenDialogToSetPath()

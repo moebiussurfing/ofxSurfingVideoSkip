@@ -3,14 +3,14 @@
 
 	TODO
 
-	add split independent mode.
-		player with loop toggle.
-		not linked to video
-	make video loader/dialog runtime
-	add non hap loader too
-	add vector of pointer players
-	integrate with ofxSoundObjects
+	add save file path for video file
+		like on the audio file
+	add non hap (mp4) loader too
 
+	add vector of pointer players
+		for multi files, 
+		layers or performance
+	integrate with ofxSoundObjects
 
 */
 
