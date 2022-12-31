@@ -50,20 +50,20 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 	// We want to remote the preset controller vars.
 	// Add after created presets manager object.
 
-//#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
-#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-
-	// Clips
-	//mMidiParams.add(presetsManager.getParametersSelectorToggles());
-
-	// Target State
-#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
-	mMidiParams.add(moods.getParametersSelectorToggles());
-	//mMidiParams.add(moods.PRESET_B_Selected);
-#endif
-
-#endif
+////#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
+//#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
+//
+//	// Clips
+//	//mMidiParams.add(presetsManager.getParametersSelectorToggles());
+//
+//	// Target State
+//#ifdef USE_ofxSurfingMoods__VIDEO_SKIP
+//	mMidiParams.add(moods.getParametersSelectorToggles());
+//	//mMidiParams.add(moods.PRESET_B_Selected);
 //#endif
+//
+//#endif
+////#endif
 
 	//--
 
@@ -202,14 +202,31 @@ void ofxSurfingVideoSkip::setup_Remote()
 
 	mMidiParams.connect();
 
+	//TODO:
+	//mMidiParams.add(params_Preset);
+	//mMidiParams.add(presetsManager.getParametersSelectorToggles());
+
+	// All presets are centralized here!
+	// T : Target State
+	// A : video clips
+	// B : FX CH
+	// C : FX Post
+
+	// -> add selector indexes
+	mMidiParams.add(moods.TARGET_Selected);
+	mMidiParams.add(moods.PRESET_A_Selected);
+	mMidiParams.add(moods.PRESET_B_Selected);
+	mMidiParams.add(moods.PRESET_C_Selected);
+
+	// -> add groups
+	mMidiParams.add(moods.getTogglesTarget());
+	mMidiParams.add(moods.getTogglesPresetA());
+	mMidiParams.add(moods.getTogglesPresetB());
+	mMidiParams.add(moods.getTogglesPresetC());
+
 #ifdef USE_ofxRemoteParameters
 	mMidiParams.add(params_Remote);
 #endif
-
-	//mMidiParams.add(params_Preset);
-
-	//TODO:
-	//mMidiParams.add(presetsManager.getParametersSelectorToggles());
 
 #endif
 
@@ -4440,43 +4457,43 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 			//--
 
-			///*
-			if (!ui.bMinimize)
-			{
-				ui.AddSpacingSeparated();
-
-				// Extra
-				ui.Add(ui.bExtra, OFX_IM_TOGGLE_BUTTON_ROUNDED);
-				if (ui.bExtra)
-				{
-					ui.Indent();
-					{
-						//TODO:
-
-//#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
-#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-
-						if (ui.AddButton("ReBuild"))
-						{
-							presetsManager.doBuildMidiNotes();
-						}
-
-						//--
-
-						//static bool bPopulateMidiToggles = false;
-						//if (ofxImGuiSurfing::ToggleRoundedButton("Populate Midi", &bPopulateMidiToggles))
-						if (ui.AddButton("Populate Midi"))
-						{
-							mMidiParams.add(presetsManager.getParametersSelectorToggles());
-						}
-
-#endif
-						//#endif
-					}
-					ui.Unindent();
-				}
-			}
-			//*/
+//			///*
+//			if (!ui.bMinimize)
+//			{
+//				ui.AddSpacingSeparated();
+//
+//				// Extra
+//				ui.Add(ui.bExtra, OFX_IM_TOGGLE_BUTTON_ROUNDED);
+//				if (ui.bExtra)
+//				{
+//					ui.Indent();
+//					{
+//						//TODO:
+//
+//////#ifdef INCLUDE__OFX_SURFING_PRESET__MIDI__
+////#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
+////
+////						if (ui.AddButton("ReBuild"))
+////						{
+////							presetsManager.doBuildMidiNotes();
+////						}
+////
+////						//--
+////
+////						//static bool bPopulateMidiToggles = false;
+////						//if (ofxImGuiSurfing::ToggleRoundedButton("Populate Midi", &bPopulateMidiToggles))
+////						if (ui.AddButton("Populate Midi"))
+////						{
+////							mMidiParams.add(presetsManager.getParametersSelectorToggles());
+////						}
+////
+////#endif
+////						//#endif
+//					}
+//					ui.Unindent();
+//				}
+//			}
+//			//*/
 
 			//--
 

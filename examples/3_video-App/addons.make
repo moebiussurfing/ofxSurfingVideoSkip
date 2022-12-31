@@ -10,9 +10,7 @@ ofxSurfingFxPro
 ofxSurfingHelpers
 ofxSurfingImGui
 ofxSurfingMoods
-ofxSurfingPlayer
 ofxSurfingPresets
-ofxSurfingRandomizer
 ofxSurfingSplashScreen
 ofxSurfingUndoHelper
 ofxSurfingVideoSkip
