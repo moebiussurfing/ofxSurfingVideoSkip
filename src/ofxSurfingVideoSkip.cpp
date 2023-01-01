@@ -281,7 +281,7 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	params_AppSettings.add(bGui_Files);
 	params_AppSettings.add(bMODE_Edit);
 	params_AppSettings.add(bMODE_Loop);
-	params_AppSettings.add(player.volumeAudio);
+	//params_AppSettings.add(player.volumeAudio);
 	//#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 	//	params_AppSettings.add(channelFx.bGui);
 	//#endif
