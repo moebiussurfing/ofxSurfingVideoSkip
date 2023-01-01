@@ -43,6 +43,8 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 	//bMODE_Edit.setName("EDIT");
 	//bMODE_Edit.makeReferenceTo(presetsManager.bAutoSave);
 
+	presetsManager.setName("CLIPS");
+
 #endif
 
 	//--
@@ -65,11 +67,11 @@ void ofxSurfingVideoSkip::setup_PresetsStuff()
 //#endif
 ////#endif
 
-	//--
+	////--
 
-	// App Session Settings
+	//// App Session Settings
 
-	ofxSurfingHelpers::loadGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
+	//ofxSurfingHelpers::loadGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
 }
 
 //--------------------------------------------------------------
@@ -228,6 +230,22 @@ void ofxSurfingVideoSkip::setup_Remote()
 	mMidiParams.add(params_Remote);
 #endif
 
+	/*
+	//TODO:
+	// link between index could be problematic
+#ifdef USE_ofxSurfingPresets__VIDEO_SKIP
+	moods.PRESET_A_Selected.makeReferenceTo(presetsManager.index);
+#endif
+
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
+	moods.PRESET_B_Selected.makeReferenceTo(fxPro.presetsManager.index);
+#endif
+
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
+	moods.PRESET_C_Selected.makeReferenceTo(channelFx.presetsManager.index);
+#endif
+	*/
+
 #endif
 
 	//----
@@ -264,9 +282,10 @@ void ofxSurfingVideoSkip::setup_AppSettings()
 	params_AppSettings.add(bMODE_Edit);
 	params_AppSettings.add(bMODE_Loop);
 	params_AppSettings.add(player.volumeAudio);
-#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
-	params_AppSettings.add(channelFx.bGui);
-#endif
+	//#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
+	//	params_AppSettings.add(channelFx.bGui);
+	//#endif
+	params_AppSettings.add(bLinkAllFiles);
 }
 
 //--------------------------------------------------------------
@@ -627,7 +646,7 @@ void ofxSurfingVideoSkip::setup()
 
 	setup_AppSettings();
 
-	//--
+	//----
 
 	// Callbacks
 
@@ -654,7 +673,7 @@ void ofxSurfingVideoSkip::setup()
 
 	//--
 
-	// Audio
+	// Video and Audio
 
 	player.setup();
 
@@ -677,9 +696,28 @@ void ofxSurfingVideoSkip::setup()
 
 	//--
 
+	setup_PresetsStuff();
+
+	//--
+
 	// Gui
 
 	setup_ImGui();
+
+	//--
+
+//#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+//
+//	pathSubs = "subs/Huxley.srt";
+//	//pathSubs = "subs/Alphaville.srt";
+//	//pathSubs = "subs/spanish.srt";
+//
+//	subs.setDuration(player.getDuration());//link durations
+//	subs.setDisableGuiInternal(true);
+//	subs.setup(pathSubs);
+//	subs.setUiPtr(&ui);
+//
+//#endif
 
 	//--
 
@@ -781,9 +819,15 @@ void ofxSurfingVideoSkip::startup()
 
 	//-
 
-	setup_PresetsStuff();
+	//setup_PresetsStuff();
 
-	//-
+	//--
+
+	// App Session Settings
+
+	ofxSurfingHelpers::loadGroup(params_AppSettings, path_GLOBAL_Folder + "/" + path_AppSettings);
+
+	//--
 
 	// Overwrite default settings
 
@@ -1171,16 +1215,18 @@ void ofxSurfingVideoSkip::updateVideoPlayer()
 	// max minutes is 99 to nice formatting
 	positionSeconds = player.getDuration() * position;
 
-	// Time label
-	int currMin, currSec;
-	std::string strMin, strSec;
-	currMin = positionSeconds / 60;
-	currSec = ((int)(positionSeconds)) % 60;
-	strMin = (currMin < 10) ? "0" : "";
-	strSec = (currSec < 10) ? "0" : "";
-	strMin += ofToString(currMin);
-	strSec += ofToString(currSec);
-	videoTIME = /*"Time " + */strMin + ":" + strSec;//std::string
+	//// Time label
+	//int currMin, currSec;
+	//std::string strMin, strSec;
+	//currMin = positionSeconds / 60;
+	//currSec = ((int)(positionSeconds)) % 60;
+	//strMin = (currMin < 10) ? "0" : "";
+	//strSec = (currSec < 10) ? "0" : "";
+	//strMin += ofToString(currMin);
+	//strSec += ofToString(currSec);
+	//videoTIME = /*"Time " + */strMin + ":" + strSec;//std::string
+
+	videoTIME = ofxSurfingHelpers::calculateTime(positionSeconds);
 
 	// Frame
 	videoFRAME = ofToString(position * totalNumFrames, 0);
@@ -2097,7 +2143,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 			name != timer_SkipRev.getName()
 			)
 		{
-			ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << name << " : " << e;
+			ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "\n" << name << " : " << e;
 		}
 
 		if (0) {}
@@ -2544,7 +2590,7 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter& e) // patch change
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::Changed_bGui()
 {
-	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << ofToString(bGui.get());
+	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << " " << ofToString(bGui.get());
 
 	// hide all
 	if (!bGui)
@@ -3172,14 +3218,15 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path)
 
 	//--
 
-	if (bLinkAllFiles)
-	{
-#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
-		pathSubs = player.getPathSrt();
-		subs.setDuration(player.getDuration());//link durations
-		subs.load(pathSubs);
-#endif
-	}
+//	//TODO:
+//	if (bLinkAllFiles)
+//	{
+//#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+//		pathSubs = player.getPathSrt();
+//		subs.setDuration(player.getDuration());//link durations
+//		subs.load(pathSubs);
+//#endif
+	//}
 
 	//--
 
@@ -3378,12 +3425,20 @@ void ofxSurfingVideoSkip::setup_ImGui()
 
 	ui.addWindowSpecial(bGui_Main);
 
+#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+	ui.addWindowSpecial(subs.bGui);
+#endif
+
 #ifdef USE_ofxSurfingPresets__VIDEO_SKIP
 	ui.addWindowSpecial(presetsManager.bGui);
 #endif
 
-#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
-	ui.addWindowSpecial(mMidiParams.bGui);
+#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
+	ui.addWindowSpecial(fxPro.bGui);
+#endif
+
+#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
+	ui.addWindowSpecial(channelFx.bGui);
 #endif
 
 #ifdef USE_ofxSurfingMoods__VIDEO_SKIP 
@@ -3394,12 +3449,8 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	ui.addWindowSpecial(beatClock.bGui);
 #endif
 
-#ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
-	ui.addWindowSpecial(channelFx.bGui);
-#endif
-
-#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
-	ui.addWindowSpecial(fxPro.bGui);
+#ifdef USE_MIDI_PARAMS__VIDEO_SKIP
+	ui.addWindowSpecial(mMidiParams.bGui);
 #endif
 
 #ifdef USE_ofxSurfingOsc
@@ -3410,10 +3461,6 @@ void ofxSurfingVideoSkip::setup_ImGui()
 #ifdef USE_ofxNDI
 	ui.addWindowSpecial(ndi.bGui);
 #endif
-
-	//#ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
-	//	ui.addWindowSpecial(subs.bGui);
-	//#endif
 
 	//ui.addWindowSpecial(surfingPreview.bGui_Extra);
 
@@ -3452,7 +3499,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 // Set to 1 to enable an to test it
 	if (1) {
 		vector<std::string> names;
-		names.push_back("CLIPS");
+		names.push_back("IMAGE");
 		names.push_back("ENGINE");
 		names.push_back("CONTROL");
 		names.push_back("FX");
@@ -3544,6 +3591,14 @@ void ofxSurfingVideoSkip::draw_ImGui_Files()
 
 		if (ui.BeginWindow(bGui_Files))
 		{
+			ui.Add(bLinkAllFiles, OFX_IM_TOGGLE_ROUNDED_MINI);
+			string s = bLinkAllFiles.get() ?
+				"Will try to load .WAV audio and .SRT file linked." :
+				"Audio, Video and SRT will behave independent";
+			ui.AddTooltip(s, bToolTips);
+
+			ui.AddSpacing();
+
 			std::string n = videoName;
 
 			//if (ui.BeginTree(n))
@@ -3573,6 +3628,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Files()
 						}
 					}
 					ui.EndBlinkFrame(bBlink);
+
 				}
 
 				//--
@@ -4184,7 +4240,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 					ui.AddSpacing();
 					ui.Add(bMODE_Edit, OFX_IM_TOGGLE_MEDIUM_BORDER);
 					ui.Add(bMODE_Loop, OFX_IM_TOGGLE_SMALL);
-			}
+				}
 
 				ui.AddSpacingSeparated();
 
@@ -4444,7 +4500,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 						}
 					}
 				}
-		}
+			}
 
 			//--
 
@@ -4499,9 +4555,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Main()
 
 			//ui.EndWindowSpecial();
 			ui.EndWindow();
+		}
 	}
 }
-		}
 
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui_Docking()

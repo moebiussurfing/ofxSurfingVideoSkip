@@ -12,6 +12,9 @@
 	mark some word with another color
 	add center offset or duration, to translate a clip/loop
 
+	+ Presets ABc with presets indexes. 
+		makeReferenteTo
+
 	TODO:
 	+ make thumbs using threading
 
@@ -112,7 +115,7 @@
 //#define USE_ofxNDI
 
 // -> 10. SRT subtitler
-//#define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+#define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
 
 //--
 

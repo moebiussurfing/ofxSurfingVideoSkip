@@ -4,7 +4,7 @@
 void ofApp::setup()
 {
 	//w.setEscapeQuitsApp(false);
-	w.setConsoleVisible(false);
+	//w.setConsoleVisible(false); // breaks thumbs thread
 	
 	//--
 

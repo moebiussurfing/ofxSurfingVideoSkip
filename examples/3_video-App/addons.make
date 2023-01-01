@@ -1,4 +1,5 @@
 ofxBeatClock
+ofxFontStash
 ofxGui
 ofxHapPlayer
 ofxImGui
@@ -12,6 +13,7 @@ ofxSurfingImGui
 ofxSurfingMoods
 ofxSurfingPresets
 ofxSurfingSplashScreen
+ofxSurfingTextSubtitle
 ofxSurfingUndoHelper
 ofxSurfingVideoSkip
 ofxWindowApp
