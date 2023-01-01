@@ -324,7 +324,7 @@ void ofxSurfingVideoSkip::setup()
 	bLinkAllFiles.set("Link Files", true);//for srt only
 	//bLinkAllFiles.makeReferenceTo(player.bLinkAudio);
 
-	bGui.set("SURFING VIDEO", true);
+	bGui.set("SURFING VIDEO", true);1
 	bGui_Main.set("VIDEO", true);
 	bGui_Files.set("FILES", true);
 	//bGui_Main.set("VIDEO SKIP", true);
@@ -3691,16 +3691,20 @@ void ofxSurfingVideoSkip::draw_ImGui_Files()
 
 						ui.Add(player.positionAudio, OFX_IM_HSLIDER_MINI_NO_LABELS);
 
-						int t = player.getPositionAudioMS() / 1000.f;
-						int currMin, currSec;
-						std::string strMin, strSec;
-						currMin = t / 60;
-						currSec = t % 60;
-						strMin = (currMin < 10) ? "0" : "";
-						strSec = (currSec < 10) ? "0" : "";
-						strMin += ofToString(currMin);
-						strSec += ofToString(currSec);
-						string s = strMin + ":" + strSec;
+						float t = player.getPositionAudioMS() / 1000.f;
+
+						//int currMin, currSec;
+						//std::string strMin, strSec;
+						//currMin = t / 60;
+						//currSec = t % 60;
+						//strMin = (currMin < 10) ? "0" : "";
+						//strSec = (currSec < 10) ? "0" : "";
+						//strMin += ofToString(currMin);
+						//strSec += ofToString(currSec);
+						//string s = strMin + ":" + strSec;
+
+						s = ofxSurfingHelpers::calculateTime(t);
+
 						ui.AddLabelBig(s);
 
 						ui.Add(player.bPlayAudio, OFX_IM_TOGGLE_BORDER, 2, 0.7f);
