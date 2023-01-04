@@ -324,7 +324,7 @@ void ofxSurfingVideoSkip::setup()
 	bLinkAllFiles.set("Link Files", true);//for srt only
 	//bLinkAllFiles.makeReferenceTo(player.bLinkAudio);
 
-	bGui.set("SURFING VIDEO", true);1
+	bGui.set("SURFING VIDEO", true);
 	bGui_Main.set("VIDEO", true);
 	bGui_Files.set("FILES", true);
 	//bGui_Main.set("VIDEO SKIP", true);
@@ -841,10 +841,10 @@ void ofxSurfingVideoSkip::startup()
 	//pathSubs = "subs/Alphaville.srt";
 	//pathSubs = "subs/spanish.srt";
 
+	subs.setUiPtr(&ui);
 	subs.setDuration(player.getDuration());//link durations
 	subs.setDisableGuiInternal(true);
 	subs.setup(pathSubs);
-	subs.setUiPtr(&ui);
 
 #endif
 
@@ -934,7 +934,8 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 
 	// fix loading settings
 	// seems that need overwrite the ImGui management
-	if (ofGetFrameNum() == 2)
+	if (ofGetFrameNum() == 1)
+	//if (ofGetFrameNum() == 2)
 	{
 		startup();
 	}
@@ -1043,6 +1044,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs& args)
 	updateVideoPlayer();
 
 #ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+	//subs.update();
 	subs.updatePosition(player.getPosition());
 #endif
 
@@ -3510,7 +3512,7 @@ void ofxSurfingVideoSkip::setup_ImGui()
 	//--
 
 	// -> Initiates when adding process finished!
-	ui.startup();
+	//ui.startup();
 
 	//--
 

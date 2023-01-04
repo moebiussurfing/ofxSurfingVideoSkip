@@ -12,7 +12,7 @@
 	mark some word with another color
 	add center offset or duration, to translate a clip/loop
 
-	+ Presets ABc with presets indexes. 
+	+ Presets ABc with presets indexes.
 		makeReferenteTo
 
 	TODO:
@@ -473,7 +473,7 @@ public:
 		cout << (s) << endl << endl;
 		cout << ofSystem(s) << endl;
 	};
-	
+
 	CommandThread commandThread;
 
 private:
@@ -525,7 +525,7 @@ public:
 		// presets
 		presetsManager.setVisible_PresetClicker(b);
 		presetsManager.setEnableKeys(b);
-	}
+}
 #endif
 
 	////--------------------------------------------------------------
