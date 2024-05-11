@@ -67,11 +67,11 @@
 
 // MAIN
 // 
-//#define USE_MINIMAL__VIDEO_SKIP
+#define USE_MINIMAL__VIDEO_SKIP
  // -> Uncomment this above line to: 
 // Force and disable ALL the below optional add-ons / compatible modules. 
 // Then allows only the use of the MINIMAL CORE stuff of the add-on.
-
+// For example for the example 1_video-Basic
 #ifndef USE_MINIMAL__VIDEO_SKIP
 
 //--
@@ -266,7 +266,7 @@ public:
 	//--------------------------------------------------------------
 	static void AspectRatio(ImGuiSizeCallbackData* data) {
 		float aspect_ratio = *(float*)data->UserData;
-		data->DesiredSize.x = IM_MAX(data->CurrentSize.x, data->CurrentSize.y);
+		data->DesiredSize.x = MAX(data->CurrentSize.x, data->CurrentSize.y);
 		data->DesiredSize.y = (float)(int)(data->DesiredSize.x / aspect_ratio);
 	}
 

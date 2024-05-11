@@ -3,8 +3,11 @@
 //--------------------------------------------------------------
 void ofApp::setup()
 {
+	#if 0
 	ofSetWindowShape(1920, 1060);
 	ofSetWindowPosition(-1920, 25);
+	#else
+	#endif
 
 	player.setup();
 
