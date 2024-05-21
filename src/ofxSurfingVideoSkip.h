@@ -381,7 +381,7 @@ public:
 
 	void draw_ImGui();
 	void draw_ImGui_Docking();
-	void draw_ImGui_Main();
+	void draw_ImGui_VideoMain();
 	void draw_ImGui_Files();
 	void draw_ImGui_SkipTimers();
 	void draw_ImGui_Preview();
@@ -475,9 +475,6 @@ private:
 	ofParameter<bool> bTheme { "Theme", false };
 
 public:
-	void setActive(bool b);
-	void setKeysEnable(bool b);
-	void setGuiVisible(bool b);
 
 	//--------------------------------------------------------------
 	void setGuiToggleVisible() {
