@@ -1,24 +1,25 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-void ofApp::setup()
-{
-	#if 0
-	ofSetWindowShape(1920, 1060);
-	ofSetWindowPosition(-1920, 25);
-	#else
-	#endif
+void ofApp::setup() {
 
 	player.setup();
 
-	ofSetEscapeQuitsApp(false);
+	//ofSetEscapeQuitsApp(false);
 }
 
 //--------------------------------------------------------------
-void ofApp::update()
-{
+void ofApp::update() {
 	string s = ofToString(ofGetFrameRate(), 0) + " Fps";
+	s += "    ";
+	s += player.getVideoFilepath();
 	ofSetWindowTitle(s);
+}
+
+//--------------------------------------------------------------
+void ofApp::draw() {
+	player.draw();
+	player.drawGui();
 }
 
 //--------------------------------------------------------------
