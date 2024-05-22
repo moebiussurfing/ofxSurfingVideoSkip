@@ -10,8 +10,8 @@ void ofApp::setup() {
 
 //--------------------------------------------------------------
 void ofApp::update() {
-	string s = ofToString(ofGetFrameRate(), 0) + " Fps";
-	s += "    ";
+	string s = ofToString(ofGetFrameRate(), 0) + " FPS";
+	s += " - ";
 	s += player.getVideoFilepath();
 	ofSetWindowTitle(s);
 }

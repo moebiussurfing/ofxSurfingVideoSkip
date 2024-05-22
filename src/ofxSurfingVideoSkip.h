@@ -122,8 +122,6 @@
 
 //----
 
-#define AUTO_GENERATE_THUMBS_ON_LOADING
-
 // bar sizes
 #define BAR_INSET 4
 #define BAR_HEIGHT 30
@@ -133,6 +131,9 @@
 #define SPEED_MAX 4.0f
 
 #define USE_BPM_TIMER_MODE
+
+//#define SURFING_USE_THUMBS
+#define AUTO_GENERATE_THUMBS_ON_LOADING
 
 //----------------------------------------------
 
@@ -145,7 +146,9 @@
 #include "WindowFbo.h"
 #include "ofxSurfingImGui.h"
 
+#ifdef SURFING_USE_THUMBS
 #include "CommandThread.h" // to call the thumbs generator without breaking drawing!
+#endif
 
 //--
 
@@ -238,15 +241,19 @@ public:
 
 	//--
 
+#ifdef SURFING_USE_THUMBS
 public:
 	ofDirectory dirThumbs;
 	vector<ofImage> imgThumbs;
 	void loadThumbs();
 	//float thumbGap=0;
 	bool bFit = true;
-
+#endif
 	bool bError = false;
 
+	//--
+
+private:
 	//TODO:
 	// https://github.com/ocornut/imgui/issues/5627#event-7303371114
 	//--------------------------------------------------------------
@@ -437,17 +444,20 @@ public:
 
 	void doOpenDialogToSetPath();
 
+#ifdef SURFING_USE_THUMBS
 	bool bThumbsReadyFbo = false;
 	void doGenerateThumbs();
 
+	CommandThread commandThread;
+#endif
+
 	//--------------------------------------------------------------
 	void doRunCommand(string s) {
-		cout << (s) << endl
-			 << endl;
+		cout << (s) << endl<< endl;
 		cout << ofSystem(s) << endl;
-	}
 
-	CommandThread commandThread;
+		ofLogNotice("ofxSurfingVideoSkip") << "COMMAND: " << endl << s;
+	}
 
 private:
 	ofTrueTypeFont font;
@@ -475,7 +485,6 @@ private:
 	ofParameter<bool> bTheme { "Theme", false };
 
 public:
-
 	//--------------------------------------------------------------
 	void setGuiToggleVisible() {
 		bGui = !bGui;
