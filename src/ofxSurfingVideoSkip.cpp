@@ -227,13 +227,13 @@ void ofxSurfingVideoSkip::setup_Parameters() {
 	beatRescale.set("SCALE", 0, -8, 8);
 	bMODE_Lock.set("LOCK", false); //?
 
-//#ifndef USE_MINIMAL__VIDEO_SKIP
-	#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
+	//#ifndef USE_MINIMAL__VIDEO_SKIP
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
 	indexPreviewSource.set("Source Preview", 0, 0, previewSources.size() - 1);
-	#else
+#else
 	indexPreviewSource.set("Source Preview", 0, 0, 0);
-	#endif
-//#endif
+#endif
+	//#endif
 
 	//--
 
@@ -1007,20 +1007,20 @@ void ofxSurfingVideoSkip::update(ofEventArgs & args) {
 #endif
 		}
 
-//--
+		//--
 
-		//TODO DEBUG
-#if 0
-		// FxPro
-	#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
-		// processed video
-		else if (indexPreviewSource == 1)
-			fxPro.draw();
-	#else
-		else if (indexPreviewSource == 1)
-			draw_Video();
-	#endif
-#endif
+		//		//TODO DEBUG
+		//#if 0
+		//		// FxPro
+		//	#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
+		//		// processed video
+		//		else if (indexPreviewSource == 1)
+		//			fxPro.draw();
+		//	#else
+		//		else if (indexPreviewSource == 1)
+		//			draw_Video();
+		//	#endif
+		//#endif
 	}
 	surfingPreview.end();
 
@@ -3221,7 +3221,7 @@ void ofxSurfingVideoSkip::setup_ImGui() {
 	ui.addWindowSpecial(bGui_VideoMain); // video
 	ui.addWindowSpecial(bGui_SkipTimers); // skip timers
 
-	ui.addWindowSpecial(surfingPreview.bGui_Extra); // preview extra
+	ui.addWindowSpecial(surfingPreview.bGui_PreviewExtra); // preview extra
 
 	//--
 
@@ -3522,7 +3522,12 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers() {
 	if (bGui_SkipTimers) ui.setNextWindowAfterWindowNamed(bGui_VideoMain);
 	//if (bGui_VideoMain) ui.setNextWindowAfterWindowNamed(bGui_VideoMain.getName());
 
-	IMGUI_SUGAR__WINDOWS_CONSTRAINTS;
+	{
+		float w_ = 180;
+		ImVec2 size_min = ImVec2(w_, -1);
+		ImVec2 size_max = ImVec2(w_, -1);
+		ImGui::SetNextWindowSizeConstraints(size_min, size_max);
+	}
 
 	if (ui.BeginWindowSpecial(bGui_SkipTimers)) {
 		float ___w1 = ui.getWidgetsWidth(1);
@@ -3652,18 +3657,108 @@ void ofxSurfingVideoSkip::draw_ImGui_SkipTimers() {
 }
 
 //--------------------------------------------------------------
-void ofxSurfingVideoSkip::draw_ImGui_Preview() {
+void ofxSurfingVideoSkip::draw_ImGui_ExtraPreview() {
+
+	//--
+
+	// 2. Preview Extra. stuff window
+
+	if (!ui.bMinimize) {
+		if (surfingPreview.bGui_PreviewExtra) {
+			if (ui.BeginWindow(surfingPreview.bGui_PreviewExtra)) {
+				ui.Add(bLock, OFX_IM_TOGGLE_ROUNDED_MINI);
+
+				// Preview Big
+				ui.Add(surfingPreview.bGui_PreviewBig, OFX_IM_TOGGLE_ROUNDED);
+				if (surfingPreview.bGui_PreviewBig) {
+					ui.Indent();
+					{
+						ui.AddCombo(surfingPreview.scaleModeIndex, surfingPreview.scaleModenames);
+
+						//-
+
+						ui.Add(surfingPreview.bFullScreen, OFX_IM_TOGGLE_ROUNDED);
+						if (!surfingPreview.bFullScreen) {
+							ui.Add(surfingPreview.bInDocked, OFX_IM_TOGGLE_ROUNDED_MINI);
+							if (!surfingPreview.bInDocked) {
+								//TODO
+								//ui.Add(surfingPreview.rectDraggable.bEditMode, OFX_IM_TOGGLE_ROUNDED_MINI);
+							}
+						}
+
+						//TODO:
+						//ui.Add(colorBg);//TODO: fix
+					}
+					ui.Unindent();
+				}
+
+				//--
+
+				// Preview Mini Floating
+
+				ui.Add(surfingPreview.bGui_PreviewMini, OFX_IM_TOGGLE_ROUNDED);
+				if (surfingPreview.bGui_PreviewMini) {
+					ui.Indent();
+					ui.Add(surfingPreview.bAutoResize_Preview, OFX_IM_TOGGLE_ROUNDED_MINI);
+					ui.Unindent();
+				}
+
+				// Debug only for floating window active
+				if (surfingPreview.bGui_PreviewMini) {
+					ui.Separator();
+
+					ui.Add(surfingPreview.bDebug, OFX_IM_TOGGLE_ROUNDED_MINI);
+					if (surfingPreview.bDebug) {
+						ui.Indent();
+						//ofxImGuiSurfing::BasicInfosWindow();
+
+						string s = "";
+						s += "FBO\n";
+						s += "w: ";
+						s += ofToString(surfingPreview.fboPreview.getWidth());
+						s += "\n";
+						s += "h: ";
+						s += ofToString(surfingPreview.fboPreview.getHeight());
+						s += "\n";
+
+						s += "VIEW\n";
+						s += "x: ";
+						s += ofToString(surfingPreview.rectPreviewViewport.getPosition().x);
+						s += "\n";
+						s += "y: ";
+						s += ofToString(surfingPreview.rectPreviewViewport.getPosition().y);
+						s += "\n";
+						s += "w: ";
+						s += ofToString(surfingPreview.rectPreviewViewport.getWidth());
+						s += "\n";
+						s += "h: ";
+						s += ofToString(surfingPreview.rectPreviewViewport.getHeight());
+
+						ui.AddLabel(s);
+
+						ui.Unindent();
+					}
+				}
+
+				ui.EndWindow();
+			}
+		}
+	}
+
+	// if minimized will draw only the floating preview, not the extra window
+}
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::draw_ImGui_MiniPreview() {
 	// Append the source name to the window header label.
 
 	string n = "";
 
-//#ifndef USE_MINIMAL__VIDEO_SKIP
-	#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
+	//#ifndef USE_MINIMAL__VIDEO_SKIP
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
 	if (indexPreviewSource < previewSources.size()) n = previewSources[indexPreviewSource];
-	#endif
-//#endif
-
-	static ofParameter<bool> bLock { "Lock", false };
+#endif
+	//#endif
 
 	//--
 	//
@@ -3672,7 +3767,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Preview() {
 	//
 	// 1. Preview Floating window
 
-	if (surfingPreview.bGui_MiniPreview) {
+	if (surfingPreview.bGui_PreviewMini) {
 		ImGuiWindowFlags flagsw = ImGuiWindowFlags_None;
 		if (surfingPreview.bAutoResize_Preview) flagsw += ImGuiWindowFlags_AlwaysAutoResize;
 
@@ -3738,7 +3833,9 @@ void ofxSurfingVideoSkip::draw_ImGui_Preview() {
 
 		//--
 
-		if (ui.BeginWindow(surfingPreview.bGui_MiniPreview, flagsw)) {
+		// image mini preview floating window
+
+		if (ui.BeginWindow(surfingPreview.bGui_PreviewMini, flagsw)) {
 			/*
 			spx = ui.getWidgetsSpacingX();
 			spy = ui.getWidgetsSpacingY();
@@ -3748,12 +3845,13 @@ void ofxSurfingVideoSkip::draw_ImGui_Preview() {
 			bready = true;
 			*/
 
+			//--
+
 			ofxImGuiSurfing::DrawFboPreview(surfingPreview.fboPreview);
 
-			//surfingPreview.fboPreview.draw(0, 0);
-
-			//string n = surfingPreview.bGui_MiniPreview.getName();
-			//ui.AddLabelBig(n);
+			//debug viewport
+			surfingPreview.rectPreviewViewport.setPosition(ui.getWindowShape().getPosition());
+			surfingPreview.rectPreviewViewport.setSize(ui.getWindowShape().getWidth(),ui.getWindowShape().getHeight());
 
 			//--
 
@@ -3792,69 +3890,6 @@ void ofxSurfingVideoSkip::draw_ImGui_Preview() {
 			ui.EndWindow();
 		}
 	}
-
-	//--
-
-	// 2. Preview Extra. stuff window
-
-	if (!ui.bMinimize) {
-		if (surfingPreview.bGui_Extra) {
-			if (ui.BeginWindow(surfingPreview.bGui_Extra)) {
-				ui.Add(bLock, OFX_IM_TOGGLE_ROUNDED_MINI);
-
-				// Preview Big
-				ui.Add(surfingPreview.bGui_PreviewBig, OFX_IM_TOGGLE_ROUNDED);
-				if (surfingPreview.bGui_PreviewBig) {
-					ui.Indent();
-					{
-						ui.AddCombo(surfingPreview.scaleModeIndex, surfingPreview.scaleModenames);
-
-						//-
-
-						ui.Add(surfingPreview.bFullScreen, OFX_IM_TOGGLE_ROUNDED);
-						if (!surfingPreview.bFullScreen) {
-							ui.Add(surfingPreview.bInDocked, OFX_IM_TOGGLE_ROUNDED_MINI);
-							if (!surfingPreview.bInDocked) {
-								//TODO
-								//ui.Add(surfingPreview.rectDraggable.bEditMode, OFX_IM_TOGGLE_ROUNDED_MINI);
-							}
-						}
-
-						//TODO:
-						//ui.Add(colorBg);//TODO: fix
-					}
-					ui.Unindent();
-				}
-
-				//--
-
-				// Preview Mini Floating
-
-				ui.Add(surfingPreview.bGui_MiniPreview, OFX_IM_TOGGLE_ROUNDED);
-				if (surfingPreview.bGui_MiniPreview) {
-					ui.Indent();
-					ui.Add(surfingPreview.bAutoResize_Preview, OFX_IM_TOGGLE_ROUNDED_MINI);
-					ui.Unindent();
-				}
-
-				// Debug only for floating window active
-				if (surfingPreview.bGui_MiniPreview) {
-					ui.Separator();
-
-					ui.Add(surfingPreview.bDebug, OFX_IM_TOGGLE_ROUNDED_MINI);
-					if (surfingPreview.bDebug) {
-						ui.Indent();
-						ofxImGuiSurfing::BasicInfosWindow();
-						ui.Unindent();
-					}
-				}
-
-				ui.EndWindow();
-			}
-		}
-	}
-
-	// if minimized will draw only the floating preview, not the extra window
 }
 
 //--------------------------------------------------------------
@@ -3866,8 +3901,12 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 	// Skip player window
 
 	if (bGui_VideoMain) {
-		//IMGUI_SUGAR__WINDOWS_CONSTRAINTSW;
-		//ofxImGuiSurfing::SetWindowContraintsWidth(170);
+		{
+			float w_ = 180;
+			ImVec2 size_min = ImVec2(w_, -1);
+			ImVec2 size_max = ImVec2(w_, -1);
+			ImGui::SetNextWindowSizeConstraints(size_min, size_max);
+		}
 
 		if (ui.BeginWindowSpecial(bGui_VideoMain)) {
 			float ___w1;
@@ -3876,7 +3915,7 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 
 			// Minimize
 			if (ui.Add(ui.bMinimize, OFX_IM_TOGGLE_ROUNDED)) {
-				if (ui.bMinimize) surfingPreview.bGui_Extra = false;
+				if (ui.bMinimize) surfingPreview.bGui_PreviewExtra = false;
 			};
 
 			//--
@@ -3897,7 +3936,7 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 
 			if (ui.Add(bGui_Previews, OFX_IM_TOGGLE_BUTTON_ROUNDED_MEDIUM)) {
 				// workflow
-				if (!bGui_Previews) surfingPreview.bGui_Extra = false;
+				if (!bGui_Previews) surfingPreview.bGui_PreviewExtra = false;
 			};
 			ui.AddTooltip("MODULE \nIMAGE \nPREVIEWS", bToolTips);
 
@@ -3911,17 +3950,17 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 						ui.Add(surfingPreview.bGui_PreviewBig, OFX_IM_TOGGLE_BUTTON_ROUNDED);
 
 						// Preview Float
-						ui.Add(surfingPreview.bGui_MiniPreview, OFX_IM_TOGGLE_BUTTON_ROUNDED);
+						ui.Add(surfingPreview.bGui_PreviewMini, OFX_IM_TOGGLE_BUTTON_ROUNDED);
 
 						// Source Selector
-//#ifndef USE_MINIMAL__VIDEO_SKIP
-	#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
-						if (surfingPreview.bGui_MiniPreview) {
+						//#ifndef USE_MINIMAL__VIDEO_SKIP
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
+						if (surfingPreview.bGui_PreviewMini) {
 							if (previewSources.size() > 1)
 								ui.AddCombo(indexPreviewSource, previewSources);
 						}
-	#endif
-//#endif
+#endif
+						//#endif
 					}
 					ui.Unindent();
 				}
@@ -3933,8 +3972,12 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 				if (bGui_Previews) {
 					ui.Indent();
 					{
+						//ui.Indent();
+						ui.Add(surfingPreview.bGui_PreviewExtra, OFX_IM_TOGGLE_BUTTON_ROUNDED);
+						//ui.Unindent();
+
 						// Preview Float
-						ui.Add(surfingPreview.bGui_MiniPreview, OFX_IM_TOGGLE_BUTTON_ROUNDED); //mini
+						ui.Add(surfingPreview.bGui_PreviewMini, OFX_IM_TOGGLE_BUTTON_ROUNDED); //mini
 
 						// Preview Big
 						ui.Add(surfingPreview.bGui_PreviewBig, OFX_IM_TOGGLE_BUTTON_ROUNDED); //big
@@ -3952,17 +3995,14 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 						}
 
 						// Source Selector
-//#ifndef USE_MINIMAL__VIDEO_SKIP
-	#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
-						if (surfingPreview.bGui_MiniPreview) {
+						//#ifndef USE_MINIMAL__VIDEO_SKIP
+#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
+						if (surfingPreview.bGui_PreviewMini) {
 							if (previewSources.size() > 1)
 								ui.AddCombo(indexPreviewSource, previewSources);
 						}
-	#endif
-//#endif
-						ui.Indent();
-						ui.Add(surfingPreview.bGui_Extra, OFX_IM_TOGGLE_BUTTON_ROUNDED);
-						ui.Unindent();
+#endif
+						//#endif
 					}
 					ui.Unindent();
 				}
@@ -4339,7 +4379,7 @@ void ofxSurfingVideoSkip::draw_ImGui() {
 		//draw_ImGui_Docking();
 
 		//----
-#if 1
+#if 0
 		// Debug
 		if (ui.BeginWindow("ofApp")) {
 			ui.Add(ui.bAutoResize);
@@ -4382,7 +4422,9 @@ void ofxSurfingVideoSkip::draw_ImGui() {
 		//--
 
 		// Floating Preview / Fbo image
-		draw_ImGui_Preview();
+		draw_ImGui_MiniPreview();
+
+		draw_ImGui_ExtraPreview();
 
 		//--
 
@@ -4450,6 +4492,8 @@ void ofxSurfingVideoSkip::doOpenDialogToSetPath() {
 		ofLogNotice("ofxSurfingVideoSkip") << "User hit cancel";
 	}
 }
+
+//--
 
 #ifdef SURFING_USE_THUMBS
 //TODO: WIP. not working as expected...
@@ -4725,6 +4769,7 @@ void ofxSurfingVideoSkip::Changed_VideoBarControl(bool & b) {
 
 //--
 
+/*
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::dockingReset() // not works on runtime..?
 {
@@ -4767,7 +4812,9 @@ void ofxSurfingVideoSkip::dockingReset() // not works on runtime..?
 
 	ImGui::DockBuilderFinish(dockspace_id);
 }
+*/
 
+/*
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::draw_ImGui_Menu() {
 	static bool opt_fullscreen = true;
@@ -4833,3 +4880,4 @@ void ofxSurfingVideoSkip::draw_ImGui_Menu() {
 		ImGui::EndMenuBar();
 	}
 }
+*/

@@ -388,7 +388,8 @@ public:
 	void draw_ImGui_VideoMain();
 	void draw_ImGui_Files();
 	void draw_ImGui_SkipTimers();
-	void draw_ImGui_Preview();
+	void draw_ImGui_MiniPreview();
+	void draw_ImGui_ExtraPreview();
 	void draw_ImGui_Menu();
 
 	void draw_ImGui_GameMode(); // final user selected / most important controls!
@@ -407,6 +408,8 @@ private:
 
 	// Preview Monitor
 	SurfingPreview surfingPreview;
+	
+	ofParameter<bool> bLock { "Lock", false };
 
 	// If some Fx enabled
 //#ifndef USE_MINIMAL__VIDEO_SKIP
@@ -423,9 +426,9 @@ private:
 
 	//--
 
-private:
-	bool bDockingReset = false;
-	void dockingReset();
+//private:
+//	bool bDockingReset = false;
+//	void dockingReset();
 
 	//--
 
