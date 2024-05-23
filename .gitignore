@@ -778,3 +778,5 @@ examples/addons/ofxMidi/libs/rtmidi/RtMidi.nativecodeanalysis.sarif
 examples/addons/ofxBeatClock/src/ofxBeatClock.nativecodeanalysis.sarif
 examples/addons/ofxBeatClock/libs/ofxDawMetro/src/ofxDawMetro.nativecodeanalysis.sarif
 examples/1_video-Basic/enc_temp_folder/58e4328c7cb16e8cdc95d9aabf664079/ofxSurfingVideoSkip.cpp
+examples/1_video-Basic/enc_temp_folder/507edbc446343f66887e9613ad07cde/ofxSurfingVideoSkip.h
+examples/1_video-Basic/enc_temp_folder/77e5e6118996564d45d94148a024534c/ofxSurfingVideoSkip.cpp

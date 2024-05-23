@@ -11,8 +11,7 @@
 	mark some word with another color
 	add center offset or duration, to translate a clip/loop
 
-	Presets ABC with presets indexes.
-		makeReferenteTo
+	Presets ABC with presets indexes. makeReferenteTo
 
 	TODO:
 	make thumbs using threading
@@ -23,8 +22,7 @@
 	OSC:
 	bang next makes double jump!
 	fix targets draw for button testing
-	fix / add enablers
-		add all/none
+	fix / add enablers. add all/none
 
 	MOOD:
 	link manual slider to value_0
@@ -35,28 +33,27 @@
 	edit mode not working when using inner presets panel
 
 	BUGS:
-	+ zero time loop wrong back...
-	+ fine tunes: kicks working weird
+	zero time loop wrong back...
+	fine tunes: kicks working weird
 
 	ENGINE:
-	+ should be oriented more to start point vs end/duration..
-	+ improve Edit mode and lock
-		+ when edit mode, and dragging start/end, move position
-	+ add shift loop
-		+ add control to move the loop clip with same duration?
-		+ lock start/end then move "centered" on edit
-	+ add slow skip timers
-	+ add new fx skip-engine jump bpm timed shutter
-	+ zoom on loop zone. maybe with stills
-	+ mark start points on bar. add one/first still for each clip
+	should be oriented more to start point vs end/duration..
+	improve Edit mode and lock
+		when edit mode, and dragging start/end, move position
+	add shift loop
+		add control to move the loop clip with same duration?
+		lock start/end then move "centered" on edit
+	add slow skip timers
+	add new fx skip-engine jump bpm timed shutter
+	zoom on loop zone. maybe with stills
+	mark start points on bar. add one/first still for each clip
 
 	APP:
-	+ full screen/dual window. external output.
-	+ populate midi notes for available presets
+	full screen/dual window. external output.
+	populate midi notes for available presets
 		or make an engine to centralize all midi stuff for different modules.
-	+ fix docking for all panels. Should split main 3 panels too..
-		+ preview window and central docking layouting
-
+	fix docking for all panels. Should split main 3 panels too..
+		preview window and central docking layouting
 */
 
 //----------------------------------------------
@@ -132,7 +129,7 @@
 
 #define USE_BPM_TIMER_MODE
 
-//#define SURFING_USE_THUMBS
+//#define SURFING_USE_THUMBS //-> main enabler for thumbs usage
 #define AUTO_GENERATE_THUMBS_ON_LOADING
 
 //----------------------------------------------
@@ -453,7 +450,7 @@ public:
 
 	//--------------------------------------------------------------
 	void doRunCommand(string s) {
-		cout << (s) << endl<< endl;
+		cout << "COMMAND: "<< endl << (s) << endl << endl;
 		cout << ofSystem(s) << endl;
 
 		ofLogNotice("ofxSurfingVideoSkip") << "COMMAND: " << endl << s;
@@ -750,8 +747,8 @@ private:
 #endif
 
 private:
-	ofEventListener listener_bGui;
-	void Changed_bGui();
+	//ofEventListener listener_bGui;
+	//void Changed_bGui();
 
 	// Settings
 	std::string path_AppSettings;
