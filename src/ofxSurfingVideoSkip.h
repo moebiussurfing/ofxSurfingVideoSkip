@@ -409,7 +409,7 @@ private:
 	SurfingPreview surfingPreview;
 
 	// If some Fx enabled
-#ifndef USE_MINIMAL__VIDEO_SKIP
+//#ifndef USE_MINIMAL__VIDEO_SKIP
 	#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
 	std::vector<std::string> previewSources = { "Source", "Processed" };
 	#else
@@ -417,7 +417,7 @@ private:
 	#endif
 	//#else
 	//	std::vector<std::string> previewSources = { "Source" };
-#endif
+//#endif
 
 	ofParameter<int> indexPreviewSource; // selector
 

@@ -227,13 +227,13 @@ void ofxSurfingVideoSkip::setup_Parameters() {
 	beatRescale.set("SCALE", 0, -8, 8);
 	bMODE_Lock.set("LOCK", false); //?
 
-#ifndef USE_MINIMAL__VIDEO_SKIP
+//#ifndef USE_MINIMAL__VIDEO_SKIP
 	#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
 	indexPreviewSource.set("Source Preview", 0, 0, previewSources.size() - 1);
 	#else
 	indexPreviewSource.set("Source Preview", 0, 0, 0);
 	#endif
-#endif
+//#endif
 
 	//--
 
@@ -355,10 +355,10 @@ void ofxSurfingVideoSkip::setup_Parameters() {
 	ofAddListener(params_Control.parameterChangedE(), this, &ofxSurfingVideoSkip::Changed_Params);
 	// these params are not stored. just from GUI panels here
 
-	// Gui
-	listener_bGui = bGui.newListener([this](bool &) {
-		this->Changed_bGui();
-	});
+	//// Gui
+	//listener_bGui = bGui.newListener([this](bool &) {
+	//	this->Changed_bGui();
+	//});
 }
 
 //--------------------------------------------------------------
@@ -822,9 +822,9 @@ void ofxSurfingVideoSkip::startup() {
 	//auto myStrings = ofSplitString(videoFilePath, "/");//not working bc '\'
 	//videoName = myStrings[myStrings.size() - 1];
 
-	// Split string path
-	ofFile videoFile(videoFilePath.get());
-	videoName = videoFile.getFileName();
+	//// Split string path
+	//ofFile videoFile(videoFilePath.get());
+	//videoName = videoFile.getFileName();
 
 	//--
 
@@ -972,6 +972,7 @@ void ofxSurfingVideoSkip::update(ofEventArgs & args) {
 			//--
 
 			// FxCh Processed
+
 #ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
 			if (channelFx.bEnable_Fx) {
 				channelFx.begin();
@@ -1006,16 +1007,19 @@ void ofxSurfingVideoSkip::update(ofEventArgs & args) {
 #endif
 		}
 
-		//--
+//--
 
+		//TODO DEBUG
+#if 0
 		// FxPro
-#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
+	#ifdef USE_ofxSurfingFxPro__VIDEO_SKIP
 		// processed video
 		else if (indexPreviewSource == 1)
 			fxPro.draw();
-#else
+	#else
 		else if (indexPreviewSource == 1)
 			draw_Video();
+	#endif
 #endif
 	}
 	surfingPreview.end();
@@ -1088,15 +1092,15 @@ void ofxSurfingVideoSkip::calculateKick() {
 	// Just try, bc if video is not loaded will need to do it again
 	totalNumFrames = player.getTotalNumFrames();
 	if (totalNumFrames == 0) {
-		ofLogError("ofxSurfingVideoSkip") << (__FUNCTION__) << "totalNumFrames is 0. Could wait until video file is loaded...";
+		ofLogError("ofxSurfingVideoSkip") << "calculateKick() totalNumFrames is 0. Could wait until video file is loaded...";
 		return;
 	} else
-		ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "totalNumFrames: " << totalNumFrames;
+		ofLogNotice("ofxSurfingVideoSkip") << "calculateKick() totalNumFrames: " << totalNumFrames;
 
 	frameSizeNorm = 1.0f / (float)totalNumFrames; //decimals size of a frame
-	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "frameSizeNorm: " << frameSizeNorm;
+	ofLogNotice("ofxSurfingVideoSkip") << "calculateKick() frameSizeNorm: " << frameSizeNorm;
 	kickSizeFrame = frameSizeNorm * (float)numFramesToKick;
-	ofLogNotice("ofxSurfingVideoSkip") << (__FUNCTION__) << "kickSizeFrame: " << kickSizeFrame;
+	ofLogNotice("ofxSurfingVideoSkip") << "calculateKick() kickSizeFrame: " << kickSizeFrame;
 
 	//float currDur = player.getDuration();//step proportional to video secs
 	//currFrame = ofMap(position, 0, 1, 0, totalNumFrames);//curr frame?
@@ -2390,7 +2394,6 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter & e) // patch chang
 			bMODE_SkipLooped = !bMODE_SkipPowered.get();
 		}
 
-		
 #ifdef SURFING_USE_THUMBS
 		else if (name == bTheme.getName()) {
 			bThumbsReadyFbo = false;
@@ -2407,10 +2410,10 @@ void ofxSurfingVideoSkip::Changed_Params(ofAbstractParameter & e) // patch chang
 	}
 }
 
-//--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_bGui() {
-	ofLogNotice("ofxSurfingVideoSkip") << "Changed_bGui: " << ofToString(bGui.get());
-}
+////--------------------------------------------------------------
+//void ofxSurfingVideoSkip::Changed_bGui() {
+//	ofLogNotice("ofxSurfingVideoSkip") << "Changed_bGui: " << ofToString(bGui.get());
+//}
 
 //--
 
@@ -2958,7 +2961,7 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path) {
 
 		ofLogError("ofxSurfingVideoSkip") << "VIDEO NOT FOUND '" << _path << "' z!";
 
-		_path = "movies/SampleHap.mov";
+		_path = "SampleHap.mov";
 		ofLogWarning("ofxSurfingVideoSkip") << "...TRYING TO LOAD A BACKUP MOVIE: '" << _path << "' !";
 
 		b = player.load(_path);
@@ -2988,6 +2991,12 @@ void ofxSurfingVideoSkip::loadMovie(std::string _path) {
 		videoFilePath.set("NO FILE");
 		videoName.set("NO FILE");
 		videoTIME.set(""); // current time position
+	}
+
+	else {
+		// Split string path
+		ofFile videoFile(videoFilePath.get());
+		videoName = videoFile.getFileName();
 	}
 
 	//--
@@ -3648,11 +3657,11 @@ void ofxSurfingVideoSkip::draw_ImGui_Preview() {
 
 	string n = "";
 
-#ifndef USE_MINIMAL__VIDEO_SKIP
+//#ifndef USE_MINIMAL__VIDEO_SKIP
 	#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
 	if (indexPreviewSource < previewSources.size()) n = previewSources[indexPreviewSource];
 	#endif
-#endif
+//#endif
 
 	static ofParameter<bool> bLock { "Lock", false };
 
@@ -3730,16 +3739,18 @@ void ofxSurfingVideoSkip::draw_ImGui_Preview() {
 		//--
 
 		if (ui.BeginWindow(surfingPreview.bGui_MiniPreview, flagsw)) {
-			///*
+			/*
 			spx = ui.getWidgetsSpacingX();
 			spy = ui.getWidgetsSpacingY();
 			win = ui.getWindowShape();
 			wwin = win.getWidth();
 			hwin = win.getHeight();
 			bready = true;
-			//*/
+			*/
 
 			ofxImGuiSurfing::DrawFboPreview(surfingPreview.fboPreview);
+
+			//surfingPreview.fboPreview.draw(0, 0);
 
 			//string n = surfingPreview.bGui_MiniPreview.getName();
 			//ui.AddLabelBig(n);
@@ -3784,7 +3795,7 @@ void ofxSurfingVideoSkip::draw_ImGui_Preview() {
 
 	//--
 
-	// 2. Preview Extra stuff window
+	// 2. Preview Extra. stuff window
 
 	if (!ui.bMinimize) {
 		if (surfingPreview.bGui_Extra) {
@@ -3868,16 +3879,17 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 				if (ui.bMinimize) surfingPreview.bGui_Extra = false;
 			};
 
-			ui.AddSpacingSeparated();
-
 			//--
 
 			// Files
 
 			if (!ui.bMinimize) {
+				ui.AddSpacingSeparated();
 				ui.Add(bGui_Files, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 				ui.AddTooltip("LOAD VIDEO AND/OR \nAUDIO FILES LINKED \nOR NOT", bToolTips);
 			}
+
+			ui.AddSpacingSeparated();
 
 			//--
 
@@ -3902,14 +3914,14 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 						ui.Add(surfingPreview.bGui_MiniPreview, OFX_IM_TOGGLE_BUTTON_ROUNDED);
 
 						// Source Selector
-#ifndef USE_MINIMAL__VIDEO_SKIP
+//#ifndef USE_MINIMAL__VIDEO_SKIP
 	#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
 						if (surfingPreview.bGui_MiniPreview) {
 							if (previewSources.size() > 1)
 								ui.AddCombo(indexPreviewSource, previewSources);
 						}
 	#endif
-#endif
+//#endif
 					}
 					ui.Unindent();
 				}
@@ -3922,10 +3934,10 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 					ui.Indent();
 					{
 						// Preview Float
-						ui.Add(surfingPreview.bGui_MiniPreview, OFX_IM_TOGGLE_BUTTON_ROUNDED);
+						ui.Add(surfingPreview.bGui_MiniPreview, OFX_IM_TOGGLE_BUTTON_ROUNDED); //mini
 
 						// Preview Big
-						ui.Add(surfingPreview.bGui_PreviewBig, OFX_IM_TOGGLE_BUTTON_ROUNDED);
+						ui.Add(surfingPreview.bGui_PreviewBig, OFX_IM_TOGGLE_BUTTON_ROUNDED); //big
 
 						//if (surfingPreview.bGui_PreviewBig)
 						{
@@ -3933,21 +3945,21 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 
 							// Control Bar
 							ui.Add(bGui_BarControl, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
-							if (bGui_BarControl) ui.Add(bAutoHide_BarControl, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
+							/*if (bGui_BarControl) */ ui.Add(bAutoHide_BarControl, OFX_IM_TOGGLE_BUTTON_ROUNDED_SMALL);
 							ui.Add(bTheme, OFX_IM_TOGGLE_ROUNDED_MINI);
 
 							ui.Unindent();
 						}
 
 						// Source Selector
-#ifndef USE_MINIMAL__VIDEO_SKIP
+//#ifndef USE_MINIMAL__VIDEO_SKIP
 	#if defined(USE_ofxSurfingFxChannel__VIDEO_SKIP) || defined(USE_ofxSurfingFxPro__VIDEO_SKIP)
 						if (surfingPreview.bGui_MiniPreview) {
 							if (previewSources.size() > 1)
 								ui.AddCombo(indexPreviewSource, previewSources);
 						}
 	#endif
-#endif
+//#endif
 						ui.Indent();
 						ui.Add(surfingPreview.bGui_Extra, OFX_IM_TOGGLE_BUTTON_ROUNDED);
 						ui.Unindent();
@@ -4665,6 +4677,55 @@ void ofxSurfingVideoSkip::Changed_BeatTick() // callback to receive BeatTicks
 //--
 
 //--------------------------------------------------------------
+void ofxSurfingVideoSkip::addMouseListeners() {
+	ofAddListener(ofEvents().mouseMoved, this, &ofxSurfingVideoSkip::mouseMoved);
+	ofAddListener(ofEvents().mouseDragged, this, &ofxSurfingVideoSkip::mouseDragged);
+	ofAddListener(ofEvents().mousePressed, this, &ofxSurfingVideoSkip::mousePressed);
+	ofAddListener(ofEvents().mouseReleased, this, &ofxSurfingVideoSkip::mouseReleased);
+	ofAddListener(ofEvents().mouseScrolled, this, &ofxSurfingVideoSkip::mouseScrolled);
+}
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::removeMouseListeners() {
+	ofRemoveListener(ofEvents().mouseMoved, this, &ofxSurfingVideoSkip::mouseMoved);
+	ofRemoveListener(ofEvents().mouseDragged, this, &ofxSurfingVideoSkip::mouseDragged);
+	ofRemoveListener(ofEvents().mousePressed, this, &ofxSurfingVideoSkip::mousePressed);
+	ofRemoveListener(ofEvents().mouseReleased, this, &ofxSurfingVideoSkip::mouseReleased);
+	ofRemoveListener(ofEvents().mouseScrolled, this, &ofxSurfingVideoSkip::mouseScrolled);
+}
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::addKeysListeners() {
+	ofAddListener(ofEvents().keyPressed, this, &ofxSurfingVideoSkip::keyPressed);
+	ofAddListener(ofEvents().keyReleased, this, &ofxSurfingVideoSkip::keyReleased);
+}
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::removeKeysListeners() {
+	ofRemoveListener(ofEvents().keyPressed, this, &ofxSurfingVideoSkip::keyPressed);
+	ofRemoveListener(ofEvents().keyReleased, this, &ofxSurfingVideoSkip::keyReleased);
+}
+
+//--------------------------------------------------------------
+void ofxSurfingVideoSkip::Changed_VideoBarControl(bool & b) {
+	ofLogNotice("ofxSurfingVideoSkip") << "Changed_VideoBarControl() " << ofToString(b ? "TRUE" : "FALSE");
+
+	static bool bGui_BarControl_PRE = !bGui_BarControl.get();
+	if (bGui_BarControl.get() != bGui_BarControl_PRE) {
+		bGui_BarControl_PRE = bGui_BarControl.get();
+	}
+	//else return;
+
+	if (!bGui_BarControl.get()) {
+		ofHideCursor();
+	} else {
+		ofShowCursor();
+	}
+}
+
+//--
+
+//--------------------------------------------------------------
 void ofxSurfingVideoSkip::dockingReset() // not works on runtime..?
 {
 	ImGuiViewport * viewport = ImGui::GetMainViewport();
@@ -4770,52 +4831,5 @@ void ofxSurfingVideoSkip::draw_ImGui_Menu() {
 			"(NB: because of this constraint, the implicit \"Debug\" window can not be docked into an explicit DockSpace() node, because that window is submitted as part of the NewFrame() call. An easy workaround is that you can create your own implicit \"Debug##2\" window after calling DockSpace() and leave it in the window stack for anyone to use.)");
 
 		ImGui::EndMenuBar();
-	}
-}
-
-//--------------------------------------------------------------
-void ofxSurfingVideoSkip::addMouseListeners() {
-	ofAddListener(ofEvents().mouseMoved, this, &ofxSurfingVideoSkip::mouseMoved);
-	ofAddListener(ofEvents().mouseDragged, this, &ofxSurfingVideoSkip::mouseDragged);
-	ofAddListener(ofEvents().mousePressed, this, &ofxSurfingVideoSkip::mousePressed);
-	ofAddListener(ofEvents().mouseReleased, this, &ofxSurfingVideoSkip::mouseReleased);
-	ofAddListener(ofEvents().mouseScrolled, this, &ofxSurfingVideoSkip::mouseScrolled);
-}
-
-//--------------------------------------------------------------
-void ofxSurfingVideoSkip::removeMouseListeners() {
-	ofRemoveListener(ofEvents().mouseMoved, this, &ofxSurfingVideoSkip::mouseMoved);
-	ofRemoveListener(ofEvents().mouseDragged, this, &ofxSurfingVideoSkip::mouseDragged);
-	ofRemoveListener(ofEvents().mousePressed, this, &ofxSurfingVideoSkip::mousePressed);
-	ofRemoveListener(ofEvents().mouseReleased, this, &ofxSurfingVideoSkip::mouseReleased);
-	ofRemoveListener(ofEvents().mouseScrolled, this, &ofxSurfingVideoSkip::mouseScrolled);
-}
-
-//--------------------------------------------------------------
-void ofxSurfingVideoSkip::addKeysListeners() {
-	ofAddListener(ofEvents().keyPressed, this, &ofxSurfingVideoSkip::keyPressed);
-	ofAddListener(ofEvents().keyReleased, this, &ofxSurfingVideoSkip::keyReleased);
-}
-
-//--------------------------------------------------------------
-void ofxSurfingVideoSkip::removeKeysListeners() {
-	ofRemoveListener(ofEvents().keyPressed, this, &ofxSurfingVideoSkip::keyPressed);
-	ofRemoveListener(ofEvents().keyReleased, this, &ofxSurfingVideoSkip::keyReleased);
-}
-
-//--------------------------------------------------------------
-void ofxSurfingVideoSkip::Changed_VideoBarControl(bool & b) {
-	ofLogNotice("ofxSurfingVideoSkip") << "Changed_VideoBarControl() " << ofToString(b ? "TRUE" : "FALSE");
-
-	static bool bGui_BarControl_PRE = !bGui_BarControl.get();
-	if (bGui_BarControl.get() != bGui_BarControl_PRE) {
-		bGui_BarControl_PRE = bGui_BarControl.get();
-	}
-	//else return;
-
-	if (!bGui_BarControl.get()) {
-		ofHideCursor();
-	} else {
-		ofShowCursor();
 	}
 }
