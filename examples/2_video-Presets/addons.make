@@ -1,16 +1,6 @@
-ofxBeatClock
-ofxFontStash
 ofxGui
 ofxHapPlayer
 ofxImGui
-ofxMidi
-ofxSurfingBox
-ofxSurfingFxChannel
 ofxSurfingHelpers
 ofxSurfingImGui
-ofxSurfingMoods
-ofxSurfingPlayer
-ofxSurfingPresets
-ofxSurfingTextSubtitle
 ofxSurfingVideoSkip
-ofxWindowApp
