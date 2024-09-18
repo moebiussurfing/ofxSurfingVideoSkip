@@ -62,7 +62,7 @@
 
 // MAIN
 
-#define USE_MINIMAL__VIDEO_SKIP
+//#define USE_MINIMAL__VIDEO_SKIP
 // -> Uncomment this above line to:
 // Force and disable ALL the below optional add-ons / compatible modules.
 // Then allows only the use of the MINIMAL CORE stuff of the add-on.
@@ -79,21 +79,21 @@
 	//
 	// -> 1A. Simple Presets
 	// -> Recommended! for GUI integration
-	#define USE_ofxSurfingPresets__VIDEO_SKIP
+	//#define USE_ofxSurfingPresets__VIDEO_SKIP
 	// -> 1B. Power Presets
 	//#define USE_ofxPresetsManager__VIDEO_SKIP
 
 	// -> 2. Mood Machine
-	#define USE_ofxSurfingMoods__VIDEO_SKIP
+	//#define USE_ofxSurfingMoods__VIDEO_SKIP
 
 	// -> 3. Beat Clock
-	#define USE_ofxBeatClock__VIDEO_SKIP
+	//#define USE_ofxBeatClock__VIDEO_SKIP
 
 	// -> 4. MIDI Input to control GUI and switch presets
-	#define USE_MIDI_PARAMS__VIDEO_SKIP
+	//#define USE_MIDI_PARAMS__VIDEO_SKIP
 
 	// -> 5. FX Channel
-	#define USE_ofxSurfingFxChannel__VIDEO_SKIP
+	//#define USE_ofxSurfingFxChannel__VIDEO_SKIP
 
 	//TODO:
 	// -> 6. Remote Parameters
@@ -102,7 +102,7 @@
 	// Will serve OSC/MIDI
 
 	// -> 7. FX Pro
-	#define USE_ofxSurfingFxPro__VIDEO_SKIP
+	//#define USE_ofxSurfingFxPro__VIDEO_SKIP
 
 	// -> 8. OSC Remote
 	//#define USE_ofxSurfingOsc
@@ -111,7 +111,7 @@
 	//#define USE_ofxNDI
 
 	// -> 10. SRT subtitler
-	#define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
+	//#define USE_ofxSurfingTextSubtitle__VIDEO_SKIP
 
 //--
 
@@ -390,9 +390,11 @@ public:
 	void draw_ImGui_SkipTimers();
 	void draw_ImGui_MiniPreview();
 	void draw_ImGui_ExtraPreview();
-	void draw_ImGui_Menu();
+	//void draw_ImGui_Menu();
 
 	void draw_ImGui_GameMode(); // final user selected / most important controls!
+	
+	string path = "myLayout.ini";
 
 public:
 	ofParameter<bool> bGui; // independent to auto hide state

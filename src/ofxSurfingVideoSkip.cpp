@@ -2581,6 +2581,7 @@ void ofxSurfingVideoSkip::draw_Video() {
 
 			if (surfingPreview.bFullScreen) {
 				r.scaleTo(ofGetWindowRect(), surfingPreview.scaleMode); // Full view
+
 			}
 
 			//--
@@ -2591,11 +2592,34 @@ void ofxSurfingVideoSkip::draw_Video() {
 				// A. Draggable view port
 
 				if (surfingPreview.bInDocked) {
-					r.scaleTo(ui.getRectangleCentralDocking(), surfingPreview.scaleMode);
+					//r.scaleTo(ui.getRectangleCentralDocking(), surfingPreview.scaleMode);
 
-					//TODO
-					//surfingPreview.updateRectDraggable(r);
-					//surfingPreview.;
+					////TODO
+					////surfingPreview.updateRectDraggable(r);
+					////surfingPreview.;
+
+					r = ui.getRectangleCentralViewport(); // Inner rect space
+					
+					//r.scaleTo(ui.getRectangleCentralViewport(), surfingPreview.scaleMode); // Full view
+
+					//if (ui.isDebug()) 
+					//{
+					//	// viewport rect
+					//	ofPushMatrix();
+					//	ofPushStyle();
+					//	ofSetRectMode(OF_RECTMODE_CENTER);
+					//	float l = 2;
+					//	float o = 1; //offset
+					//	ofSetLineWidth(l);
+					//	ofColor c = ofColor(ofColor::yellow, 255 * SurfingGui::Bounce());
+					//	ofSetColor(c);
+					//	ofNoFill();
+					//	ofRectangle r_ = ofRectangle(r.getCenter().x + o, r.getCenter().y + o, r.getWidth() - 2 * o, r.getHeight() - 2 * o);
+					//	ofDrawRectangle(r_);
+					//	ofPopStyle();
+					//	ofPopMatrix();
+					//}
+
 				}
 
 				//--
@@ -2608,15 +2632,16 @@ void ofxSurfingVideoSkip::draw_Video() {
 				}
 			}
 
-			//--
+			//----
 
 			// Draw video frame
+			
 			//{
 			//	ofSetColor(255, 255, 255, 255);
 			//	player.draw(r.x, r.y, r.width, r.height);
 			//}
 
-			//--
+			//-
 
 			// Fx Processed
 #ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
@@ -2643,7 +2668,7 @@ void ofxSurfingVideoSkip::draw_Video() {
 			ofSetColor(255, 255, 255, 255);
 			player.draw(r.x, r.y, r.width, r.height);
 #endif
-			//--
+			//----
 
 #ifdef USE_ofxSurfingTextSubtitle__VIDEO_SKIP
 			subs.draw(r);
@@ -3851,7 +3876,7 @@ void ofxSurfingVideoSkip::draw_ImGui_MiniPreview() {
 
 			//debug viewport
 			surfingPreview.rectPreviewViewport.setPosition(ui.getWindowShape().getPosition());
-			surfingPreview.rectPreviewViewport.setSize(ui.getWindowShape().getWidth(),ui.getWindowShape().getHeight());
+			surfingPreview.rectPreviewViewport.setSize(ui.getWindowShape().getWidth(), ui.getWindowShape().getHeight());
 
 			//--
 
@@ -3903,8 +3928,8 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 	if (bGui_VideoMain) {
 		{
 			float w_ = 180;
-			ImVec2 size_min = ImVec2(w_, -1);
-			ImVec2 size_max = ImVec2(w_, -1);
+			ImVec2 size_min = ImVec2(w_, w_);
+			ImVec2 size_max = ImVec2(w_, w_);
 			ImGui::SetNextWindowSizeConstraints(size_min, size_max);
 		}
 
@@ -4335,6 +4360,22 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 			//				}
 			//			}
 			//			//*/
+
+			//--
+
+			ui.AddSpacingSeparated();
+
+			string s = "Manager";
+			ui.AddLabelBig(s);
+
+			if (ui.AddButton("Load", OFX_IM_BUTTON_SMALL, 2)) {
+				ui.loadLayout(path);
+			}
+			ui.SameLine();
+
+			if (ui.AddButton("Save", OFX_IM_BUTTON_SMALL, 2)) {
+				ui.saveLayout(path);
+			}
 
 			//--
 

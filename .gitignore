@@ -780,3 +780,4 @@ examples/addons/ofxBeatClock/libs/ofxDawMetro/src/ofxDawMetro.nativecodeanalysis
 examples/1_video-Basic/enc_temp_folder/58e4328c7cb16e8cdc95d9aabf664079/ofxSurfingVideoSkip.cpp
 examples/1_video-Basic/enc_temp_folder/507edbc446343f66887e9613ad07cde/ofxSurfingVideoSkip.h
 examples/1_video-Basic/enc_temp_folder/77e5e6118996564d45d94148a024534c/ofxSurfingVideoSkip.cpp
+examples/2_video-Presets/config.make
