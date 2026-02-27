@@ -391,7 +391,7 @@ void ofxSurfingVideoSkip::setup_ParametersControl() {
 
 	// Fx
 #ifdef USE_ofxSurfingFxChannel__VIDEO_SKIP
-	params_Control.add(_param_ChannelFx);
+    params_Control.add(_param_ChannelFx);
 #endif
 
 	//--
@@ -1410,7 +1410,7 @@ void ofxSurfingVideoSkip::updateTimers() {
 			//float factor = 0.45f;
 			float factor = 0.25f;
 
-			float _skipPower = MAX(skipPower, 0.1f);
+			float _skipPower = MAX(skipPower.get(), 0.1f);
 
 			float pow = factor * ofRandom(-_skipPower, _skipPower);
 			skipPos = position + pow;
@@ -2931,7 +2931,7 @@ void ofxSurfingVideoSkip::draw_VideoBarControl() {
 
 		if (player.isError()) {
 			bError = true;
-			string s = "MUST PICK A HAP VIDEO FILE!";
+			string s = "MUST PICK A HAP VIDEO FILE! PRESS L (LOAD) KEY";
 			float w = ofxSurfingHelpers::getWidthBBtextBoxed(font, s);
 			ofxSurfingHelpers::drawTextBoxed(font, s, ofGetWidth() / 2 - w / 2, 40, c);
 			//player.getError()
@@ -3227,7 +3227,11 @@ void ofxSurfingVideoSkip::setPath_GlobalFolder(std::string folder) {
 //--------------------------------------------------------------
 void ofxSurfingVideoSkip::setup_ImGui() {
 
+	ui.setImGuiViewPort(true);
 	ui.setup(IM_GUI_MODE_INSTANTIATED_DOCKING_RAW_AUTOHANDLER);
+	//ui.setup();
+
+	//ui.setup(IM_GUI_MODE_INSTANTIATED_DOCKING_RAW_AUTOHANDLER);
 	//ui.setup(IM_GUI_MODE_INSTANTIATED_DOCKING);
 
 	// Customize default labels
@@ -3341,7 +3345,7 @@ void ofxSurfingVideoSkip::setup_ImGui() {
 	//--
 
 	// -> Initiates when adding process finished!
-	ui.startup();
+	//ui.startup();
 }
 
 //--------------------------------------------------------------
@@ -4420,7 +4424,7 @@ void ofxSurfingVideoSkip::draw_ImGui() {
 		//draw_ImGui_Docking();
 
 		//----
-#if 0
+#if 1
 		// Debug
 		if (ui.BeginWindow("ofApp")) {
 			ui.Add(ui.bAutoResize);

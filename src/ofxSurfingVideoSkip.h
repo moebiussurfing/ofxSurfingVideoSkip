@@ -79,7 +79,7 @@
 	//
 	// -> 1A. Simple Presets
 	// -> Recommended! for GUI integration
-	//#define USE_ofxSurfingPresets__VIDEO_SKIP
+	#define USE_ofxSurfingPresets__VIDEO_SKIP
 	// -> 1B. Power Presets
 	//#define USE_ofxPresetsManager__VIDEO_SKIP
 
