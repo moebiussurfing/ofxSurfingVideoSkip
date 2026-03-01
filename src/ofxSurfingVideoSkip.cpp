@@ -4369,7 +4369,7 @@ void ofxSurfingVideoSkip::draw_ImGui_VideoMain() {
 
 			ui.AddSpacingSeparated();
 
-			string s = "Manager";
+			string s = "Layout Manager";
 			ui.AddLabelBig(s);
 
 			if (ui.AddButton("Load", OFX_IM_BUTTON_SMALL, 2)) {
