@@ -84,10 +84,10 @@
 	//#define USE_ofxPresetsManager__VIDEO_SKIP
 
 	// -> 2. Mood Machine
-	//#define USE_ofxSurfingMoods__VIDEO_SKIP
+	#define USE_ofxSurfingMoods__VIDEO_SKIP
 
 	// -> 3. Beat Clock
-	//#define USE_ofxBeatClock__VIDEO_SKIP
+	#define USE_ofxBeatClock__VIDEO_SKIP
 
 	// -> 4. MIDI Input to control GUI and switch presets
 	//#define USE_MIDI_PARAMS__VIDEO_SKIP

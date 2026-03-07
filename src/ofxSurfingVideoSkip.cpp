@@ -4428,6 +4428,10 @@ void ofxSurfingVideoSkip::draw_ImGui() {
 		// Debug
 		if (ui.BeginWindow("ofApp")) {
 			ui.Add(ui.bAutoResize);
+			ui.DrawWidgetsGlobalScaleMini();
+	#ifdef USE_ofxBeatClock__VIDEO_SKIP // BeatClock
+			ui.Add(beatClock.bGui);
+	#endif
 			//ui.Add(bGui);
 			//ui.Add(bGui_BarControl);
 			//ui.Add(bGui_Files);
